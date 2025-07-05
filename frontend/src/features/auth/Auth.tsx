@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import AuthForm from "./components/AuthForm";
 
 import styles from "./Auth.module.css";
+import UnderConstruction from "../shared/UnderConstruction";
 
 export default function Auth() {
    const params = useParams();
@@ -20,9 +21,15 @@ export default function Auth() {
          <Link to="/" className={styles.authTitleLink}>
             Barbell Log
          </Link>
-         <h2 className={styles.authHeader}>{authTitle}</h2>
-         <FaUser className={styles.userIcon} />
-         <AuthForm authTitle={authTitle} />
+         {authTitle === "Sign Up" ? (
+            <UnderConstruction />
+         ) : (
+            <>
+               <h2 className={styles.authHeader}>{authTitle}</h2>
+               <FaUser className={styles.userIcon} />
+               <AuthForm authTitle={authTitle} />
+            </>
+         )}
       </div>
    );
 }
