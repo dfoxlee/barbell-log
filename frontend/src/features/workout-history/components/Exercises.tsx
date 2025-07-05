@@ -1,5 +1,5 @@
+import UnderConstruction from "../../shared/UnderConstruction";
+
 export default function Exercises() {
-  return (
-    <div>Exercises</div>
-  )
+   return <UnderConstruction />;
 }
