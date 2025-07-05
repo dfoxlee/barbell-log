@@ -1,0 +1,23 @@
+.container {
+   width: 90vw;
+   max-width: 600px;
+   padding-bottom: 80px;
+   margin: 0 auto;
+}
+
+.backBtn {
+   display: flex;
+   align-items: center;
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   margin-top: 5px;
+}
+
+.workoutName {
+   text-align: center;
+}
+
+.backBtn > *:not(:first-child) {
+   margin-left: 5px;
+}

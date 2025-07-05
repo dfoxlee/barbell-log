@@ -1,0 +1,38 @@
+.title {
+   text-align: center;
+   font-size: 1.5rem;
+   margin: 10px auto 0;
+}
+
+.logoutBtn {
+   background: none;
+   border: 1px solid;
+   color: var(--primary);
+   padding: 1px 10px;
+   border-radius: 5px;
+   cursor: pointer;
+   display: block;
+   margin: 15px auto 0;
+}
+
+.weightPreferenceTitle {
+   text-align: center;
+   font-size: 1rem;
+   margin-top: 20px;
+   font-weight: 500;
+}
+
+.weightUnitToggleWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 5px;
+}
+
+.weightUnitBtn {
+   background: none;
+   border-style: none;
+   font-size: 1.5rem;
+   color: var(--primary);
+   margin: 0 5px;
+}

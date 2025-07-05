@@ -1,0 +1,49 @@
+.inputsWrapper {
+   display: flex;
+   flex-flow: column;
+   align-items: center;
+}
+
+.inputWrapper {
+   margin: 15px auto 0;
+}
+
+.inputLabel {
+   font-size: 0.875rem;
+   color: var(--accent);
+}
+
+.authInput {
+   width: 90vw;
+   max-width: 300px;
+   margin-top: 3px;
+}
+
+.changeAuthWrapper {
+   text-align: center;
+   padding: 0 15px;
+   margin-top: 5px;
+}
+
+.changeAuthText {
+   color: white;
+   font-size: 0.75rem;
+}
+
+.changeAuthLink {
+   color: var(--primary);
+   /* text-decoration: none; */
+   text-underline-offset: 5px;
+   margin-left: 8px;
+   font-size: 0.875rem;
+}
+
+.authSubmitBtn {
+   background: none;
+   color: var(--primary);
+   border: 1px solid;
+   padding: 3px 8px;
+   border-radius: 5px;
+   margin: 30px auto;
+   display: block;
+}

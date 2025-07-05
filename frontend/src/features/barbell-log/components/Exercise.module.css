@@ -1,0 +1,44 @@
+.container {
+   display: flex;
+   align-items: center;
+   width: 90%;
+   margin: 20px auto 0;
+   border: 1px solid;
+   padding: 10px;
+   border-radius: 5px;
+   border-color: var(--primary);
+   box-shadow: 0 0 5px 0 var(--primary);
+}
+
+.reorderBtn {
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   cursor: grab;
+}
+
+.reorderBtn:active {
+   cursor: grabbing;
+}
+
+.exerciseName {
+   font-size: 1rem;
+   color: white;
+}
+
+.completedSets {
+   font-size: 0.75rem;
+   margin-top: 5px;
+   color: white;
+}
+
+.contentWrapper {
+   flex-grow: 1;
+   padding: 0 15px;
+}
+
+.skipBtn {
+   background: none;
+   border-style: none;
+   color: var(--primary);
+}

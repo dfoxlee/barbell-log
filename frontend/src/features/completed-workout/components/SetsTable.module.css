@@ -1,0 +1,65 @@
+.tableContainer {
+   width: 100%;
+   margin-top: 10px;
+}
+
+.infoWrapper {
+   cursor: help;
+   display: inline-block;
+}
+
+.completeBtn {
+   background: none;
+   border-style: none;
+   color: var(--accent);
+}
+
+.infoText {
+   visibility: hidden;
+   width: 30vw;
+   max-width: 300px;
+   padding: 5px;
+   position: absolute;
+   background-color: var(--accent);
+   color: var(--secondary);
+   left: 50%;
+   z-index: 100;
+   border-radius: 3px;
+}
+
+.infoWrapper:hover .infoText {
+   visibility: visible;
+}
+
+.completedCheck {
+   color: var(--primary);
+}
+
+.completeBtn {
+   display: flex;
+   align-items: center;
+}
+
+.incompleteCheck {
+   color: var(--accent);
+}
+
+.tableHeader {
+   font-size: 0.75rem;
+   color: var(--accent);
+   font-weight: 500;
+}
+
+.optionWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.optionWrapper > *:not(:first-child) {
+   margin-left: 10px;
+}
+
+.dataCell {
+   margin: 5px 0;
+}

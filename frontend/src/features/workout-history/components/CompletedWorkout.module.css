@@ -1,0 +1,41 @@
+.container {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-top: 20px;
+}
+
+.contentWrapper {
+   flex-grow: 1;
+}
+
+.workoutName {
+   font-size: 1rem;
+   font-weight: 500;
+}
+
+.completedDate {
+   font-size: 0.75rem;
+
+   margin-top: 5px;
+}
+
+.linkWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.navLink {
+   text-decoration: none;
+   color: var(--primary);
+   font-size: 1.25rem;
+   margin: 5px;
+}
+
+.deleteBtn {
+   background: none;
+   border-style: none;
+   color: var(--warning);
+   font-size: 1.25rem;
+}

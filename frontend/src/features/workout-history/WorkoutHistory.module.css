@@ -1,0 +1,32 @@
+.container {
+   width: 90vw;
+   max-width: 600px;
+   margin: 0 auto;
+}
+
+.title {
+   text-align: center;
+   font-size: 1.5rem;
+   margin: 10px auto 0;
+}
+
+.optionBtnsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.optionBtn {
+   background: none;
+   border: 1px solid;
+   border-color: var(--primary);
+   color: var(--primary);
+   padding: 1px 8px;
+   margin: 5px;
+   border-radius: 5px;
+}
+
+.optionBtnActive {
+   background-color: var(--primary);
+   color: var(--secondary);
+}

@@ -1,0 +1,55 @@
+.container {
+   position: fixed;
+   width: 100vw;
+   top: 0;
+   bottom: 0;
+   left: -100vw;
+   transition: left 0.3s ease-in-out;
+   z-index: 100;
+   background-color: var(--secondary);
+}
+
+.containerOpen {
+   left: 0;
+}
+
+.closeBtn {
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   font-size: 1.25rem;
+   position: absolute;
+   top: 0.5rem;
+   right: 0.5rem;
+   cursor: pointer;
+}
+
+.workoutName {
+   font-size: 1rem;
+   text-align: center;
+   margin-top: 30px;
+   font-size: 1.5rem;
+   color: white;
+}
+
+.seperatorWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 90vw;
+   max-width: 600px;
+   margin: 0 auto;
+}
+
+.seperatorLine {
+   width: 100%;
+   height: 1px;
+   background-color: white;
+}
+
+.seperatorIcon {
+   flex-grow: 1;
+   font-size: 60px;
+   color: var(--secondary);
+   margin: 0 10px;
+}

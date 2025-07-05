@@ -1,0 +1,86 @@
+.container {
+   padding-bottom: 80px;
+}
+
+.headerWrapper {
+   margin-top: 10px;
+   position: relative;
+}
+
+.openSetNoteModalBtn {
+   position: absolute;
+   left: 5%;
+   top: 5%;
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   font-size: 1.25rem;
+}
+
+.title {
+   font-size: 1.5rem;
+   text-align: center;
+   /* margin: 10px auto 0; */
+}
+
+.setNotes {
+   width: 90%;
+   height: 50px;
+   background: none;
+   border-radius: 5px;
+   border-style: solid;
+   border-color: var(--primary);
+   border-width: 1px;
+   color: white;
+   padding: 5px;
+   resize: vertical;
+   margin: 10px auto 0;
+   display: block;
+   font-size: 0.75rem;
+}
+
+.setOptionBtnsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 15px;
+   flex-wrap: wrap;
+}
+
+.addSetBtn,
+.completeSetBtn,
+.addSetNotesBtn,
+.completeExerciseBtn,
+.removeSetNotesBtn {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 5px;
+   padding: 3px 8px;
+   border-radius: 5px;
+}
+
+.addSetBtn > *:not(:first-child),
+.completeSetBtn > *:not(:first-child),
+.addSetNotesBtn > *:not(:first-child),
+.completeExerciseBtn > *:not(:first-child),
+.removeSetNotesBtn > *:not(:first-child) {
+   margin-left: 5px;
+}
+
+.addSetBtn,
+.addSetNotesBtn {
+   background-color: var(--accent);
+   border-style: none;
+}
+
+.completeSetBtn,
+.completeExerciseBtn {
+   background-color: var(--primary);
+   border-style: none;
+}
+
+.removeSetNotesBtn {
+   background-color: var(--warning);
+   border-style: none;
+}

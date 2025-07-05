@@ -1,0 +1,47 @@
+.container {
+   position: relative;
+   width: 90vw;
+   max-width: 600px;
+   margin: 10px auto;
+   padding-bottom: 80px;
+}
+
+.workoutNameInput {
+   font-size: 1.25rem;
+   text-align: center;
+   width: 100%;
+   background: none;
+   border: 1px solid;
+   border-radius: 5px;
+   border-color: var(--accent);
+   color: var(--white);
+   padding: 1px 8px;
+}
+
+.reorderExerciseBtn {
+   background-color: var(--primary);
+   border: 1px solid;
+   padding: 3px 10px;
+   border-radius: 5px;
+   margin: 10px auto 0;
+   display: block;
+   font-size: 0.875rem;
+   font-weight: 500;
+   color: var(--secondary);
+}
+
+.addExerciseBtn {
+   display: flex;
+   align-items:center;
+   justify-content: center;
+   margin: 20px auto 0;
+   background: none;
+   color: var(--primary);
+   border: 1px solid;
+   padding: 3px 15px;
+   border-radius: 5px;
+}
+
+.addExerciseText {
+   margin-left: 5px;
+}

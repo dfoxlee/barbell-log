@@ -1,0 +1,22 @@
+.seperatorWrapper {
+   width: 90%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 5px auto 0;
+   height: 30px;
+   overflow: hidden;
+}
+
+.seperator {
+   height: 1px;
+   background-color: var(--accent);
+   width: 100%;
+}
+
+.seperatorIcon {
+   flex-grow: 1;
+   font-size: 60px;
+   color: var(--primary);
+   margin: 0 10px;
+}

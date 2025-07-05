@@ -1,0 +1,34 @@
+/* Container for the spinner and text */
+.loadingSpinnerContainer {
+   display: flex;
+   flex-direction: column; /* Stack icon and text vertically */
+   align-items: center; /* Center horizontally */
+   justify-content: center; /* Center vertically */
+   min-height: 100px; /* Give it some minimum height so it's visible */
+   width: 100%; /* Take full width of its parent */
+   text-align: center;
+}
+
+/* Spinner icon styling and animation */
+.loadingSpinnerIcon {
+   animation: spin 1.5s linear infinite; /* Spin animation */
+   margin-bottom: 10px; /* Space between icon and text */
+   color: var(--primary);
+}
+
+/* Spin animation keyframes */
+@keyframes spin {
+   0% {
+      transform: rotate(0deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
+}
+
+/* Optional: Styling for the loading text */
+.loadingSpinnerText {
+   font-size: 1.25rem;
+   color: white;
+   margin: 0; /* Remove default paragraph margin */
+}

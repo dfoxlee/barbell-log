@@ -1,0 +1,30 @@
+.workoutWrapper {
+   display: flex;
+   align-items: center;
+   margin-top: 20px;
+   border-radius: 5px;
+}
+
+.contentWrapper {
+   flex-grow: 1;
+}
+
+.workoutCountInfo {
+   font-size: 0.75rem;
+}
+
+.optionsWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.optionsWrapper > *:not(:first-child) {
+   margin-left: 10px;
+}
+
+.optionLink {
+   font-size: 1.25rem;
+   color: var(--primary);
+   text-decoration: none;
+}

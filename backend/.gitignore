@@ -1,0 +1,36 @@
+# Express Backend .gitignore
+
+# --- Node.js specific ---
+/node_modules
+/dist                  # Transpiled JavaScript output (e.g., if using TypeScript)
+/build                 # Another common build output directory
+.env                   # Local environment variables
+.env.development       # Development specific environment variables
+.env.production        # Production specific environment variables
+.env.test              # Test specific environment variables
+
+# --- Log files ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log                  # Any general log files (e.g., from Winston)
+
+# --- Database specific ---
+*.sqlite               # SQLite database files (if you used SQLite for dev)
+*.sqlite3
+/data/*.sqlite         # If your DB files are in a data directory
+
+# --- Uploads/User-generated content (if applicable) ---
+/uploads               # Directory for user-uploaded files (e.g., images)
+
+# --- IDE specific ---
+.vscode/
+.idea/
+
+# --- macOS specific ---
+.DS_Store
+
+# --- Testing related ---
+/coverage              # Jest/Mocha coverage reports
+*.crt
+SqlInitialize.sql

@@ -1,0 +1,46 @@
+.container {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+}
+
+.contentWrapper {
+   flex-grow: 1;
+}
+
+.workoutName {
+   font-size: 1rem;
+   font-weight: 500;
+}
+
+.workoutCreatedDate {
+   font-size: 0.875rem;
+   margin-top: 5px;
+}
+
+.optionBtnsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding-left: 5px;
+}
+
+.optionBtnsWrapper > *:not(:first-child) {
+   margin-left: 8px;
+}
+
+.optionBtn,
+.deleteBtn {
+   background: none;
+   border-style: none;
+   font-size: 1.25rem;
+}
+
+.optionBtn {
+   color: var(--primary);
+}
+
+.deleteBtn {
+   color: var(--warning);
+}

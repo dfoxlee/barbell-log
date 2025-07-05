@@ -1,0 +1,19 @@
+# In backend/.gitignore
+/node_modules
+/dist
+/build
+.env
+.env.development
+.env.production
+.env.test
+*.log
+/logger/logs/ # <--- Add this or ensure it covers logs
+*.sqlite
+*.sqlite3
+/data/*.sqlite
+/uploads
+.vscode/
+.idea/
+.DS_Store
+/coverage
+*.crt
