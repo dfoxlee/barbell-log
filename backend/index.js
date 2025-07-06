@@ -20,7 +20,10 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+   origin: "https://barbell-log.com",
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan("combined", { stream: winstonStream }));
