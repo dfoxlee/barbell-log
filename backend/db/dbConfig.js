@@ -20,9 +20,9 @@ const connectionConfig =
            queueLimit: 0,
            enableKeepAlive: true,
            keepAliveInitialDelay: 0,
-           ssl: {
-              ca: fs.readFileSync(path.join(__dirname, 'ca-certificate.crt')), // Download this from DigitalOcean
-           },
+         //   ssl: {
+         //      ca: fs.readFileSync(path.join(__dirname, 'ca-certificate.crt')),
+         //   },
         }
       : {
            host: process.env.MYSQL_HOST,
