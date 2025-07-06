@@ -6,7 +6,7 @@ export const fetchSignUp = async ({
    password: string;
 }) => {
    const signUpRequest = await fetch(
-      "http://localhost:8008/api/v1/users/sign-up",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/users/sign-up",
       {
          method: "POST",
          headers: {
@@ -40,7 +40,7 @@ export const fetchLogin = async ({
    password: string;
 }) => {
    const loginRequest = await fetch(
-      "http://localhost:8008/api/v1/users/login",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/users/login",
       {
          method: "POST",
          headers: {
@@ -71,7 +71,7 @@ export const fetchUpdateWeightPreference = async ({
    weightUnitPreference,
 }) => {
    return await fetch(
-      "http://localhost:8008/api/v1/users/update-weight-preference",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/users/update-weight-preference",
       {
          method: "POST",
          headers: {

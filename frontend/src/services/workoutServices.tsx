@@ -7,7 +7,7 @@ const fetchCreateWorkout = async ({
    workout: WorkoutCompositionStateType;
    token: string;
 }) => {
-   const req = await fetch("http://localhost:8008/api/v1/workouts/create", {
+   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/create", {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const fetchUpdateWorkout = async ({
    token: string;
    workoutId: string;
 }) => {
-   const req = await fetch(`http://localhost:8008/api/v1/workouts/update`, {
+   const req = await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/update`, {
       method: "PUT",
       headers: {
          "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const fetchUpdateWorkout = async ({
 };
 
 const fetchGetWorkouts = async ({ token }: { token: string }) => {
-   const req = await fetch("http://localhost:8008/api/v1/workouts", {
+   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts", {
       method: "GET",
       headers: {
          "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const fetchGetWorkouts = async ({ token }: { token: string }) => {
 
 const fetchGetWorkout = async ({ token, workoutId }) => {
    const req = await fetch(
-      `http://localhost:8008/api/v1/workouts/${workoutId}`,
+      `https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/${workoutId}`,
       {
          method: "GET",
          headers: {
@@ -76,7 +76,7 @@ const fetchGetWorkout = async ({ token, workoutId }) => {
 };
 
 const fetchDeleteWorkout = async ({ token, workoutId }) => {
-   await fetch(`http://localhost:8008/api/v1/workouts/${workoutId}`, {
+   await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/${workoutId}`, {
       method: "DELETE",
       headers: {
          "Content-Type": "application/json",

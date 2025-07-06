@@ -1,6 +1,6 @@
 const fetchCreateCompletedWorkout = async ({ workout, token }) => {
    const req = await fetch(
-      "http://localhost:8008/api/v1/completed-workouts/create",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/create",
       {
          method: "POST",
          headers: {
@@ -18,7 +18,7 @@ const fetchCreateCompletedWorkout = async ({ workout, token }) => {
 
 const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
    const fetchCompletedworkoutRequest = await fetch(
-      `http://localhost:8008/api/v1/completed-workouts/${completedWorkoutId}`,
+      `https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/${completedWorkoutId}`,
       {
          method: "GET",
          headers: {
@@ -34,7 +34,7 @@ const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
 };
 
 const fetchGetCompletedWorkouts = async ({ token }) => {
-   const req = await fetch("http://localhost:8008/api/v1/completed-workouts/", {
+   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/", {
       method: "GET",
       headers: {
          "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const fetchGetCompletedWorkouts = async ({ token }) => {
 
 const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
    const req = await fetch(
-      "http://localhost:8008/api/v1/completed-workouts/weekly-breakdown",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/weekly-breakdown",
       {
          method: "GET",
          headers: {
@@ -66,7 +66,7 @@ const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
 
 const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
    const req = await fetch(
-      "http://localhost:8008/api/v1/completed-workouts/update",
+      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/update",
       {
          method: "PUT",
          headers: {
@@ -84,7 +84,7 @@ const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
 
 const fetchDeleteCompeletedWorkout = async ({ token, completedWorkoutId }) => {
    console.log(token, completedWorkoutId);
-   const req = await fetch(`http://localhost:8008/api/v1/completed-workouts/`, {
+   const req = await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/`, {
       method: "DELETE",
       headers: {
          "Content-Type": "application/json",
