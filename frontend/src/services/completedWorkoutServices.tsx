@@ -1,15 +1,17 @@
+const baseUrl =
+   import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
+      ? import.meta.env.VITE_PRODUCTION_URL
+      : import.meta.env.VITE_DEVELOPMENT_URL;
+
 const fetchCreateCompletedWorkout = async ({ workout, token }) => {
-   const req = await fetch(
-      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/create",
-      {
-         method: "POST",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-         body: JSON.stringify({ workout }),
-      }
-   );
+   const req = await fetch(`${baseUrl}/completed-workouts/create`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ workout }),
+   });
 
    const res = await req.json();
 
@@ -18,7 +20,7 @@ const fetchCreateCompletedWorkout = async ({ workout, token }) => {
 
 const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
    const fetchCompletedworkoutRequest = await fetch(
-      `https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/${completedWorkoutId}`,
+      `${baseUrl}/completed-workouts/${completedWorkoutId}`,
       {
          method: "GET",
          headers: {
@@ -34,7 +36,7 @@ const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
 };
 
 const fetchGetCompletedWorkouts = async ({ token }) => {
-   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/", {
+   const req = await fetch(`${baseUrl}/completed-workouts`, {
       method: "GET",
       headers: {
          "Content-Type": "application/json",
@@ -48,16 +50,13 @@ const fetchGetCompletedWorkouts = async ({ token }) => {
 };
 
 const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
-   const req = await fetch(
-      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/weekly-breakdown",
-      {
-         method: "GET",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-      }
-   );
+   const req = await fetch(`${baseUrl}/completed-workouts/weekly-breakdown`, {
+      method: "GET",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
 
    const res = await req.json();
 
@@ -65,17 +64,14 @@ const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
 };
 
 const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
-   const req = await fetch(
-      "https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/update",
-      {
-         method: "PUT",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-         body: JSON.stringify({ completedWorkout }),
-      }
-   );
+   const req = await fetch(`${baseUrl}/completed-workouts/update`, {
+      method: "PUT",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ completedWorkout }),
+   });
 
    const res = await req.json();
 
@@ -83,8 +79,7 @@ const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
 };
 
 const fetchDeleteCompeletedWorkout = async ({ token, completedWorkoutId }) => {
-   console.log(token, completedWorkoutId);
-   const req = await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/completed-workouts/`, {
+   const req = await fetch(`${baseUrl}/completed-workouts`, {
       method: "DELETE",
       headers: {
          "Content-Type": "application/json",

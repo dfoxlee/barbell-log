@@ -77,21 +77,6 @@ export default function SetsTable() {
 
                     return (
                        <tr key={`${set.exerciseSetId}-${set.setOrder}`}>
-                          {/* <td>
-                             <button
-                                disabled={set.setOrder === currentSet.setOrder}
-                                className={
-                                   set.setOrder === currentSet.setOrder
-                                      ? styles.currentSetSkipToSetBtn
-                                      : styles.skipToSetBtn
-                                }
-                                onClick={(e) =>
-                                   handleSkipToSetClick(set.setOrder)
-                                }
-                             >
-                                <FaStepForward />
-                             </button>
-                          </td> */}
                           <td>{set.setOrder}</td>
                           <td>{set.completedReps}</td>
                           <td>{set.completedWeight}</td>

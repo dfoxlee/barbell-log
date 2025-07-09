@@ -45,7 +45,7 @@ export default function Settings() {
    };
 
    return (
-      <div>
+      <div className={styles.container}>
          <h2 className={styles.title}>Settings</h2>
          <Seperator />
          <button className={styles.logoutBtn} onClick={handleLogoutClick}>

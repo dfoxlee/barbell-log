@@ -2,7 +2,7 @@
    display: flex;
    align-items: center;
    justify-content: center;
-   margin-top: 20px;
+   margin-top: 30px;
 }
 
 .contentWrapper {
@@ -10,13 +10,12 @@
 }
 
 .workoutName {
-   font-size: 1rem;
+   font-size: 1.25rem;
    font-weight: 500;
 }
 
 .completedDate {
-   font-size: 0.75rem;
-
+   font-size: 0.875rem;
    margin-top: 5px;
 }
 
@@ -26,10 +25,14 @@
    justify-content: center;
 }
 
+.linkWrapper > *:not(:first-child) {
+   margin-left: 15px;
+}
+
 .navLink {
    text-decoration: none;
    color: var(--primary);
-   font-size: 1.25rem;
+   font-size: 1.5rem;
    margin: 5px;
 }
 
@@ -37,5 +40,5 @@
    background: none;
    border-style: none;
    color: var(--warning);
-   font-size: 1.25rem;
+   font-size: 1.5rem;
 }

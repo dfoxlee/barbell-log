@@ -14,17 +14,18 @@
 .exerciseNameInput {
    width: 80%;
    color: white;
-   padding: 1px 8px;
+   padding: 3px 8px;
    border: 1px solid;
    border-color: var(--accent);
    border-radius: 5px;
    background: none;
+   font-size: 1.25rem;
 }
 
 .deleteExerciseBtn {
    background: none;
    border-style: none;
-   font-size: 1.125rem;
+   font-size: 1.25rem;
    color: var(--warning);
    margin-left: 5px;
 }
@@ -38,7 +39,6 @@
 td,
 th {
    text-align: center;
-   /* padding: 5px; */
 }
 
 .tableHeader {
@@ -56,6 +56,8 @@ th {
    border-color: var(--accent);
    color: white;
    border-radius: 3px;
+   font-size: 1rem;
+   padding: 3px 5px;
 }
 
 .repsInput {
@@ -95,7 +97,7 @@ th {
 .deleteSetBtn {
    background: none;
    border-style: none;
-   /* font-size: 20px; */
+   font-size: 1.25rem;
    color: var(--warning);
 }
 
@@ -110,6 +112,7 @@ th {
    margin-top: 10px;
    width: 90%;
    max-width: 300px;
+   font-size: 1.25rem;
 }
 
 .addSetText {

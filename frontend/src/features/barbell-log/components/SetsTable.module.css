@@ -3,7 +3,6 @@
    margin: 10px auto 0;
 }
 
-.skipToSetBtn,
 .currentSetSkipToSetBtn,
 .deleteSetBtn {
    background: none;
@@ -23,7 +22,7 @@
 
 .incompleteSetIcon,
 .setCompleteIcon {
-   font-size: 1rem;
+   font-size: 1.25rem;
 }
 
 .setCompleteBtn {
@@ -41,4 +40,6 @@
 
 .deleteSetBtn {
    color: var(--warning);
+   font-size: 1.25rem;
+   margin-left: 10px;
 }

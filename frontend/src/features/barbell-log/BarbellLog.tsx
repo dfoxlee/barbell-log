@@ -66,7 +66,7 @@ export default function BarbellLog() {
                token,
                completedWorkoutId,
             });
-            
+
             barbellLogDispatch({
                type: "UPDATE-WORKOUT",
                payload: req,
@@ -260,17 +260,15 @@ export default function BarbellLog() {
             exerciseModalOpen={exerciseModalOpen}
             toggleExerciseModal={toggleExerciseModal}
          />
-         <div className={styles.headerWrapper}>
-            <button
-               className={styles.openSetNoteModalBtn}
-               onClick={handleOpenExerciseModal}
-            >
-               <FaChevronRight />
-            </button>
-            <h1 className={styles.title}>
-               {currentExercise && currentExercise.exerciseName}
-            </h1>
-         </div>
+         <button
+            className={styles.openExerciseModalBtn}
+            onClick={handleOpenExerciseModal}
+         >
+            <FaChevronRight />
+         </button>
+         <h1 className={styles.title}>
+            {currentExercise && currentExercise.exerciseName}
+         </h1>
          <Seperator />
          <SetsTable />
          <div className={styles.setOptionBtnsWrapper}>

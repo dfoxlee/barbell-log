@@ -2,7 +2,7 @@
    display: flex;
    justify-content: center;
    align-items: center;
-   margin-top: 10px;
+   margin-top: 20px;
 }
 
 .container > *:not(:first-child) {
@@ -60,10 +60,11 @@
    font-size: 0.75rem;
    color: var(--secondary);
    margin: 0 5px;
-   width: 30px;
+   width: 40px;
    aspect-ratio: 1 / 1;
    text-align: center;
    border-radius: 1000px;
+   font-size: 1rem;
 }
 
 .weightIncrementBtn {

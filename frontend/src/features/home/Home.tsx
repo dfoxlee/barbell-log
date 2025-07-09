@@ -5,7 +5,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { fetchGetWeeklyCompletedWorkouts } from "../../services/completedWorkoutServices";
 import toastify from "../../utils/toastify";
 import Loading from "../shared/Loading";
-import WorkoutsCount from "./components/WorkoutsCount";
+import Workout from "./components/Workout";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -17,16 +17,17 @@ export default function Home() {
    const { user } = useAuthContext();
 
    useEffect(() => {
+      const getWorkouts = async () => {
+         const workoutsRequest = await fetchGetWeeklyCompletedWorkouts({
+            token: user?.token,
+         });
+
+         setWorkoutsBreakdown(workoutsRequest);
+      };
+
       try {
-         const getWorkouts = async () => {
-            const workoutsRequest = await fetchGetWeeklyCompletedWorkouts({
-               token: user?.token,
-            });
-
-            setWorkoutsBreakdown(workoutsRequest);
-         };
-
          setIsLoading(true);
+
          getWorkouts();
       } catch (error) {
          console.error(error);
@@ -39,6 +40,15 @@ export default function Home() {
          setIsLoading(false);
       }
    }, [user?.token]);
+
+   const removeWorkout = ({ workoutId }) => {
+      setWorkoutsBreakdown((prev) => ({
+         recentWorkouts: prev.recentWorkouts,
+         workouts: prev.workouts.filter(
+            (workout) => workout.workoutId !== workoutId
+         ),
+      }));
+   };
 
    if (isLoading) {
       return <Loading />;
@@ -67,7 +77,13 @@ export default function Home() {
                      Create Workout
                   </Link>
                </div>
-               <WorkoutsCount workouts={workoutsBreakdown.workouts} />
+               {workoutsBreakdown.workouts.map((workout) => (
+                  <Workout
+                     key={workout.workoutId}
+                     workout={workout}
+                     removeWorkout={removeWorkout}
+                  />
+               ))}
             </>
          )}
       </div>

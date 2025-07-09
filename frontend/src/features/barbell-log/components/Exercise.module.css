@@ -2,7 +2,7 @@
    display: flex;
    align-items: center;
    width: 90%;
-   margin: 20px auto 0;
+   margin: 30px auto 0;
    border: 1px solid;
    padding: 10px;
    border-radius: 5px;
@@ -15,6 +15,7 @@
    border-style: none;
    color: var(--primary);
    cursor: grab;
+   font-size: 1.25rem;
 }
 
 .reorderBtn:active {
@@ -22,12 +23,12 @@
 }
 
 .exerciseName {
-   font-size: 1rem;
+   font-size: 1.25rem;
    color: white;
 }
 
 .completedSets {
-   font-size: 0.75rem;
+   font-size: 0.875rem;
    margin-top: 5px;
    color: white;
 }
@@ -41,4 +42,5 @@
    background: none;
    border-style: none;
    color: var(--primary);
+   font-size: 1.25rem;
 }

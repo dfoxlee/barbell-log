@@ -1,4 +1,8 @@
 import type { WorkoutCompositionStateType } from "../types/types";
+const baseUrl =
+   import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
+      ? import.meta.env.VITE_PRODUCTION_URL
+      : import.meta.env.VITE_DEVELOPMENT_URL;
 
 const fetchCreateWorkout = async ({
    workout,
@@ -7,7 +11,7 @@ const fetchCreateWorkout = async ({
    workout: WorkoutCompositionStateType;
    token: string;
 }) => {
-   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/create", {
+   const req = await fetch(`${baseUrl}/workouts/create`, {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -30,7 +34,7 @@ const fetchUpdateWorkout = async ({
    token: string;
    workoutId: string;
 }) => {
-   const req = await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/update`, {
+   const req = await fetch(`${baseUrl}/workouts/update`, {
       method: "PUT",
       headers: {
          "Content-Type": "application/json",
@@ -45,7 +49,7 @@ const fetchUpdateWorkout = async ({
 };
 
 const fetchGetWorkouts = async ({ token }: { token: string }) => {
-   const req = await fetch("https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts", {
+   const req = await fetch(`${baseUrl}/workouts`, {
       method: "GET",
       headers: {
          "Content-Type": "application/json",
@@ -59,16 +63,13 @@ const fetchGetWorkouts = async ({ token }: { token: string }) => {
 };
 
 const fetchGetWorkout = async ({ token, workoutId }) => {
-   const req = await fetch(
-      `https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/${workoutId}`,
-      {
-         method: "GET",
-         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-         },
-      }
-   );
+   const req = await fetch(`${baseUrl}/workouts/${workoutId}`, {
+      method: "GET",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
 
    const res = await req.json();
 
@@ -76,7 +77,7 @@ const fetchGetWorkout = async ({ token, workoutId }) => {
 };
 
 const fetchDeleteWorkout = async ({ token, workoutId }) => {
-   await fetch(`https://barbell-log-69l97.ondigitalocean.app/api/v1/workouts/${workoutId}`, {
+   return await fetch(`${baseUrl}/workouts/${workoutId}`, {
       method: "DELETE",
       headers: {
          "Content-Type": "application/json",

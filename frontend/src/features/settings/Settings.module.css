@@ -1,3 +1,9 @@
+.container {
+   width: 90vw;
+   max-width: 600px;
+   margin: 0 auto;
+}
+
 .title {
    text-align: center;
    font-size: 1.5rem;
@@ -8,17 +14,17 @@
    background: none;
    border: 1px solid;
    color: var(--primary);
-   padding: 1px 10px;
+   padding: 5px 10px;
    border-radius: 5px;
    cursor: pointer;
    display: block;
-   margin: 15px auto 0;
+   margin: 30px auto 0;
 }
 
 .weightPreferenceTitle {
    text-align: center;
-   font-size: 1rem;
-   margin-top: 20px;
+   font-size: 1.25rem;
+   margin-top: 30px;
    font-weight: 500;
 }
 
@@ -26,7 +32,7 @@
    display: flex;
    justify-content: center;
    align-items: center;
-   margin-top: 5px;
+   margin-top: 10px;
 }
 
 .weightUnitBtn {

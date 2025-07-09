@@ -17,17 +17,19 @@
    width: 90vw;
    max-width: 300px;
    margin-top: 3px;
+   font-size: 1.25rem;
+   padding: 5px;
 }
 
 .changeAuthWrapper {
    text-align: center;
    padding: 0 15px;
-   margin-top: 5px;
+   margin-top: 10px;
 }
 
 .changeAuthText {
    color: white;
-   font-size: 0.75rem;
+   font-size: 0.875rem;
 }
 
 .changeAuthLink {
@@ -35,15 +37,16 @@
    /* text-decoration: none; */
    text-underline-offset: 5px;
    margin-left: 8px;
-   font-size: 0.875rem;
+   font-size: 1rem;
 }
 
 .authSubmitBtn {
    background: none;
    color: var(--primary);
    border: 1px solid;
-   padding: 3px 8px;
+   padding: 5px 10px;
    border-radius: 5px;
    margin: 30px auto;
    display: block;
+   font-size: 1.25rem;
 }

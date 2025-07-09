@@ -15,7 +15,7 @@ export default function Landing() {
    }, [token, navigate]);
 
    return (
-      <div>
+      <div className={styles.container}>
          <div className={styles.heroWrapper}>
             <div className={styles.heroTextWrapper}>
                <h1 className={styles.heroTitle}>Barbell Log</h1>
@@ -32,6 +32,8 @@ export default function Landing() {
                   </Link>
                </div>
             </div>
+         </div>
+         <div className={styles.showcaseWrapper}>
          </div>
       </div>
    );

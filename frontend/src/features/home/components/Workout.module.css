@@ -1,7 +1,7 @@
-.workoutWrapper {
+.container {
+   margin-top: 30px;
    display: flex;
    align-items: center;
-   margin-top: 20px;
    border-radius: 5px;
 }
 
@@ -10,7 +10,11 @@
 }
 
 .workoutCountInfo {
-   font-size: 0.75rem;
+   font-size: 0.875rem;
+}
+
+.workoutName {
+   font-size: 1.25rem;
 }
 
 .optionsWrapper {
@@ -20,11 +24,18 @@
 }
 
 .optionsWrapper > *:not(:first-child) {
-   margin-left: 10px;
+   margin-left: 20px;
 }
 
 .optionLink {
-   font-size: 1.25rem;
+   font-size: 1.5rem;
    color: var(--primary);
    text-decoration: none;
+}
+
+.deleteWorkoutBtn {
+   background: none;
+   border-style: none;
+   color: var(--warning);
+   font-size: 1.25rem;
 }

@@ -11,11 +11,13 @@
    background: none;
    border-style: none;
    color: var(--primary);
-   margin-top: 5px;
+   margin-top: 15px;
+
 }
 
 .workoutName {
    text-align: center;
+   margin-top: 30px;
 }
 
 .backBtn > *:not(:first-child) {

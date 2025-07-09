@@ -1,9 +1,9 @@
 import { FaGripVertical, FaStepForward } from "react-icons/fa";
 import { useBarbellLogContext } from "../../../hooks/useBarbellLogContext";
 import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
 
 import styles from "./Exercise.module.css";
-import { useSortable } from "@dnd-kit/sortable";
 
 export default function Exercise({ exercise, closeExerciseModal, id }) {
    const { barbellLogState, barbellLogDispatch } = useBarbellLogContext();

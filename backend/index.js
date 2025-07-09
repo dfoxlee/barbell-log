@@ -18,11 +18,15 @@ const completedWorkoutRouter = require("./routes/completedWorkoutsRoutes");
 
 require("dotenv").config();
 
+
 const app = express();
 
-const corsOptions = {
+const corsOptions =
+process.env.ENVIRONMENT === "PRODUCTION"
+? {
    origin: "https://barbell-log.com",
-};
+}
+: null;
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

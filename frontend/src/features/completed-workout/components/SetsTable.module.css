@@ -33,15 +33,18 @@
 
 .completedCheck {
    color: var(--primary);
+   font-size: 1.25rem;
 }
 
 .completeBtn {
    display: flex;
    align-items: center;
+   font-size: 1.25rem;
 }
 
 .incompleteCheck {
    color: var(--accent);
+   font-size: 1.25rem;
 }
 
 .tableHeader {
