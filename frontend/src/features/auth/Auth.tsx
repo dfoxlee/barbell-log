@@ -17,7 +17,7 @@ export default function Auth() {
    }, [params]);
 
    return (
-      <div>
+      <div className={styles.container}>
          <Link to="/" className={styles.authTitleLink}>
             Barbell Log
          </Link>

@@ -93,8 +93,8 @@ export default function Workouts() {
 
    return (
       <div className={styles.container}>
-         <h2 className={styles.sectionTitle}>Workout Scoreboard</h2>
-         {completedWorkouts.workouts && <Bar options={options} data={data} />}
+         {/* <h2 className={styles.sectionTitle}>Workout Scoreboard</h2>
+         {completedWorkouts.workouts && <Bar options={options} data={data} />} */}
          <h2 className={styles.sectionTitle}>Recent Workouts</h2>
          {isLoading ? (
             <Loading />

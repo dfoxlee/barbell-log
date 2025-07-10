@@ -134,7 +134,7 @@ export default function CurrentSet() {
             <input
                className={styles.repsInput}
                type="number"
-               inputMode="numeric"
+               inputMode="decimal"
                value={currentSet.completedReps}
                onChange={handleRepsChange}
             />
@@ -166,7 +166,7 @@ export default function CurrentSet() {
             <input
                className={styles.weightInput}
                type="number"
-               inputMode="numeric"
+               inputMode="decimal"
                value={currentSet.completedWeight}
                onChange={handleWeightChange}
             />
