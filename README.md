@@ -60,26 +60,6 @@ Licensed under the MIT License.
 
 ## 8. Future Enhancements
 
-**Overall**
-- Increate sizes
-
-**Landing**
-- Finish landing page
-
-**Auth**
-- Increase margin
-- Set max width for seperator
-
-**Layout**
-- Remove Workouts page and just have workouts on main page
-
-**Home**
-- Increase create workout button size
-- Add loader for workouts
-
-**Workout Composition**
-- Add touch sensors for dnd on reorder exercises
-
-**Barbell Log**
-- Change btn text colors that blue
-- Add touch sensor sfor dnd on reorder exercises
+**Workout History**
+- Remove scoreboard for now
+- When a completed workout is deleted the workout needs deleted from compelted workouts
