@@ -134,7 +134,7 @@ export default function CurrentSet() {
             <input
                className={styles.repsInput}
                type="number"
-               inputMode="decimal"
+               inputMode="numeric"
                value={currentSet.completedReps}
                onChange={handleRepsChange}
             />

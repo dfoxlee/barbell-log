@@ -148,7 +148,7 @@ export default function ExerciseComposition({ exercise }) {
                         <input
                            className={styles.repsInput}
                            type="number"
-                           inputMode="decimal"
+                           inputMode="numeric"
                            value={set.reps}
                            onChange={(event) =>
                               handleRepsInput(set.setOrder, event.target.value)
