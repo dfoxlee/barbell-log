@@ -147,12 +147,13 @@ button {
    color: var(--primary);
    border: 1px solid;
    border-color: var(--primary);
-   padding: 5px 15px;
+   padding: 5px 30px;
    border-radius: 5px;
    display: block;
 }
 
 .standardLink {
+   text-decoration: none;
 }
 
 .standardBtn {

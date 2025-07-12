@@ -42,3 +42,21 @@
    color: var(--primary);
    margin: 0 5px;
 }
+
+.accountOptionsWrapper {
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+   align-items: center;
+   margin-top: 30px;
+}
+
+.accountOptionBtn {
+   margin: 5px;
+}
+
+.deleteAccountBtn {
+   margin: 30px auto 0;
+   color: var(--warning) !important;
+   border-color: var(--warning) !important;
+}

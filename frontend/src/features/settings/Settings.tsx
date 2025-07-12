@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Seperator from "../shared/Seperator";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
-import { useState } from "react";
 import { fetchUpdateWeightPreference } from "../../services/userServices";
 import toastify from "../../utils/toastify";
 
@@ -68,6 +67,17 @@ export default function Settings() {
                <span className={styles.weightUnitLabel}>lb</span>
             </div>
          </div>
+         <div className={styles.accountOptionsWrapper}>
+            <button className={`standardBtn ${styles.accountOptionBtn}`}>
+               Change Email
+            </button>
+            <button className={`standardBtn ${styles.accountOptionBtn}`}>
+               Reset Password
+            </button>
+         </div>
+         <button className={`standardBtn ${styles.deleteAccountBtn}`}>
+            Delete Account
+         </button>
       </div>
    );
 }

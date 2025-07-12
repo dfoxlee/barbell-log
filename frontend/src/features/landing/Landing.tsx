@@ -1,18 +1,112 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import homeScreenImg from "/public/home-screenshot.png";
+import barbellLogScreenImg from "/public/barbell-log-screenshot.png";
+import workoutCompositionScreenImg from "/public/workout-composition-screenshot.png";
+import workoutHistoryScreenImg from "/public/workout-history-screenshot.png";
+import settingsScreenImg from "/public/settings-screenshot.png";
+import { FaArrowDown, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import styles from "./Landing.module.css";
+
+const images = [
+   {
+      id: 0,
+      image: homeScreenImg,
+      alt: "Barbell Log Home Page",
+      description:
+         "The home screen gives you quick actions to get you where you need to go.",
+   },
+   {
+      id: 1,
+      image: workoutCompositionScreenImg,
+      alt: "Barbell Log Workout Composition Page",
+      description: "Create and edit workouts quickly and simply.",
+   },
+   {
+      id: 2,
+      image: barbellLogScreenImg,
+      alt: "Barbell Log Screen",
+      description:
+         "The workout page gives you easy options for entering workouts.",
+   },
+   {
+      id: 2,
+      image: workoutHistoryScreenImg,
+      alt: "Barbell Log Workout History",
+      description:
+         "Review you workouts on the history page where you can also explore growth with exercises.",
+   },
+   {
+      id: 2,
+      image: settingsScreenImg,
+      alt: "Barbell Log Settings",
+      description:
+         "Settings page allows you to manage your account and preferences with ease.",
+   },
+];
+
+const AUTOPLAY_INTERVAL = 8000;
 
 export default function Landing() {
    const { token } = useAuthContext();
    const navigate = useNavigate();
+   const [currentImageId, setCurrentImageId] = useState(0);
+   const intervalRef = useRef<number | null>(null);
+   const timerBarRef = useRef(null);
 
    useEffect(() => {
       if (token) {
          navigate("/home");
       }
    }, [token, navigate]);
+
+   useEffect(() => {
+      const resetProgressBar = () => {
+         if (timerBarRef.current) {
+            timerBarRef.current.style.transition = "none";
+            timerBarRef.current.style.width = "0%";
+            void timerBarRef.current.offsetWidth;
+            timerBarRef.current.style.transition = `width ${AUTOPLAY_INTERVAL}ms linear`;
+            timerBarRef.current.style.width = "100%";
+         }
+      };
+
+      resetProgressBar();
+
+      if (intervalRef.current) {
+         clearInterval(intervalRef.current);
+      }
+
+      intervalRef.current = setInterval(() => {
+         setCurrentImageId((prevId) =>
+            prevId === images.length - 1 ? 0 : prevId + 1
+         );
+      }, AUTOPLAY_INTERVAL);
+
+      return () => {
+         if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+         }
+      };
+   }, [currentImageId]);
+
+   const handleIncrementImage = () => {
+      if (currentImageId === images.length - 1) {
+         return setCurrentImageId(0);
+      }
+
+      setCurrentImageId((prev) => prev + 1);
+   };
+
+   const handleDecrementImage = () => {
+      if (currentImageId === 0) {
+         return setCurrentImageId(images.length - 1);
+      }
+
+      setCurrentImageId((prev) => prev - 1);
+   };
 
    return (
       <div className={styles.container}>
@@ -24,16 +118,88 @@ export default function Landing() {
                   your fingertips.
                </h3>
                <div className={styles.heroLinkWrapper}>
-                  <Link className={styles.heroLoginLink} to="/auth/login">
+                  <Link
+                     className={`standardLink ${styles.heroLoginLink}`}
+                     to="/auth/login"
+                  >
                      Login
                   </Link>
-                  <Link className={styles.heroSignUpLink} to="/auth/sign-up">
+                  <Link
+                     className={`standardLink ${styles.heroSignUpLink}`}
+                     to="/auth/sign-up"
+                  >
                      Sign Up
                   </Link>
+               </div>
+               <div className={styles.learnMoreWrapper}>
+                  <p className={styles.learnMoreText}>Learn More</p>
+                  <FaArrowDown className={styles.learnMoreIcon} />
                </div>
             </div>
          </div>
          <div className={styles.showcaseWrapper}>
+            <div className={styles.navigationWrapper}>
+               <button
+                  className={styles.navigationBtn}
+                  onClick={handleDecrementImage}
+               >
+                  <FaChevronLeft />
+               </button>
+               <div className={styles.timerWrapper}>
+                  <div ref={timerBarRef} className={styles.timerBar}></div>
+               </div>
+               <button
+                  className={styles.navigationBtn}
+                  onClick={handleIncrementImage}
+               >
+                  <FaChevronRight />
+               </button>
+            </div>
+            <div className={styles.contentWrapper}>
+               <img
+                  className={styles.screenshotImg}
+                  src={images[currentImageId].image}
+                  alt={images[currentImageId].alt}
+               />
+               <p className={styles.screenshotDescription}>
+                  {images[currentImageId].description}
+               </p>
+            </div>
+         </div>
+         <div className={styles.programPlanOptions}>
+            <div className={styles.planWrapper}>
+               <div className={styles.titleWrapper}>
+                  <h3 className={styles.planTitle}>Bronze</h3>
+                  <h5 className={styles.pricingSubTitle}>FREE</h5>
+                  <p className={styles.planDescription}>
+                     Free doesn't mean worthless with us. Create up to 3
+                     workouts with up to 10 exercises each.
+                  </p>
+               </div>
+               <button className={`standardBtn`}>Try Bronze</button>
+            </div>
+            <div className={styles.planWrapper}>
+               <div className={styles.titleWrapper}>
+                  <h3 className={styles.planTitle}>Silver</h3>
+                  <h5 className={styles.pricingSubTitle}>$5 / month</h5>
+                  <p className={styles.planDescription}>
+                     Step up your workouts. Create 10 workouts with up to 20
+                     workouts each
+                  </p>
+               </div>
+               <button className={`standardBtn`}>Try Silver</button>
+            </div>
+            <div className={styles.planWrapper}>
+               <div className={styles.titleWrapper}>
+                  <h3 className={styles.planTitle}>Gold</h3>
+                  <h5 className={styles.pricingSubTitle}>$15 / month</h5>
+                  <p className={styles.planDescription}>
+                     Our most inclusive plan. Get up to 50 workouts with up to
+                     30 exercises each.
+                  </p>
+               </div>
+               <button className={`standardBtn`}>Try Gold</button>
+            </div>
          </div>
       </div>
    );
