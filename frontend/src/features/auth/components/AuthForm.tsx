@@ -153,7 +153,7 @@ export default function AuthForm({ authTitle }) {
                </>
             )}
          </p>
-         <button className={styles.authSubmitBtn} type="submit">
+         <button className={`standardBtn ${styles.submitBtn}`} type="submit">
             {authTitle}
          </button>
       </form>

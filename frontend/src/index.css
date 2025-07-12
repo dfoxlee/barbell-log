@@ -130,10 +130,40 @@ button {
    display: block;
    background: none;
    color: white;
-   padding: 3px 5px;
+   padding: 5px 10px;
    border-style: none;
    border: 1px solid;
+   border-color: white;
    min-width: 0;
    appearance: textfield;
    border-radius: 5px;
+   font-size: 1.25rem;
+}
+
+.standardLink,
+.standardBtn {
+   font-size: 1.25rem;
+   background: none;
+   color: var(--primary);
+   border: 1px solid;
+   border-color: var(--primary);
+   padding: 5px 15px;
+   border-radius: 5px;
+   display: block;
+}
+
+.standardLink {
+}
+
+.standardBtn {
+   cursor: pointer;
+   font-size: 1.25rem;
+}
+
+.standardIconBtn {
+
+}
+
+.standardIconLink {
+
 }
