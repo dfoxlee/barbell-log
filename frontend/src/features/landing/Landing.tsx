@@ -7,6 +7,7 @@ import workoutCompositionScreenImg from "/public/workout-composition-screenshot.
 import workoutHistoryScreenImg from "/public/workout-history-screenshot.png";
 import settingsScreenImg from "/public/settings-screenshot.png";
 import { FaArrowDown, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Seperator from "../shared/Seperator";
 
 import styles from "./Landing.module.css";
 
@@ -167,38 +168,41 @@ export default function Landing() {
             </div>
          </div>
          <div className={styles.programPlanOptions}>
-            <div className={styles.planWrapper}>
-               <div className={styles.titleWrapper}>
-                  <h3 className={styles.planTitle}>Bronze</h3>
-                  <h5 className={styles.pricingSubTitle}>FREE</h5>
-                  <p className={styles.planDescription}>
-                     Free doesn't mean worthless with us. Create up to 3
-                     workouts with up to 10 exercises each.
-                  </p>
-               </div>
-               <button className={`standardBtn`}>Try Bronze</button>
+            <div className={styles.titleWrapper}>
+               <h3 className={styles.plansTitle}>Workout Plans</h3>
+               <Seperator />
             </div>
-            <div className={styles.planWrapper}>
-               <div className={styles.titleWrapper}>
-                  <h3 className={styles.planTitle}>Silver</h3>
-                  <h5 className={styles.pricingSubTitle}>$5 / month</h5>
-                  <p className={styles.planDescription}>
-                     Step up your workouts. Create 10 workouts with up to 20
-                     workouts each
-                  </p>
+            <div className={styles.plansWrapper}>
+               <div className={styles.planWrapper}>
+                  <div className={styles.titleWrapper}>
+                     <h3 className={styles.planTitle}>Bronze</h3>
+                     <h5 className={styles.pricingSubTitle}>FREE</h5>
+                     <p className={styles.planDescription}>3 Workouts</p>
+                     <p>10 Exercises / Workout</p>
+                     <p>5 Sets / Exercise</p>
+                  </div>
+                  <button className={`standardBtn`}>Try Bronze</button>
                </div>
-               <button className={`standardBtn`}>Try Silver</button>
-            </div>
-            <div className={styles.planWrapper}>
-               <div className={styles.titleWrapper}>
-                  <h3 className={styles.planTitle}>Gold</h3>
-                  <h5 className={styles.pricingSubTitle}>$15 / month</h5>
-                  <p className={styles.planDescription}>
-                     Our most inclusive plan. Get up to 50 workouts with up to
-                     30 exercises each.
-                  </p>
+               <div className={styles.planWrapper}>
+                  <div className={styles.titleWrapper}>
+                     <h3 className={styles.planTitle}>Silver</h3>
+                     <h5 className={styles.pricingSubTitle}>$5 / month</h5>
+                     <p className={styles.planDescription}>10 Workouts</p>
+                     <p>10 Exercises / Workout</p>
+                     <p>10 Sets / Exercise</p>
+                  </div>
+                  <button className={`standardBtn`}>Try Silver</button>
                </div>
-               <button className={`standardBtn`}>Try Gold</button>
+               <div className={styles.planWrapper}>
+                  <div className={styles.titleWrapper}>
+                     <h3 className={styles.planTitle}>Gold</h3>
+                     <h5 className={styles.pricingSubTitle}>$15 / month</h5>
+                     <p className={styles.planDescription}>50 Workouts</p>
+                     <p>20 Exercises / Workout</p>
+                     <p>15 Sets / Exercise</p>
+                  </div>
+                  <button className={`standardBtn`}>Try Gold</button>
+               </div>
             </div>
          </div>
       </div>

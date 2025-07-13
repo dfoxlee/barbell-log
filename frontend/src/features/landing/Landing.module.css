@@ -150,7 +150,20 @@
    }
 }
 
-.programPlanOptions {
+.titleWrapper {
+   max-width: 600px;
+   margin: 0 auto;
+   text-align: center;
+}
+
+.plansTitle {
+   text-align: center;
+   font-size: 2rem;
+   font-weight: 500;
+   margin-top: 30px;
+}
+
+.plansWrapper {
    display: flex;
    align-items: start;
    justify-content: center;
