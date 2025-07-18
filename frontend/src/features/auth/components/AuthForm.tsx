@@ -1,39 +1,43 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import { fetchLogin, fetchSignUp } from "../../../services/userServices";
 import toastify from "../../../utils/toastify";
 
 import styles from "./AuthForm.module.css";
+import { useUserStore } from "../../../stores/userStore";
 
-export default function AuthForm({ authTitle }) {
+export default function AuthForm({ authTitle }: { authTitle: string }) {
    const [emailInput, setEmailInput] = useState("");
    const [passwordInput, setPasswordInput] = useState("");
    const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
-   const { updateUser } = useAuthContext();
+   const { user, login, signUp, authError } = useUserStore();
    const navigate = useNavigate();
 
-   const handleEmailChange = (e) => {
+   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmailInput(e.target.value);
    };
 
-   const handlePasswordChange = (e) => {
+   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setPasswordInput(e.target.value);
    };
 
-   const handleConfirmPasswordChange = (e) => {
+   const handleConfirmPasswordChange = (
+      e: React.ChangeEvent<HTMLInputElement>
+   ) => {
       setConfirmPasswordInput(e.target.value);
    };
 
-   const handleFormSubmit = async (e) => {
+   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
+      if (emailInput === "" || passwordInput === "") {
+         return toastify({
+            message: "All fields are required.",
+            type: "warn",
+         });
+      }
+
       if (authTitle === "Sign Up") {
-         if (
-            passwordInput === "" ||
-            emailInput === "" ||
-            confirmPasswordInput === ""
-         ) {
+         if (confirmPasswordInput === "") {
             return toastify({
                message: "All fields are required.",
                type: "warn",
@@ -46,45 +50,23 @@ export default function AuthForm({ authTitle }) {
                type: "warn",
             });
          }
+      }
 
-         try {
-            const signUpRequest = await fetchSignUp({
-               email: emailInput,
-               password: passwordInput,
-            });
-
-            updateUser(signUpRequest);
-
-            return navigate("/home");
-         } catch (error) {
-            return toastify({
-               message: error.message,
-               type: "error",
-            });
-         }
+      if (authTitle === "Sign Up") {
+         await signUp({ email: emailInput, password: passwordInput });
       } else {
-         if (passwordInput === "" || emailInput === "") {
-            return toastify({
-               message: "All fields required.",
-               type: "warn",
-            });
-         }
+         await login({ email: emailInput, password: passwordInput });
+      }
 
-         try {
-            const loginRequest = await fetchLogin({
-               email: emailInput,
-               password: passwordInput,
-            });
+      if (authError) {
+         return toastify({
+            message: authError,
+            type: "error",
+         });
+      }
 
-            updateUser(loginRequest);
-
-            return navigate("/home");
-         } catch (error) {
-            return toastify({
-               message: error.message,
-               type: "error",
-            });
-         }
+      if (user?.token) {
+         navigate("/home");
       }
    };
 

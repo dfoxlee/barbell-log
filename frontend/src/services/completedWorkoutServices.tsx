@@ -1,9 +1,18 @@
+import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
+import type { WorkoutType } from "../types/workoutTypes";
+
 const baseUrl =
    import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
       ? import.meta.env.VITE_PRODUCTION_URL
       : import.meta.env.VITE_DEVELOPMENT_URL;
 
-const fetchCreateCompletedWorkout = async ({ workout, token }) => {
+export const fetchCreateCompletedWorkout = async ({
+   workout,
+   token,
+}: {
+   workout: WorkoutType;
+   token: string;
+}) => {
    const req = await fetch(`${baseUrl}/completed-workouts/create`, {
       method: "POST",
       headers: {
@@ -18,7 +27,13 @@ const fetchCreateCompletedWorkout = async ({ workout, token }) => {
    return res;
 };
 
-const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
+export const fetchGetCompletedWorkout = async ({
+   token,
+   completedWorkoutId,
+}: {
+   token: string;
+   completedWorkoutId: string;
+}) => {
    const fetchCompletedworkoutRequest = await fetch(
       `${baseUrl}/completed-workouts/${completedWorkoutId}`,
       {
@@ -35,7 +50,11 @@ const fetchGetCompletedWorkout = async ({ token, completedWorkoutId }) => {
    return data;
 };
 
-const fetchGetCompletedWorkouts = async ({ token }) => {
+export const fetchGetCompletedWorkouts = async ({
+   token,
+}: {
+   token: string;
+}) => {
    const req = await fetch(`${baseUrl}/completed-workouts`, {
       method: "GET",
       headers: {
@@ -49,7 +68,11 @@ const fetchGetCompletedWorkouts = async ({ token }) => {
    return res;
 };
 
-const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
+export const fetchGetWeeklyCompletedWorkouts = async ({
+   token,
+}: {
+   token: string;
+}) => {
    const req = await fetch(`${baseUrl}/completed-workouts/weekly-breakdown`, {
       method: "GET",
       headers: {
@@ -63,7 +86,13 @@ const fetchGetWeeklyCompletedWorkouts = async ({ token }) => {
    return res;
 };
 
-const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
+export const fetchUpdateCompletedWorkout = async ({
+   token,
+   completedWorkout,
+}: {
+   token: string;
+   completedWorkout: CompletedWorkoutType;
+}) => {
    const req = await fetch(`${baseUrl}/completed-workouts/update`, {
       method: "PUT",
       headers: {
@@ -78,7 +107,13 @@ const fetchUpdateCompletedWorkout = async ({ token, completedWorkout }) => {
    return res;
 };
 
-const fetchDeleteCompeletedWorkout = async ({ token, completedWorkoutId }) => {
+export const fetchDeleteCompeletedWorkout = async ({
+   token,
+   completedWorkoutId,
+}: {
+   token: string;
+   completedWorkoutId: string;
+}) => {
    const req = await fetch(`${baseUrl}/completed-workouts`, {
       method: "DELETE",
       headers: {
@@ -91,13 +126,4 @@ const fetchDeleteCompeletedWorkout = async ({ token, completedWorkoutId }) => {
    const res = await req.json();
 
    return res;
-};
-
-export {
-   fetchCreateCompletedWorkout,
-   fetchGetCompletedWorkouts,
-   fetchGetCompletedWorkout,
-   fetchGetWeeklyCompletedWorkouts,
-   fetchUpdateCompletedWorkout,
-   fetchDeleteCompeletedWorkout,
 };

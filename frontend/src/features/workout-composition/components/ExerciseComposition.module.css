@@ -11,6 +11,18 @@
    align-items: center;
 }
 
+.exerciseNameInputWrapper {
+   display: flex;
+   align-items: center;
+}
+
+.changeExerciseBtn {
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   font-size: 2rem;
+}
+
 .exerciseNameInput {
    width: 80%;
    color: white;
@@ -31,9 +43,8 @@
 }
 
 .tableWrapper {
-   width: 90vw;
-   max-width: 300px;
-   margin-top: 10px;
+   width: 100%;
+   margin-top: 30px;
 }
 
 td,
@@ -124,4 +135,23 @@ th {
    height: 1px;
    background-color: white;
    margin-top: 10px;
+}
+
+.optionsWrapper {
+   display: flex;
+   align-items: center;
+}
+
+.toggleBtnWrapper {
+   display: flex;
+   align-items: center;
+}
+
+.toggleBtn {
+   color: var(--primary);
+}
+
+.toggleSetOptionText {
+   font-size: 0.875rem;
+   font-size: 500;
 }

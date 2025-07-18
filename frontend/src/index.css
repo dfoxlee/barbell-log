@@ -126,6 +126,12 @@ button {
    cursor: pointer;
 }
 
+.pageTitle {
+   font-size: 1.5rem;
+   text-align: center;
+   font-weight: 600;
+}
+
 .standardInput {
    display: block;
    background: none;
@@ -140,6 +146,10 @@ button {
    font-size: 1.25rem;
 }
 
+.linkWrapper {
+   text-align: center;
+}
+
 .standardLink,
 .standardBtn {
    font-size: 1.25rem;
@@ -149,10 +159,15 @@ button {
    border-color: var(--primary);
    padding: 5px 30px;
    border-radius: 5px;
+   text-align: center;
+}
+
+.standardBtn {
    display: block;
 }
 
 .standardLink {
+   display: inline-block;
    text-decoration: none;
 }
 
@@ -162,9 +177,10 @@ button {
 }
 
 .standardIconBtn {
-
+   background: none;
+   border-style: none;
+   font-size: 1.5rem;
 }
 
 .standardIconLink {
-
 }

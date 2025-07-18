@@ -1,56 +1,37 @@
-import { useEffect, useState } from "react";
-import Seperator from "../shared/Seperator";
-import styles from "./Home.module.css";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { fetchGetWeeklyCompletedWorkouts } from "../../services/completedWorkoutServices";
-import toastify from "../../utils/toastify";
-import Loading from "../shared/Loading";
-import Workout from "./components/Workout";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Seperator from "../shared/Seperator";
+
+import { useUserStore } from "../../stores/userStore";
+import { useWorkoutsStore } from "../../stores/workoutsStore";
+import toastify from "../../utils/toastify";
+
+import Loading from "../shared/Loading";
+import Workouts from "./components/Workouts";
+
+import styles from "./Home.module.css";
 
 export default function Home() {
-   const [workoutsBreakdown, setWorkoutsBreakdown] = useState({
-      recentWorkouts: [],
-      workouts: [],
-   });
-   const [isLoading, setIsLoading] = useState(false);
-   const { user } = useAuthContext();
+   const workouts = useWorkoutsStore((state) => state.workouts);
+   const getWorkouts = useWorkoutsStore((state) => state.getWorkouts);
+   const workoutsLoading = useWorkoutsStore((state) => state.workoutsLoading);
+   const workoutsError = useWorkoutsStore((state) => state.workoutsError);
+   const { user } = useUserStore();
 
    useEffect(() => {
-      const getWorkouts = async () => {
-         const workoutsRequest = await fetchGetWeeklyCompletedWorkouts({
-            token: user?.token,
-         });
+      if (!workoutsLoading && !workoutsError && user?.token) {
+         getWorkouts(user.token);
+      }
 
-         setWorkoutsBreakdown(workoutsRequest);
-      };
-
-      try {
-         setIsLoading(true);
-
-         getWorkouts();
-      } catch (error) {
-         console.error(error);
-
+      if (workoutsError) {
          toastify({
-            message: "Something went wrong. Please try again later.",
+            message: "Something went wrong getting workouts. Try again later.",
             type: "error",
          });
-      } finally {
-         setIsLoading(false);
       }
-   }, [user?.token]);
+   }, [user?.token, workoutsError]);
 
-   const removeWorkout = ({ workoutId }) => {
-      setWorkoutsBreakdown((prev) => ({
-         recentWorkouts: prev.recentWorkouts,
-         workouts: prev.workouts.filter(
-            (workout) => workout.workoutId !== workoutId
-         ),
-      }));
-   };
-
-   if (isLoading) {
+   if (workoutsLoading) {
       return <Loading />;
    }
 
@@ -58,33 +39,17 @@ export default function Home() {
       <div className={styles.container}>
          <h1 className={styles.title}>Barbell Log</h1>
          <Seperator />
-         {!workoutsBreakdown.workouts.length ? (
-            <div className={styles.createWorkoutWrapper}>
+         {!workouts.length ? (
+            <div className={`linkWrapper`}>
                <Link
-                  to="/home/workout-composition/create"
-                  className={styles.createWorkoutLink}
+                  className={`standardLink ${styles.createWorkoutLink}`}
+                  to="/home/workout-composition"
                >
                   Create Workout
                </Link>
             </div>
          ) : (
-            <>
-               <div className={styles.createWorkoutWrapper}>
-                  <Link
-                     to="/home/workout-composition/create"
-                     className={styles.createWorkoutLink}
-                  >
-                     Create Workout
-                  </Link>
-               </div>
-               {workoutsBreakdown.workouts.map((workout) => (
-                  <Workout
-                     key={workout.workoutId}
-                     workout={workout}
-                     removeWorkout={removeWorkout}
-                  />
-               ))}
-            </>
+            <Workouts />
          )}
       </div>
    );

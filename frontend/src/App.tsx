@@ -10,6 +10,7 @@ import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import WorkoutHistory from "./features/workout-history/WorkoutHistory";
 import CompletedWorkout from "./features/completed-workout/CompletedWorkout";
+import Measurements from "./features/measurements/Measurements";
 
 function App() {
    return (
@@ -20,13 +21,14 @@ function App() {
             <Route index element={<Home />} />
             <Route path="workouts" element={<Workouts />} />
             <Route
-               path="workout-composition/:composition-type/:workout-id?"
+               path="workout-composition/:workout-id?"
                element={<WorkoutComposition />}
             />
             <Route
                path="barbell-log/:workout-id/:completed-workout-id?"
                element={<BarbellLog />}
             />
+            <Route path="measurements" element={<Measurements />} />
             <Route path="workout-history" element={<WorkoutHistory />} />
             <Route
                path="completed-workout/:completed-workout-id"

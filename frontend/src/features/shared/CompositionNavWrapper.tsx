@@ -1,66 +1,59 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useWorkoutCompositionContext } from "../../hooks/useWorkoutCompositionContext";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import {
-   fetchCreateWorkout,
-   fetchUpdateWorkout,
-} from "../../services/workoutServices";
+import { useUserStore } from "../../stores/userStore";
 
 import styles from "./Navbar.module.css";
 
 export default function CompositionNavWrapper() {
    const navigate = useNavigate();
-   const { workoutCompositionState, workoutCompositionDispatch } =
-      useWorkoutCompositionContext();
-   const { user } = useAuthContext();
+   const user = useUserStore((state) => state.user);
    const params = useParams();
-   const compositionType = params["composition-type"];
+   const workoutId = params["workout-id"];
 
    const handleCancelClick = () => {
-      workoutCompositionDispatch({
-         type: "RESET-WORKOUT",
-      });
-
       navigate(-1);
    };
 
    const handleSaveClick = async () => {
-      try {
-         const workout = workoutCompositionState;
-         if (compositionType === "create") {
-            const createWorkoutRequest = await fetchCreateWorkout({
-               workout,
-               token: user.token,
-            });
+      navigate(-1);
+      // try {
+      //    const workout = workoutCompositionState;
 
-            if (createWorkoutRequest.error) {
-               console.error(createWorkoutRequest);
-               return alert("Something went wrong. Try again later.");
-            }
-         }
+      //    if (workoutId) {
+      //       const createWorkoutRequest = await fetchCreateWorkout({
+      //          workout,
+      //          token: user.token,
+      //       });
 
-         if (compositionType === "edit") {
-            const updateWorkoutRequest = await fetchUpdateWorkout({
-               workout,
-               token: user.token,
-            });
+      //       if (createWorkoutRequest.error) {
+      //          console.error(createWorkoutRequest);
+      //          return alert("Something went wrong. Try again later.");
+      //       }
+      //    }
 
-            if (updateWorkoutRequest.error) {
-               console.error(updateWorkoutRequest);
-               return alert("Something went wrong. Try again later.");
-            }
-         }
+      //    if (workoutId) {
+      //       const updateWorkoutRequest = await fetchUpdateWorkout({
+      //          workout,
+      //          token: user.token,
+      //       });
 
-         workoutCompositionDispatch({
-            type: "RESET-WORKOUT",
-         });
+      //       if (updateWorkoutRequest.error) {
+      //          console.error(updateWorkoutRequest);
+      //          return alert("Something went wrong. Try again later.");
+      //       }
+      //    }
 
-         return navigate(-1);
-      } catch (error) {
-         console.error(error);
-         return alert("Something went wrong. Try again later.");
-      }
+      //    workoutCompositionDispatch({
+      //       type: "RESET-WORKOUT",
+      //    });
+
+      //    return navigate(-1);
+      // } catch (error) {
+      //    console.error(error);
+      //    return alert("Something went wrong. Try again later.");
+      // }
    };
+
+   console.log(workoutId);
 
    return (
       <nav className={styles.wrapper}>
@@ -68,7 +61,7 @@ export default function CompositionNavWrapper() {
             Cancel
          </button>
          <button className={styles.saveBtn} onClick={handleSaveClick}>
-            {compositionType === "create" ? "Save" : "Update"}
+            {!workoutId ? "Save" : "Update"}
          </button>
       </nav>
    );

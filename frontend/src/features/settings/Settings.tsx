@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Seperator from "../shared/Seperator";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
-import { fetchUpdateWeightPreference } from "../../services/userServices";
+import { fetchUpdateWeightUnitPreference } from "../../services/userServices";
 import toastify from "../../utils/toastify";
 
 import styles from "./Settings.module.css";
@@ -22,7 +22,7 @@ export default function Settings() {
          user?.weightUnitPreference === "lb" ? "kg" : "lb";
 
       try {
-         await fetchUpdateWeightPreference({
+         await fetchUpdateWeightUnitPreference({
             token: user?.token,
             weightUnitPreference: newWeightPreference,
          });

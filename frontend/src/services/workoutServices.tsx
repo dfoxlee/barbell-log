@@ -1,14 +1,15 @@
-import type { WorkoutCompositionStateType } from "../types/types";
+import type { WorkoutType } from "../types/workoutTypes";
+
 const baseUrl =
    import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
       ? import.meta.env.VITE_PRODUCTION_URL
       : import.meta.env.VITE_DEVELOPMENT_URL;
 
-const fetchCreateWorkout = async ({
+export const fetchCreateWorkout = async ({
    workout,
    token,
 }: {
-   workout: WorkoutCompositionStateType;
+   workout: WorkoutType;
    token: string;
 }) => {
    const req = await fetch(`${baseUrl}/workouts/create`, {
@@ -25,14 +26,12 @@ const fetchCreateWorkout = async ({
    return res;
 };
 
-const fetchUpdateWorkout = async ({
+export const fetchUpdateWorkout = async ({
    workout,
    token,
-   workoutId,
 }: {
-   workout: WorkoutCompositionStateType;
+   workout: WorkoutType;
    token: string;
-   workoutId: string;
 }) => {
    const req = await fetch(`${baseUrl}/workouts/update`, {
       method: "PUT",
@@ -48,7 +47,7 @@ const fetchUpdateWorkout = async ({
    return res;
 };
 
-const fetchGetWorkouts = async ({ token }: { token: string }) => {
+export const fetchGetWorkouts = async ({ token }: { token: string }) => {
    const req = await fetch(`${baseUrl}/workouts`, {
       method: "GET",
       headers: {
@@ -56,13 +55,19 @@ const fetchGetWorkouts = async ({ token }: { token: string }) => {
          Authorization: `Bearer ${token}`,
       },
    });
-
+   
    const res = await req.json();
-
+   
    return res;
 };
 
-const fetchGetWorkout = async ({ token, workoutId }) => {
+export const fetchGetWorkout = async ({
+   token,
+   workoutId,
+}: {
+   token: string;
+   workoutId: string;
+}) => {
    const req = await fetch(`${baseUrl}/workouts/${workoutId}`, {
       method: "GET",
       headers: {
@@ -76,7 +81,13 @@ const fetchGetWorkout = async ({ token, workoutId }) => {
    return res;
 };
 
-const fetchDeleteWorkout = async ({ token, workoutId }) => {
+export const fetchDeleteWorkout = async ({
+   token,
+   workoutId,
+}: {
+   token: string;
+   workoutId: string;
+}) => {
    return await fetch(`${baseUrl}/workouts/${workoutId}`, {
       method: "DELETE",
       headers: {
@@ -84,12 +95,4 @@ const fetchDeleteWorkout = async ({ token, workoutId }) => {
          Authorization: `Bearer ${token}`,
       },
    });
-};
-
-export {
-   fetchCreateWorkout,
-   fetchUpdateWorkout,
-   fetchGetWorkouts,
-   fetchGetWorkout,
-   fetchDeleteWorkout,
 };
