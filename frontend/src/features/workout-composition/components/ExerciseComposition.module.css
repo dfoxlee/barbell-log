@@ -57,18 +57,15 @@ th {
    font-weight: 500;
 }
 
+.skipToSetBtn {
+   color: var(--primary);
+}
+
 .repsInput,
 .weightInput {
-   appearance: textfield;
-   margin: 0 auto;
    text-align: center;
-   background: none;
-   border: 1px solid;
-   border-color: var(--accent);
-   color: white;
-   border-radius: 3px;
-   font-size: 1rem;
-   padding: 3px 5px;
+   font-size: 1.5rem;
+   font-weight: 500;
 }
 
 .repsInput {
@@ -152,6 +149,6 @@ th {
 }
 
 .toggleSetOptionText {
-   font-size: 0.875rem;
-   font-size: 500;
+   font-size: 0.75rem;
+   font-weight: 500;
 }

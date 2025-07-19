@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import type { WorkoutType } from "../types/workoutTypes";
+import type { ExerciseType, WorkoutType } from "../types/workoutTypes";
+import { exercises } from "../enums/constants";
 
 export interface WorkoutCompositionStoreProps {
    workoutComposition: WorkoutType;
@@ -7,10 +8,11 @@ export interface WorkoutCompositionStoreProps {
    workoutCompositionError: string | null;
    currentExerciseViewOrder: number;
    currentExerciseSetViewOrder: number;
+   updateExercise: (updatedExercise: ExerciseType) => void;
 }
 
 export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
-   () => ({
+   (set) => ({
       workoutComposition: {
          workoutName: "",
          exercises: [
@@ -41,5 +43,32 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
       workoutCompositionError: null,
       currentExerciseViewOrder: 1,
       currentExerciseSetViewOrder: 1,
+      updateExercise: (updatedExercise: ExerciseType) => {
+         set(({ workoutComposition }) => {
+            const updatedExercises = [...workoutComposition.exercises];
+
+            const indexOfUpdatedExercise = updatedExercises.findIndex(
+               (exercise) =>
+                  exercise.exerciseOrder === updatedExercise.exerciseOrder
+            );
+
+            if (indexOfUpdatedExercise === -1) {
+               return {
+                  workoutComposition,
+               };
+            }
+
+            updatedExercises.splice(indexOfUpdatedExercise, 1, updatedExercise);
+
+            const updatedWorkoutComposition = {
+               ...workoutComposition,
+               exercises: updatedExercises,
+            };
+
+            return {
+               workoutComposition: updatedWorkoutComposition,
+            };
+         });
+      },
    })
 );
