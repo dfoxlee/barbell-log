@@ -8,9 +8,9 @@ export default function Layout() {
    const navigate = useNavigate();
 
    useEffect(() => {
-      if (!user?.token) {
-         navigate("/auth/login");
-      }
+      // if (!user?.token) {
+      //    navigate("/auth/login");
+      // }
    }, [user, navigate]);
 
    return (

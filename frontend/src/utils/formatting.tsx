@@ -1,25 +1,15 @@
-import { distanceUnits, weightUnits } from "../enums/constants";
+// import { distanceUnits, weightUnits } from "../enums/constants";
+import type { ExerciseSetType } from "../types/workoutTypes";
 
-const rwtdCellFormat = (set) => {
+const rwtdCellFormat = (set: ExerciseSetType) => {
    const reps = set.reps;
-   const isReps = set.isReps;
+   const hasReps = set.hasReps;
    const weight = set.weight;
-   const weightUnit = weightUnits.find(
-      (unit) => unit.id === parseInt(set.weightUnit)
-   )
-      ? weightUnits.find((unit) => unit.id === parseInt(set.weightUnit))?.label
-      : "";
+   const weightUnit = set.weightUnit;
    const isBodyweight = set.isBodyweight;
    const distance = set.distance;
-   const distanceUnit = distanceUnits.find(
-      (unit) => unit.id === parseInt(set.distanceUnit)
-   )
-      ? distanceUnits.find((unit) => unit.id === parseInt(set.distanceUnit))
-           ?.label
-      : "";
+   const distanceUnit = set.distanceUnit;
    const isDistance = set.isDistance;
-   const isBar = set.isBar;
-   const isDumbbell = set.isDumbbell;
    const hr = set.hr;
    const min = set.min;
    const sec = set.sec;
@@ -27,23 +17,15 @@ const rwtdCellFormat = (set) => {
 
    let rwtdText = "";
 
-   if (isReps) {
-      if (isDumbbell) {
-         rwtdText += `${reps} x ${weight} ${weightUnit}/DB`;
-      } else if (isBodyweight) {
+   if (hasReps) {
+      if (isBodyweight) {
          rwtdText += `${reps} x BW`;
-      } else if (isBar) {
-         rwtdText += `${reps} x bar`;
       } else {
          rwtdText += `${reps} x ${weight} ${weightUnit}`;
       }
    } else {
-      if (isDumbbell) {
-         rwtdText += `${weight} ${weightUnit}/DB`;
-      } else if (isBodyweight) {
+      if (isBodyweight) {
          rwtdText += `BW`;
-      } else if (isBar) {
-         rwtdText += `bar`;
       } else {
          rwtdText += `${weight} ${weightUnit}`;
       }

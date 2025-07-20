@@ -162,7 +162,9 @@ button {
 }
 
 .standardBtn {
-   display: block;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .standardLink {
@@ -178,7 +180,7 @@ button {
 .standardIconBtn {
    background: none;
    border-style: none;
-   font-size: 1.5rem;
+   font-size: 1.5;
 }
 
 .standardIconLink {

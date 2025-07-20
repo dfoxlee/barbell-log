@@ -1,0 +1,119 @@
+/* ExerciseSetsGrid */
+
+.exerciseSetsGridWrapper {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   margin-top: 10px;
+}
+
+/* SharedSetRow */
+
+.gridDataCell,
+.gridDoubleHeaderCell,
+.gridHeaderCell {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 5px 0;
+}
+
+.deleteSetBtn {
+   background: none;
+   border-style: none;
+   font-size: 1.25rem;
+   color: var(--warning);
+}
+
+/* ExerciseSetRow */
+
+.exerciseSetRowOptions {
+   display: flex;
+   align-items: center;
+}
+
+.skipToSetBtn {
+   color: var(--primary);
+}
+
+.warmUpIcon {
+   background-color: var(--accent);
+   width: 20px;
+   aspect-ratio: 1 / 1;
+   text-align: center;
+   color: var(--secondary);
+   border-radius: 1000px;
+   font-size: 0.75rem;
+   margin-left: 5px;
+}
+
+/* ExerciseSetEditRow */
+
+.toggleBtn {
+   color: var(--primary);
+   background: none;
+   border-style: none;
+   display: flex;
+   align-items: center;
+   flex: 1 0 auto;
+   min-width: 110px;
+}
+
+.toggleIcon {
+   font-size: 30px;
+}
+
+.toggleSetOptionText {
+   font-size: 0.5rem;
+   font-weight: 500;
+   margin-left: 5px;
+   color: var(--accent);
+}
+
+.setInputsWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.repsWeightWrapper {
+   display: flex;
+   align-items: center;
+}
+
+.timeInputsWrapper {
+   display: flex;
+   align-items: center;
+   margin-top: 10px;
+}
+
+.repsInput,
+.weightInput,
+.timeInput,
+.distanceInput {
+   text-align: center;
+   font-size: 1.5rem;
+   font-weight: 500;
+}
+
+.repsInput,
+.timeInput {
+   width: 50px;
+}
+
+.weightInput,
+.distanceInput {
+   width: 80px;
+}
+
+.repsWeightSeperator {
+   font-size: 1rem;
+   margin: 0 5px;
+}
+
+.timeInputsWrapper > *:not(:first-child) {
+   margin-left: 10px;
+}
+
+.distanceInputsWrapper {
+   margin-top: 10px;
+}

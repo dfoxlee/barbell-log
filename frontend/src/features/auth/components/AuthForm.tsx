@@ -82,6 +82,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
                   type="email"
                   value={emailInput}
                   onChange={handleEmailChange}
+                  inputMode="email"
                />
             </div>
             <div className={styles.inputWrapper}>

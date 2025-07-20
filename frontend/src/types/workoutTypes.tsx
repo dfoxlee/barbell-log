@@ -17,6 +17,7 @@ export interface ExerciseSetType {
    exerciseSetOrder: number;
    isTimed: boolean;
    isDistance: boolean;
+   isBodyweight: boolean;
    isWarmup: boolean;
    hasReps: boolean;
    reps: number;

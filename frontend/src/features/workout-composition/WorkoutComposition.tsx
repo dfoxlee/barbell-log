@@ -23,12 +23,18 @@ export default function WorkoutComposition() {
    const workoutComposition = useWorkoutCompositionStore(
       (state) => state.workoutComposition
    );
+   const updateWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.updateWorkoutComposition
+   );
 
    useEffect(() => {}, [compositionType, user?.token, workoutId]);
 
-   const handleWorkoutNameInput = (event) => {};
-
-   const handleCreateExerciseClick = () => {};
+   const handleWorkoutNameInput = (event) => {
+      updateWorkoutComposition({
+         ...workoutComposition,
+         workoutName: event.target.value,
+      });
+   };
 
    const handleReorderExerciseClick = () => {
       return setIsReorderExercise((prev) => !prev);
@@ -40,12 +46,14 @@ export default function WorkoutComposition() {
             className={styles.workoutNameInput}
             type="text"
             placeholder="workout name..."
+            value={workoutComposition.workoutName}
+            onChange={handleWorkoutNameInput}
          />
          <button
             className={styles.reorderExerciseBtn}
             onClick={handleReorderExerciseClick}
          >
-            {isReorderExercise ? `Break-out Sets` : `Reorder Exercises`}
+            {isReorderExercise ? `Exercise Details` : `Reorder Exercises`}
          </button>
          <Seperator />
          {isReorderExercise ? (
