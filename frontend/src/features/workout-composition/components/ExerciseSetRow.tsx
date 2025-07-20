@@ -1,11 +1,11 @@
 import { FaFastForward, FaTrashAlt } from "react-icons/fa";
 import type { ExerciseSetType } from "../../../types/workoutTypes";
 import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
-
-import styles from "./ExerciseSetsGrid.module.css";
 import { useMemo } from "react";
 import toastify from "../../../utils/toastify";
 import { rwtdCellFormat } from "../../../utils/formatting";
+
+import styles from "./ExerciseSetsGrid.module.css";
 
 export default function ExerciseSetRow({
    exerciseSet,

@@ -7,6 +7,7 @@ export interface WorkoutType {
 
 export interface ExerciseType {
    exerciseId?: string;
+   workoutId?: string;
    exerciseOrder: number;
    exerciseName: string;
    exerciseSets: ExerciseSetType[];
@@ -14,6 +15,7 @@ export interface ExerciseType {
 
 export interface ExerciseSetType {
    exerciseSetId?: string;
+   exerciseId?: string;
    exerciseSetOrder: number;
    isTimed: boolean;
    isDistance: boolean;

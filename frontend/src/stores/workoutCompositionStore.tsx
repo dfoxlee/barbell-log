@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { ExerciseType, WorkoutType } from "../types/workoutTypes";
+import { fetchGetWorkout } from "../services/workoutServices";
 
 export interface WorkoutCompositionStoreProps {
    workoutComposition: WorkoutType;
@@ -7,6 +8,20 @@ export interface WorkoutCompositionStoreProps {
    workoutCompositionError: string | null;
    currentExerciseViewOrder: number;
    currentExerciseSetViewOrder: number;
+   updateUnits: ({
+      weightUnit,
+      distanceUnit,
+   }: {
+      weightUnit: string;
+      distanceUnit: string;
+   }) => void;
+   getWorkoutComposition: ({
+      token,
+      workoutId,
+   }: {
+      token: string;
+      workoutId: string;
+   }) => void;
    updateWorkoutComposition: (updatedWorkoutComposition: WorkoutType) => void;
    updateExercise: (updatedExercise: ExerciseType) => void;
    incrementExerciseViewOrder: () => void;
@@ -17,6 +32,7 @@ export interface WorkoutCompositionStoreProps {
    updateCurrentExerciseViewOrder: (
       updatedCurrentExerciseViewOrder: number
    ) => void;
+   resetWorkoutComposition: () => void;
 }
 
 export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
@@ -52,11 +68,72 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
       workoutCompositionError: null,
       currentExerciseViewOrder: 1,
       currentExerciseSetViewOrder: 1,
+      getWorkoutComposition: async ({
+         token,
+         workoutId,
+      }: {
+         token: string;
+         workoutId: string;
+      }) => {
+         set({
+            workoutCompositionLoading: true,
+            workoutCompositionError: null,
+         });
+
+         try {
+            const request = await fetchGetWorkout({ token, workoutId });
+
+            if (request.error) {
+               return set({ workoutCompositionError: request.message });
+            }
+
+            set({
+               workoutComposition: request,
+            });
+         } catch (error: any) {
+            set({
+               workoutCompositionError:
+                  typeof error === typeof Error
+                     ? error.message
+                     : "Something went wrong getting workout.",
+            });
+         } finally {
+            set({
+               workoutCompositionLoading: false,
+            });
+         }
+      },
+      updateUnits: ({
+         weightUnit,
+         distanceUnit,
+      }: {
+         weightUnit: string;
+         distanceUnit: string;
+      }) => {
+         set(({ workoutComposition }) => {
+            const updatedExercises = workoutComposition.exercises.map(
+               (exercise) => ({
+                  ...exercise,
+                  exerciseSets: exercise.exerciseSets.map((set) => ({
+                     ...set,
+                     weightUnit,
+                     distanceUnit,
+                  })),
+               })
+            );
+
+            return {
+               workoutComposition: {
+                  ...workoutComposition,
+                  exercises: updatedExercises,
+               },
+            };
+         });
+      },
       updateWorkoutComposition: (updatedWorkoutComposition: WorkoutType) => {
          return set({ workoutComposition: updatedWorkoutComposition });
       },
       updateExercise: (updatedExercise: ExerciseType) => {
-         console.log(updatedExercise);
          set(({ workoutComposition }) => {
             const updatedExercises = [...workoutComposition.exercises];
 
@@ -72,8 +149,6 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             }
 
             updatedExercises.splice(indexOfUpdatedExercise, 1, updatedExercise);
-
-            console.log(updatedExercises);
 
             const updatedWorkoutComposition = {
                ...workoutComposition,
@@ -170,5 +245,35 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             currentExerciseViewOrder: updatedCurrentExerciseViewOrder,
          }));
       },
+      resetWorkoutComposition: () =>
+         set({
+            workoutComposition: {
+               workoutName: "",
+               exercises: [
+                  {
+                     exerciseOrder: 1,
+                     exerciseName: "",
+                     exerciseSets: [
+                        {
+                           exerciseSetOrder: 1,
+                           isTimed: false,
+                           isDistance: false,
+                           isWarmup: false,
+                           isBodyweight: false,
+                           hasReps: true,
+                           reps: 0,
+                           weight: 0,
+                           weightUnit: "lb",
+                           hr: 0,
+                           min: 0,
+                           sec: 0,
+                           distance: 0,
+                           distanceUnit: "mi",
+                        },
+                     ],
+                  },
+               ],
+            },
+         }),
    })
 );

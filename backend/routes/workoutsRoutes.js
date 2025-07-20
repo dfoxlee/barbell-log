@@ -35,9 +35,9 @@ workoutsRouter.get("/:workoutId", async (req, res, next) => {
 workoutsRouter.post("/create", async (req, res, next) => {
    try {
       const userId = req.user.user_id;
-      const { workout } = req.body;
+      const { workoutComposition } = req.body;
 
-      await addUserWorkout({ userId, workout });
+      await addUserWorkout({ userId, workoutComposition });
 
       return res.status(201).json({ message: "Workout created successfully" });
    } catch (error) {

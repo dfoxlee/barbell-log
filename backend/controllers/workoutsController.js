@@ -1,183 +1,109 @@
 const pool = require("../db/dbConfig");
+const {
+   createExercise,
+   getExercises,
+} = require("../services/exercises.services");
+const {
+   createExerciseSet,
+   getExerciseSets,
+} = require("../services/exerciseSets.services");
+const { getWorkouts, createWorkout } = require("../services/workouts.services");
 
 const getAllUserWorkouts = async ({ userId }) => {
-   const [selectWorkoutResults] = await pool.execute(
-      `
-            SELECT workout_id as workoutId, workout_name as workoutName, created_date as createdDate
-            FROM workout
-            WHERE user_id = ?
-         `,
-      [userId]
-   );
+   const selectWorkoutResults = await getWorkouts({ userId });
 
    return selectWorkoutResults;
 };
 
 const getUserWorkout = async ({ workoutId }) => {
-   const [selectWorkoutResults] = await pool.execute(
-      `
-         SELECT workout_id, workout_name, created_date
-         FROM workout
-         WHERE workout_id = ?
-         `,
-      [workoutId]
-   );
+   const selectWorkoutResults = await getWorkouts({ workoutId });
 
    if (!selectWorkoutResults.length) {
-      throw new Error("No password found.");
+      throw new Error("No workout found.");
    }
 
-   let workout = {
-      workoutId: selectWorkoutResults[0].workout_id,
-      workoutName: selectWorkoutResults[0].workout_name,
-      createdDate: selectWorkoutResults[0].created_date,
-   };
+   let workout = selectWorkoutResults[0];
 
-   const [selectExercisesResults] = await pool.execute(
-      `
-            SELECT exercise_id, exercise_order, exercise_name
-            FROM exercise
-            WHERE workout_id = ?
-         `,
-      [workoutId]
-   );
+   const selectExercisesResults = await getExercises({ workoutId });
 
    if (!selectExercisesResults.length) {
       return selectWorkoutResults[0];
    }
 
-   const exercisesPromises = selectExercisesResults.map(async (exercise) => {
-      const [selectExerciseSetsResults] = await pool.execute(
-         `
-            SELECT *
-            FROM exercise_set
-            WHERE exercise_id = ?
-            `,
-         [exercise.exercise_id]
-      );
+   const exercises = await Promise.all(
+      selectExercisesResults.map(async (exercise) => {
+         const selectExerciseSetsResults = await getExerciseSets({
+            exerciseId: exercise.exerciseId,
+         });
 
-      if (!selectExerciseSetsResults.length) {
+         if (!selectExerciseSetsResults.length) {
+            return {
+               ...exercise,
+               exerciseSets: [],
+            };
+         }
+
+         const exerciseSets = selectExerciseSetsResults;
+
          return {
-            exerciseId: exercise.exercise_id,
-            exerciesName: exercise.exercise_name,
-            exerciseOrder: exercise.exercise_order,
-            sets: [],
+            ...exercise,
+            exerciseSets,
          };
-      }
-
-      const sets = selectExerciseSetsResults.map((set) => {
-         return {
-            exerciseSetId: set.exercise_set_id,
-            setOrder: set.set_order,
-            reps: set.reps,
-            weight: set.weight,
-         };
-      });
-
-      return {
-         exerciseId: exercise.exercise_id,
-         exerciseName: exercise.exercise_name,
-         exerciseOrder: exercise.exercise_order,
-         sets,
-      };
-   });
-
-   const exercises = await Promise.all(exercisesPromises);
+      })
+   );
 
    return { ...workout, exercises };
 };
 
-const addUserWorkout = async ({ userId, workout }) => {
-   const createdDate = new Date();
-   const workoutName = workout.workoutName;
+const addUserWorkout = async ({ userId, workoutComposition }) => {
+   const workoutName = workoutComposition.workoutName;
 
-   const [selectWorkoutResults] = await pool.execute(
-      `
-            SELECT *
-            FROM workout
-            WHERE user_id = ?
-               AND workout_name = ?
-         `,
-      [userId, workoutName]
-   );
+   const selectWorkoutResults = await getWorkouts({ userId, workoutName });
 
    if (selectWorkoutResults.length > 0) {
       throw new Error("Workout already exists.");
    }
 
-   const [insertWorkoutResults] = await pool.execute(
-      `
-            INSERT INTO workout (user_id, workout_name, created_date) 
-            VALUES (?, ?, ?)
-         `,
-      [userId, workoutName, createdDate]
-   );
+   await createWorkout({ userId, workoutName });
 
-   if (!insertWorkoutResults.affectedRows) {
-      throw new Error("Unable to insert workout into database.");
-   }
-
-   const [selectNewWorkoutResults] = await pool.execute(
-      `
-            SELECT *
-            FROM workout
-            WHERE user_id = ?
-               AND workout_name = ?
-         `,
-      [userId, workoutName]
-   );
+   const selectNewWorkoutResults = await getWorkouts({ userId, workoutName });
 
    const newWorkoutId = selectNewWorkoutResults[0].workout_id;
 
    await Promise.all(
-      workout.exercises.map(async (exercise) => {
-         const [insertExerciseResults] = await pool.execute(
-            `
-               INSERT INTO exercise (workout_id, exercise_name, exercise_order)
-               VALUES (?, ?, ?)
-            `,
-            [newWorkoutId, exercise.exerciseName, exercise.exerciseOrder]
-         );
+      workoutComposition.exercises.map(async (exercise) => {
+         await createExercise({
+            newWorkoutId,
+            exerciseName: exercise.exerciseName,
+            exerciseOrder: exercise.exerciseOrder,
+         });
 
-         if (!insertExerciseResults.affectedRows) {
-            throw new Error("Unable to insert exercise into database.");
-         }
-
-         const [selectNewExerciseResults] = await pool.execute(
-            `
-               SELECT *
-               FROM exercise
-               WHERE exercise_name = ?
-                  AND workout_id = ?            
-            `,
-            [exercise.exerciseName, newWorkoutId]
-         );
+         const selectNewExerciseResults = await getExercises({
+            workoutId: newWorkoutId,
+            exerciseName: exercise.exerciseName,
+         });
 
          const newExerciseId = selectNewExerciseResults[0].exercise_id;
 
          await Promise.all(
-            exercise.sets.map(async (set) => {
-               const [insertExerciseSetResults] = await pool.execute(
-                  `
-                  INSERT INTO exercise_set (
-                     exercise_id, 
-                     set_order, 
-                     reps,
-                     weight 
-                  )
-                  VALUES (
-                     ?, 
-                     ?, 
-                     ?, 
-                     ?
-                  )
-               `,
-                  [newExerciseId, set.setOrder, set.reps, set.weight]
-               );
-
-               if (!insertExerciseSetResults.affectedRows) {
-                  throw new Error("Unable to insert set into database.");
-               }
+            exercise.exerciseSets.map(async (set) => {
+               await createExerciseSet({
+                  exerciseId: newExerciseId,
+                  reps: set.reps,
+                  weight: set.weight,
+                  hasReps: set.hasReps,
+                  isBodyweight: set.isBodyweight,
+                  isTimed: set.isTimed,
+                  isDistance: set.isDistance,
+                  isWarmup: set.isWarmup,
+                  weightUnit: set.weightUnit,
+                  distanceUnit: set.distanceUnit,
+                  distance: set.distance,
+                  hr: set.hr,
+                  min: set.min,
+                  sec: set.sec,
+                  exerciseSetOrder: set.exerciseSetOrder,
+               });
             })
          );
       })

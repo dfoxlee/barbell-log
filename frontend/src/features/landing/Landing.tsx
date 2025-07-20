@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { useEffect, useRef, useState } from "react";
 import homeScreenImg from "/public/home-screenshot.png";
 import barbellLogScreenImg from "/public/barbell-log-screenshot.png";
@@ -10,6 +9,7 @@ import { FaArrowDown, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Seperator from "../shared/Seperator";
 
 import styles from "./Landing.module.css";
+import { useUserStore } from "../../stores/userStore";
 
 const images = [
    {
@@ -51,17 +51,17 @@ const images = [
 const AUTOPLAY_INTERVAL = 8000;
 
 export default function Landing() {
-   const { token } = useAuthContext();
+   const user = useUserStore((state) => state.user);
    const navigate = useNavigate();
    const [currentImageId, setCurrentImageId] = useState(0);
    const intervalRef = useRef<number | null>(null);
    const timerBarRef = useRef(null);
 
    useEffect(() => {
-      if (token) {
+      if (user?.token) {
          navigate("/home");
       }
-   }, [token, navigate]);
+   }, [user?.token, navigate]);
 
    useEffect(() => {
       const resetProgressBar = () => {

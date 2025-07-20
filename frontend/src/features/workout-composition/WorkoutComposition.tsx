@@ -13,10 +13,11 @@ import ReorderExerciseWrapper from "./components/ReorderExerciseWrapper";
 
 import styles from "./WorkoutComposition.module.css";
 import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
+import { fetchGetWorkout } from "../../services/workoutServices";
+import toastify from "../../utils/toastify";
 
 export default function WorkoutComposition() {
    const params = useParams();
-   const compositionType = params["composition-type"];
    const workoutId = params["workout-id"];
    const [isReorderExercise, setIsReorderExercise] = useState(false);
    const user = useUserStore((state) => state.user);
@@ -26,8 +27,15 @@ export default function WorkoutComposition() {
    const updateWorkoutComposition = useWorkoutCompositionStore(
       (state) => state.updateWorkoutComposition
    );
+   const getWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.getWorkoutComposition
+   );
 
-   useEffect(() => {}, [compositionType, user?.token, workoutId]);
+   useEffect(() => {
+      if (workoutId && user?.token) {
+         getWorkoutComposition({ token: user.token, workoutId });
+      }
+   }, [user?.token, workoutId]);
 
    const handleWorkoutNameInput = (event) => {
       updateWorkoutComposition({

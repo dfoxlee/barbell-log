@@ -5,9 +5,10 @@ import type {
 } from "../../../types/workoutTypes";
 import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
 import { useMemo } from "react";
+import toastify from "../../../utils/toastify";
+import { distanceUnits, weightUnits } from "../../../enums/constants";
 
 import styles from "./ExerciseSetsGrid.module.css";
-import toastify from "../../../utils/toastify";
 
 export default function ExerciseSetEditRow({
    exerciseSet,
@@ -396,7 +397,7 @@ export default function ExerciseSetEditRow({
 
    return (
       <>
-         <span className={styles.gridDataCell}>
+         <span className={styles.gridEditCell}>
             <div className={styles.toggleBtnsWrapper}>
                <button
                   className={`${styles.toggleBtn}`}
@@ -457,10 +458,10 @@ export default function ExerciseSetEditRow({
                </button>
             </div>
          </span>
-         <span className={styles.gridDataCell}>
+         <span className={styles.gridEditCell}>
             {exerciseSet.exerciseSetOrder}
          </span>
-         <span className={styles.gridDataCell}>
+         <span className={styles.gridEditCell}>
             <div className={styles.setInputsWrapper}>
                <div className={styles.repsWeightWrapper}>
                   {currentExerciseSet?.hasReps ? (
@@ -478,42 +479,64 @@ export default function ExerciseSetEditRow({
                   {currentExerciseSet?.isBodyweight ? (
                      <span className={styles.bodyweightIndicator}>BW</span>
                   ) : (
-                     <input
-                        inputMode="decimal"
-                        className={`standardInput ${styles.weightInput}`}
-                        value={exerciseSet.weight}
-                        min="0"
-                        onChange={handleWeightInput}
-                     />
+                     <div className={styles.weightInputWrapper}>
+                        <input
+                           inputMode="decimal"
+                           className={`standardInput ${styles.weightInput}`}
+                           value={exerciseSet.weight}
+                           min="0"
+                           onChange={handleWeightInput}
+                        />
+                        <select
+                           className={styles.unitSelector}
+                           name="weight-unit"
+                           id="weight-unit"
+                        >
+                           {weightUnits.map((unit) => (
+                              <option key={unit.id} value={unit.label}>
+                                 {unit.label}
+                              </option>
+                           ))}
+                        </select>
+                     </div>
                   )}
                </div>
                {currentExerciseSet?.isTimed ? (
                   <div className={styles.timeInputsWrapper}>
-                     <input
-                        className={`standardInput ${styles.timeInput}`}
-                        inputMode="numeric"
-                        type="text"
-                        onChange={handleHrInput}
-                        value={currentExerciseSet.hr}
-                     />
-                     <input
-                        className={`standardInput ${styles.timeInput}`}
-                        inputMode="numeric"
-                        type="text"
-                        onChange={handleMinInput}
-                        value={currentExerciseSet.min}
-                     />
-                     <input
-                        className={`standardInput ${styles.timeInput}`}
-                        inputMode="numeric"
-                        type="text"
-                        onChange={handleSecInput}
-                        value={currentExerciseSet.sec}
-                     />
+                     <div className={styles.timeInputWrapper}>
+                        <input
+                           className={`standardInput ${styles.timeInput}`}
+                           inputMode="numeric"
+                           type="text"
+                           onChange={handleHrInput}
+                           value={currentExerciseSet.hr}
+                        />
+                        <span className={styles.timeSubText}>hr</span>
+                     </div>
+                     <div className={styles.timeInputWrapper}>
+                        <input
+                           className={`standardInput ${styles.timeInput}`}
+                           inputMode="numeric"
+                           type="text"
+                           onChange={handleMinInput}
+                           value={currentExerciseSet.min}
+                        />
+                        <span className={styles.timeSubText}>min</span>
+                     </div>
+                     <div className={styles.timeInputWrapper}>
+                        <input
+                           className={`standardInput ${styles.timeInput}`}
+                           inputMode="numeric"
+                           type="text"
+                           onChange={handleSecInput}
+                           value={currentExerciseSet.sec}
+                        />
+                        <span className={styles.timeSubText}>sec</span>
+                     </div>
                   </div>
                ) : null}
                {currentExerciseSet?.isDistance ? (
-                  <div className={styles.distanceInputsWrapper}>
+                  <div className={styles.distanceInputWrapper}>
                      <input
                         className={`standardInput ${styles.distanceInput}`}
                         type="text"
@@ -521,11 +544,22 @@ export default function ExerciseSetEditRow({
                         onChange={handleDistanceInput}
                         value={currentExerciseSet.distance}
                      />
+                     <select
+                        className={styles.unitSelector}
+                        name="distance-unit"
+                        id="distance-unit"
+                     >
+                        {distanceUnits.map((unit) => (
+                           <option key={unit.id} value={unit.label}>
+                              {unit.label}
+                           </option>
+                        ))}
+                     </select>
                   </div>
                ) : null}
             </div>
          </span>
-         <span className={styles.gridDataCell}>
+         <span className={styles.gridEditCell}>
             {currentExercise && currentExercise?.exerciseSets.length > 1 ? (
                <button
                   className={`standardIconBtn ${styles.deleteSetBtn}`}

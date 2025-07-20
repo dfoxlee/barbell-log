@@ -30,7 +30,7 @@ export default function Workout({ workout, deleteWorkout }) {
             </Link>
             <Link
                className={styles.optionBtn}
-               to={`/home/workout-composition/edit/${workout.workoutId}`}
+               to={`/home/workout-composition/${workout.workoutId}`}
             >
                <FaPencilAlt />
             </Link>

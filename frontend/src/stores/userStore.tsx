@@ -12,16 +12,11 @@ export interface UserStoreType {
 }
 
 export const useUserStore = create<UserStoreType>((set) => ({
-   user: null,
+   user: localStorage.getItem("barbell-log")
+      ? JSON.parse(localStorage.getItem("barbell-log")!)
+      : null,
    authLoading: false,
    authError: null,
-   validateToken: async () => {
-      if (!user) {
-         return false;
-      }
-
-      
-   },
    login: async (userCredentials: AuthCredentialType) => {
       const email = userCredentials.email;
       const password = userCredentials.password;
@@ -31,12 +26,16 @@ export const useUserStore = create<UserStoreType>((set) => ({
 
          const loginRequest = await fetchLogin({ email, password });
 
+         const user = {
+            token: loginRequest.token,
+            weightUnitPreference: loginRequest.weightUnitPreference,
+            distanceUnitPreference: loginRequest.distanceUnitPreference,
+         };
+
+         localStorage.setItem("barbell-log", JSON.stringify(user));
+
          set({
-            user: {
-               token: loginRequest.token,
-               weightUnitPreference: loginRequest.weightUnitPreference,
-               distanceUnitPreference: loginRequest.distanceUnitPreference,
-            },
+            user,
          });
       } catch (error: any) {
          set({
@@ -60,12 +59,16 @@ export const useUserStore = create<UserStoreType>((set) => ({
 
          const signUpRequest = await fetchSignUp({ email, password });
 
+         const user = {
+            token: signUpRequest.token,
+            weightUnitPreference: signUpRequest.weightUnitPreference,
+            distanceUnitPreference: signUpRequest.distanceUnitPreference,
+         };
+
+         localStorage.setItem("barbell-log", JSON.stringify(user));
+
          set({
-            user: {
-               token: signUpRequest.token,
-               weightUnitPreference: signUpRequest.weightUnitPreference,
-               distanceUnitPreference: signUpRequest.distanceUnitPreference,
-            },
+            user,
          });
       } catch (error: any) {
          set({

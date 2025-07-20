@@ -4,12 +4,21 @@ import toastify from "../../../utils/toastify";
 
 import styles from "./AuthForm.module.css";
 import { useUserStore } from "../../../stores/userStore";
+import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
 
 export default function AuthForm({ authTitle }: { authTitle: string }) {
    const [emailInput, setEmailInput] = useState("");
    const [passwordInput, setPasswordInput] = useState("");
    const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
-   const { user, login, signUp, authError } = useUserStore();
+   // const { user, login, signUp, authError } = useUserStore();
+   const user = useUserStore((state) => state.user);
+   const login = useUserStore((state) => state.login);
+   const signUp = useUserStore((state) => state.signUp);
+   const authError = useUserStore((state) => state.authError);
+   const authLoading = useUserStore((state) => state.authLoading);
+   const workoutComposition = useWorkoutCompositionStore(
+      (state) => state.workoutComposition
+   );
    const navigate = useNavigate();
 
    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,17 +61,17 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          }
       }
 
-      if (authTitle === "Sign Up") {
-         await signUp({ email: emailInput, password: passwordInput });
-      } else {
-         await login({ email: emailInput, password: passwordInput });
-      }
-
       if (authError) {
          return toastify({
             message: authError,
             type: "error",
          });
+      }
+
+      if (authTitle === "Sign Up") {
+         await signUp({ email: emailInput, password: passwordInput });
+      } else {
+         await login({ email: emailInput, password: passwordInput });
       }
 
       if (user?.token) {

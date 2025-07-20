@@ -24,7 +24,7 @@ export default function Workout({ workout }: { workout: WorkoutType }) {
             </Link>
             <Link
                className={styles.optionLink}
-               to={`/home/workout-composition/edit/${workout.workoutId}`}
+               to={`/home/workout-composition/${workout.workoutId}`}
             >
                <FaPencilAlt />
             </Link>

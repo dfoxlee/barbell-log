@@ -19,10 +19,10 @@ export default function ExerciseSetsGrid({
 }: ExerciseSetsGridPropsType) {
    return (
       <div className={styles.exerciseSetsGridWrapper}>
-         <span className={styles.gridHeaderCell}>options</span>
+         <span className={styles.gridHeaderCell}></span>
          <span className={styles.gridHeaderCell}>set</span>
          <span className={styles.gridHeaderCell}>details</span>
-         <span className={styles.gridHeaderCell}>delete</span>
+         <span className={styles.gridHeaderCell}></span>
 
          {currentExercise?.exerciseSets.map((exerciseSet) => {
             if (

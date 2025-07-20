@@ -3,13 +3,11 @@ export const weightUnits = [
       id: 0,
       label: "lb",
       value: "pound",
-      plural: "pounds",
    },
    {
       id: 1,
       label: "kg",
       value: "kilogram",
-      plural: "kilograms",
    },
 ];
 
@@ -18,31 +16,26 @@ export const distanceUnits = [
       id: 0,
       label: "mi",
       value: "mile",
-      plural: "miles",
    },
    {
       id: 1,
       label: "yd",
       value: "yard",
-      plural: "yards",
    },
    {
       id: 2,
       label: "ft",
       value: "foot",
-      plural: "feet",
    },
    {
       id: 3,
       label: "m",
       value: "meter",
-      plural: "meters",
    },
    {
       id: 4,
       label: "km",
       value: "kilometer",
-      plural: "kilometers",
    },
 ];
 
