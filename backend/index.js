@@ -12,21 +12,21 @@ const usersRouter = require("./routes/usersRoutes");
 const testRouter = require("./routes/testsRoutes");
 const workoutsRouter = require("./routes/workoutsRoutes");
 const completedWorkoutRouter = require("./routes/completedWorkoutsRoutes");
+const barbelLLogRouter = require("./routes/barbellLogRoutes");
 
 // utils, db, services
 // const { winstonStream, logger } = require("./logger/logger");
 
 require("dotenv").config();
 
-
 const app = express();
 
 const corsOptions =
-process.env.ENVIRONMENT === "PRODUCTION"
-? {
-   origin: "https://barbell-log.com",
-}
-: null;
+   process.env.ENVIRONMENT === "PRODUCTION"
+      ? {
+           origin: "https://barbell-log.com",
+        }
+      : null;
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +36,7 @@ app.use("/api/v1/test", testRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/workouts", authMiddleware, workoutsRouter);
 app.use("/api/v1/completed-workouts", authMiddleware, completedWorkoutRouter);
+app.use("/api/v1/barbell-log", authMiddleware, barbelLLogRouter);
 
 app.use(errorMiddleware);
 

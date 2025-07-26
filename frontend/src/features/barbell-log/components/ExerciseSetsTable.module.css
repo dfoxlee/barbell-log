@@ -1,0 +1,29 @@
+.tableWrapper {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.tableHeader,
+.tableData {
+   text-align: center;
+}
+
+.tableHeader {
+   border-bottom: 1px solid var(--primary);
+}
+
+.tableData {
+   padding: 20px 5px;
+   border-bottom: 1px solid var(--accent);
+}
+
+.repsWeightInputWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: start;
+   gap: 20px;
+}
+
+.completeBtn {
+   color: var(--primary);
+}

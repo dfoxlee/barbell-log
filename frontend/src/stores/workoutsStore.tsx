@@ -28,7 +28,6 @@ export const useWorkoutsStore = create<WorkoutsStoreType>((set, get) => ({
 
       try {
          const workoutRequest = await fetchGetWorkouts({ token });
-         console.log(workoutRequest);
 
          set({ workouts: workoutRequest });
       } catch (error: any) {

@@ -1,54 +1,36 @@
 const pool = require("../db/dbConfig");
+const {
+   getCompletedExercises,
+} = require("../services/completedExercises.services");
+const {
+   getCompletedExerciseSets,
+} = require("../services/completedExerciseSets.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getCompletedWorkout = async ({ completedWorkoutId }) => {
-   const [selectCompletedWorkout] = await pool.execute(
-      `
-         SELECT completed_workout.completed_workout_id as completedWorkoutId, workout.workout_id as workoutId, completed_workout.completed_date as completedDate, workout.workout_name as workoutName
-         FROM completed_workout
-         INNER JOIN workout ON workout.workout_id = completed_workout.workout_id
-         WHERE completed_workout.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
+   const completedWorkout = await getCompletedWorkout({ completedWorkoutId });
 
-   const [selectCompletedExercises] = await pool.execute(
-      `
-         SELECT completed_exercise.completed_exercise_id as completedExerciseId,completed_exercise.completed_exercise_order as completedExerciseOrder, exercise.exercise_name as exerciseName
-         FROM completed_exercise
-         INNER JOIN exercise ON exercise.exercise_id = completed_exercise.exercise_id
-         WHERE completed_exercise.completed_workout_id = ?
-         ORDER BY completed_exercise.completed_exercise_order
-      `,
-      [completedWorkoutId]
-   );
+   let completedExercises = await getCompletedExercises({
+      completedWorkoutId,
+   });
 
-   const completedExercises = await Promise.all(
-      selectCompletedExercises.map(async (exercise) => {
-         const [selectCompletedSets] = await pool.execute(
-            `
-            SELECT completed_exercise_set.completed_exercise_id as completedExerciseId, completed_exercise_set.completed_exercise_set_id as completedExerciseSetId, completed_exercise_set.completed_reps as completedReps, completed_exercise_set.completed_weight as completedWeight, completed_exercise_set.exercise_set_id as exerciseSetId, completed_exercise_set.is_complete as isCompleted, completed_exercise_set.notes, exercise_set.set_order as setOrder
-            FROM completed_exercise_set
-            INNER JOIN exercise_set ON exercise_set.exercise_set_id = completed_exercise_set.exercise_set_id
-            WHERE completed_exercise_set.completed_exercise_id = ?
-            ORDER BY exercise_set.set_order
-         `,
-            [exercise.completedExerciseId]
-         );
+   completedExercises = await Promise.all(
+      completedExercises.map(async (completedExercise) => {
+         const completedExerciseSets = await getCompletedExerciseSets({
+            completedExerciseId: completedExercise.completedExerciseId,
+         });
 
          return {
-            ...exercise,
-            completedSets: selectCompletedSets,
+            ...completedExercise,
+            completedExerciseSets,
          };
       })
    );
 
-   const workout = {
-      ...selectCompletedWorkout[0],
-      completedExercises: completedExercises,
+   return {
+      ...completedWorkout,
+      completedExercises,
    };
-
-   return workout;
 };
 
 const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {

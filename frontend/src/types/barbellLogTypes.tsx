@@ -1,27 +1,33 @@
-export interface CompletedWorkoutType {
-   completedWorkoutId?: string;
-   workoutId: string;
-   completedDate?: Date | string;
-   completedExercises: CompletedExerciseType[];
-}
-
 export interface CompletedExerciseType {
    completedExerciseId?: string;
    exerciseId: string;
+   exerciseName: string;
    completedExerciseOrder: number;
    completedExerciseSets: CompletedExerciseSetType[];
 }
 
 export interface CompletedExerciseSetType {
-   completedExerciseSetId: string;
+   completedExerciseSetId?: string;
    exerciseSetId: string;
-   completedSetOrder: number;
+   completedExerciseSetOrder: number;
    completedReps: number;
    completedWeight: number;
+   completedWeightUnit: string;
    completedHr: number;
    completedMin: number;
    completedSec: number;
    completedDistance: number;
+   completedDistanceUnit: string;
    notes: string;
    isComplete: boolean;
+}
+
+export interface BarbellLogType {
+   completedWorkoutId?: string;
+   workoutId: string;
+   workoutName: string;
+   completedDate?: Date | string | null;
+   completedExercises: CompletedExerciseType[];
+   currentExerciseOrder: number;
+   currentExerciseSetOrder: number;
 }
