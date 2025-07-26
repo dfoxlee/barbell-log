@@ -102,11 +102,11 @@ const addUserWorkout = async ({ userId, workoutComposition }) => {
                   exerciseId: newExerciseId,
                   reps: set.reps || 0,
                   weight: set.weight || 0,
-                  hasReps: set.hasReps || true,
-                  isBodyweight: set.isBodyweight || false,
-                  isTimed: set.isTimed || false,
-                  isDistance: set.isDistance || false,
-                  isWarmup: set.isWarmup || false,
+                  hasReps: set.hasReps,
+                  isBodyweight: set.isBodyweight,
+                  isTimed: set.isTimed,
+                  isDistance: set.isDistance,
+                  isWarmup: set.isWarmup,
                   weightUnit: set.weightUnit || "lb",
                   distanceUnit: set.distanceUnit || "mi",
                   distance: set.distance || 0,
@@ -212,7 +212,7 @@ const updateUserWorkout = async ({ userId, workoutComposition }) => {
 
          const newExercise = newExerciseResults[0];
 
-         for (let set of exercise.sets) {
+         for (let set of exercise.exerciseSets) {
             await createExerciseSet({
                exerciseId: newExercise.exerciseId,
                reps: set.reps,

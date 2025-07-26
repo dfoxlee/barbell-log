@@ -15,6 +15,7 @@ export interface BarbellLogStoreType {
       workoutId: string;
       completedWorkoutId?: string;
    }) => Promise<void>;
+   updateBarbellLog: (updatedBarbellLog: BarbellLogType) => void;
 }
 
 export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
@@ -43,7 +44,6 @@ export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
             barbellLog: {
                ...barbellLog,
                currentExerciseOrder: 1,
-               currentExerciseSetOrder: 1,
             },
          });
       } catch (error: any) {
@@ -57,4 +57,6 @@ export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
          set({ barbellLogLoading: false });
       }
    },
+   updateBarbellLog: (updatedBarbellLog: BarbellLogType) =>
+      set({ barbellLog: updatedBarbellLog }),
 }));

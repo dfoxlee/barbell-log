@@ -37,6 +37,7 @@ const getExerciseSets = async ({ exerciseId }) => {
          exercise_set_order AS exerciseSetOrder
       FROM exercise_set
       WHERE exercise_id = ?
+      ORDER BY exerciseSetOrder
    `;
 
    values.push(exerciseId);

@@ -1,18 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import Seperator from "../shared/Seperator";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 import { fetchUpdateWeightUnitPreference } from "../../services/userServices";
 import toastify from "../../utils/toastify";
 
 import styles from "./Settings.module.css";
+import { useUserStore } from "../../stores/userStore";
 
 export default function Settings() {
-   const { user, updateUser, removeUser } = useAuthContext();
+   const user = useUserStore((state) => state.user);
+   const logout = useUserStore((state) => state.logout);
    const navigate = useNavigate();
 
    const handleLogoutClick = () => {
-      removeUser();
+      logout();
 
       navigate("/");
    };
@@ -32,7 +33,7 @@ export default function Settings() {
             weightUnitPreference: newWeightPreference,
          };
 
-         updateUser(newUser);
+         console.log("Updated weight unit preference", newUser);
       } catch (error) {
          console.error(error);
 

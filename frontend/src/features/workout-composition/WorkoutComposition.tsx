@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
 import ExerciseComposition from "./components/ExerciseComposition";
 import Seperator from "../shared/Seperator";
 import ReorderExercise from "./components/ReorderExercise";
@@ -10,11 +9,9 @@ import {
    SortableContext,
 } from "@dnd-kit/sortable";
 import ReorderExerciseWrapper from "./components/ReorderExerciseWrapper";
+import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
 
 import styles from "./WorkoutComposition.module.css";
-import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
-import { fetchGetWorkout } from "../../services/workoutServices";
-import toastify from "../../utils/toastify";
 
 export default function WorkoutComposition() {
    const params = useParams();
@@ -30,9 +27,15 @@ export default function WorkoutComposition() {
    const getWorkoutComposition = useWorkoutCompositionStore(
       (state) => state.getWorkoutComposition
    );
+   const resetWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.resetWorkoutComposition
+   );
 
    useEffect(() => {
+      resetWorkoutComposition();
+      
       if (workoutId && user?.token) {
+
          getWorkoutComposition({ token: user.token, workoutId });
       }
    }, [user?.token, workoutId]);

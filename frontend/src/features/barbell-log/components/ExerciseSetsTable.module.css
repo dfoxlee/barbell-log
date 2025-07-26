@@ -1,6 +1,7 @@
 .tableWrapper {
    width: 100%;
    border-collapse: collapse;
+   margin-top: 30px;
 }
 
 .tableHeader,
@@ -10,6 +11,9 @@
 
 .tableHeader {
    border-bottom: 1px solid var(--primary);
+   color: var(--accent);
+   font-weight: 500;
+   font-size: 0.75rem;
 }
 
 .tableData {
@@ -26,4 +30,8 @@
 
 .completeBtn {
    color: var(--primary);
+}
+
+.notCompleteBtn {
+   color: var(--accent);
 }

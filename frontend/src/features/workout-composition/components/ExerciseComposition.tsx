@@ -75,7 +75,6 @@ export default function ExerciseComposition() {
             ...currentExercise,
             exerciseSets: updatedExerciseSets,
          };
-         console.log(currentExercise);
 
          updateExercise(updatedExercise);
          updateCurrentExerciseSetViewOrder(newExerciseSetOrder);

@@ -9,6 +9,7 @@ export interface UserStoreType {
    authError: null;
    login: (userCredentials: AuthCredentialType) => Promise<void>;
    signUp: (userCredentials: AuthCredentialType) => Promise<void>;
+   logout: () => void;
 }
 
 export const useUserStore = create<UserStoreType>((set) => ({
@@ -83,4 +84,5 @@ export const useUserStore = create<UserStoreType>((set) => ({
          });
       }
    },
+   logout: () => set({ user: null }),
 }));

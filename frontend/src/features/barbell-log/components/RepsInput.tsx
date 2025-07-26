@@ -1,15 +1,58 @@
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import styles from "./Inputs.module.css";
+import toastify from "../../../utils/toastify";
 
-export default function RepsInput({ reps, updateReps }) {
+export default function RepsInput({
+   reps,
+   updateReps,
+   completedExerciseSetOrder,
+}) {
    const handleRepsChange = (event) => {
-      updateReps(event.target.value);
+      if (event.target.value !== "" && !parseInt(event.target.value)) {
+         return toastify({
+            message: "Value must be a valid number.",
+            type: "warning",
+         });
+      }
+
+      updateReps({
+         completedExerciseSetOrder: completedExerciseSetOrder,
+         updatedReps: event.target.value,
+      });
+   };
+
+   const handleIncrementClick = () => {
+      const newReps = reps + 1;
+
+      updateReps({
+         completedExerciseSetOrder: completedExerciseSetOrder,
+         updatedReps: newReps,
+      });
+   };
+
+   const handleRepsDecrementClick = () => {
+      const newReps = reps - 1;
+
+      if (newReps < 0) {
+         return toastify({
+            message: "Value must be greater than zero.",
+            type: "warning",
+         });
+      }
+
+      updateReps({
+         completedExerciseSetOrder: completedExerciseSetOrder,
+         updatedReps: newReps,
+      });
    };
 
    return (
       <div className={styles.inputWrapper}>
-         <button className={`standardIconBtn ${styles.incrementBtn}`}>
+         <button
+            className={`standardIconBtn ${styles.incrementBtn}`}
+            onClick={handleIncrementClick}
+         >
             <FaChevronUp />
          </button>
          <input
@@ -19,7 +62,10 @@ export default function RepsInput({ reps, updateReps }) {
             value={reps}
             onChange={handleRepsChange}
          />
-         <button className={`standardIconBtn ${styles.incrementBtn}`}>
+         <button
+            className={`standardIconBtn ${styles.incrementBtn}`}
+            onClick={handleRepsDecrementClick}
+         >
             <FaChevronDown />
          </button>
          <span className={styles.inputLabel}>reps</span>

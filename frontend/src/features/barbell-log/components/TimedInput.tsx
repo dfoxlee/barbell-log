@@ -33,7 +33,7 @@ export default function TimedInput({
    return (
       <div className={styles.inputsWrapper}>
          <div className={styles.inputWrapper}>
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronUp />
             </button>
             <input
@@ -43,13 +43,13 @@ export default function TimedInput({
                value={hr}
                onChange={handleHrChange}
             />
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronDown />
             </button>
             <span className={styles.inputLabel}>hr</span>
          </div>
          <div className={styles.inputWrapper}>
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronUp />
             </button>
             <input
@@ -59,13 +59,13 @@ export default function TimedInput({
                value={min}
                onChange={handleMinChange}
             />
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronDown />
             </button>
             <span className={styles.inputLabel}>min</span>
          </div>
          <div className={styles.inputWrapper}>
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronUp />
             </button>
             <input
@@ -75,7 +75,7 @@ export default function TimedInput({
                value={sec}
                onChange={handleSecChange}
             />
-            <button className={styles.incrementBtn}>
+            <button className={`standardIconBtn ${styles.incrementBtn}`}>
                <FaChevronDown />
             </button>
             <span className={styles.inputLabel}>sec</span>

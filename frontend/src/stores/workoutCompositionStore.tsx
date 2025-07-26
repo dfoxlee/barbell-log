@@ -247,6 +247,8 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
       },
       resetWorkoutComposition: () =>
          set({
+            currentExerciseViewOrder: 1,
+            currentExerciseSetViewOrder: 1,
             workoutComposition: {
                workoutName: "",
                exercises: [

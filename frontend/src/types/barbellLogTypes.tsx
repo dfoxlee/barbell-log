@@ -7,6 +7,11 @@ export interface CompletedExerciseType {
 }
 
 export interface CompletedExerciseSetType {
+   hasReps: boolean;
+   isBodyweight: boolean;
+   isTimed: boolean;
+   isWarmup: boolean;
+   isDistance: boolean;
    completedExerciseSetId?: string;
    exerciseSetId: string;
    completedExerciseSetOrder: number;
@@ -29,5 +34,4 @@ export interface BarbellLogType {
    completedDate?: Date | string | null;
    completedExercises: CompletedExerciseType[];
    currentExerciseOrder: number;
-   currentExerciseSetOrder: number;
 }

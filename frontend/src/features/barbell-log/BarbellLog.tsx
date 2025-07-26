@@ -20,6 +20,9 @@ export default function BarbellLog() {
       (state) => state.barbellLogLoading
    );
    const barbellLogError = useBarbellLogStore((state) => state.barbellLogError);
+   const updateBarbellLog = useBarbellLogStore(
+      (state) => state.updateBarbellLog
+   );
    const exerciseNames = useMemo(
       () =>
          barbellLog?.completedExercises.map(
@@ -39,7 +42,13 @@ export default function BarbellLog() {
    );
 
    useEffect(() => {
-      if (!barbellLog && !barbellLogError && user?.token && workoutId) {
+      if (
+         !barbellLog &&
+         !barbellLogLoading &&
+         !barbellLogError &&
+         user?.token &&
+         workoutId
+      ) {
          if (completedWorkoutId) {
             getBarbellLog({
                token: user?.token,
@@ -57,10 +66,50 @@ export default function BarbellLog() {
             type: "error",
          });
       }
-   }, []);
+   }, [workoutId, completedWorkoutId]);
 
    const handleExerciseSelectChange = (event) => {
-      console.log(event.target.value);
+      const switchToExercise = barbellLog?.completedExercises.find(
+         (completedExercise) =>
+            completedExercise.exerciseName === event.target.value
+      );
+
+      if (switchToExercise && barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: switchToExercise?.completedExerciseOrder,
+         });
+      }
+   };
+
+   const handleExerciseIncrementClick = () => {
+      if (
+         barbellLog !== null &&
+         barbellLog?.currentExerciseOrder >=
+            barbellLog?.completedExercises.length
+      ) {
+         return;
+      }
+
+      if (barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: barbellLog.currentExerciseOrder + 1,
+         });
+      }
+   };
+
+   const handleExerciseDecrementClick = () => {
+      if (barbellLog != null && barbellLog?.currentExerciseOrder <= 1) {
+         return;
+      }
+
+      if (barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: barbellLog.currentExerciseOrder - 1,
+         });
+      }
    };
 
    if (barbellLogLoading) {
@@ -81,6 +130,7 @@ export default function BarbellLog() {
                      : styles.exerciseNavBtn
                }
                disabled={barbellLog?.currentExerciseOrder === 1}
+               onClick={handleExerciseDecrementClick}
             >
                <FaChevronLeft />
             </button>
@@ -100,7 +150,21 @@ export default function BarbellLog() {
                   ))}
                </select>
             </div>
-            <button className={styles.exerciseNavBtn}>
+            <button
+               className={
+                  barbellLog != null &&
+                  barbellLog?.currentExerciseOrder <
+                     barbellLog?.completedExercises.length
+                     ? styles.exerciseNavBtn
+                     : styles.exerciseNavBtnDisabled
+               }
+               disabled={
+                  barbellLog !== null &&
+                  barbellLog?.currentExerciseOrder >=
+                     barbellLog?.completedExercises.length
+               }
+               onClick={handleExerciseIncrementClick}
+            >
                <FaChevronRight />
             </button>
          </div>

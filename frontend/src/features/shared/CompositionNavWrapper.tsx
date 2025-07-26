@@ -1,7 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../stores/userStore";
 import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
-import { fetchCreateWorkout, fetchUpdateWorkout } from "../../services/workoutServices";
+import {
+   fetchCreateWorkout,
+   fetchUpdateWorkout,
+} from "../../services/workoutServices";
 
 import styles from "./Navbar.module.css";
 
@@ -13,12 +16,8 @@ export default function CompositionNavWrapper() {
    const workoutComposition = useWorkoutCompositionStore(
       (state) => state.workoutComposition
    );
-   const resetWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.resetWorkoutComposition
-   );
 
    const handleCancelClick = () => {
-      resetWorkoutComposition();
       navigate(-1);
    };
 
@@ -27,7 +26,6 @@ export default function CompositionNavWrapper() {
          navigate("/auth/login");
       }
 
-      navigate(-1);
       try {
          if (!workoutId) {
             const createWorkoutRequest = await fetchCreateWorkout({
@@ -52,8 +50,6 @@ export default function CompositionNavWrapper() {
                return alert("Something went wrong. Try again later.");
             }
          }
-
-         resetWorkoutComposition();
 
          return navigate(-1);
       } catch (error) {
