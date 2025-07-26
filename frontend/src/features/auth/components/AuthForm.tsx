@@ -74,9 +74,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          await login({ email: emailInput, password: passwordInput });
       }
 
-      if (user?.token) {
-         navigate("/home");
-      }
+      navigate("/home");
    };
 
    return (
@@ -146,7 +144,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
             )}
          </p>
          <button className={`standardBtn ${styles.submitBtn}`} type="submit">
-            {authTitle}
+            {authLoading ? "loading..." : authTitle}
          </button>
       </form>
    );

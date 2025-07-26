@@ -39,18 +39,15 @@ export default function Home() {
       <div className={styles.container}>
          <h1 className={styles.title}>Barbell Log</h1>
          <Seperator />
-         {!workouts.length ? (
-            <div className={`linkWrapper`}>
-               <Link
-                  className={`standardLink ${styles.createWorkoutLink}`}
-                  to="/home/workout-composition"
-               >
-                  Create Workout
-               </Link>
-            </div>
-         ) : (
-            <Workouts />
-         )}
+         <div className={styles.createWorkoutLinkWrapper}>
+            <Link
+               className={`standardLink ${styles.createWorkoutLink}`}
+               to="/home/workout-composition"
+            >
+               Create Workout
+            </Link>
+         </div>
+         {workouts.length ? <Workouts /> : null}
       </div>
    );
 }

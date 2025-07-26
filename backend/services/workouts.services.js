@@ -54,7 +54,42 @@ const createWorkout = async ({ userId, workoutName }) => {
    return;
 };
 
+const updateWorkout = async ({ workoutId, workoutName }) => {
+   const [updateWorkoutResults] = await pool.execute(
+      `
+         UPDATE workout
+         SET workout_name = ?
+         WHERE workout_id = ?
+      `,
+      [workoutName, workoutId]
+   );
+
+   if (!updateWorkoutResults.affectedRows) {
+      throw new Error("Unable to update workout.");
+   }
+
+   return;
+};
+
+const deleteWorkout = async ({ workoutId }) => {
+   const [deleteWorkoutResult] = await pool.execute(
+      `
+         DELETE FROM workout
+         WHERE workout_id = ?
+      `,
+      [workoutId]
+   );
+
+   if (!deleteWorkoutResult.affectedRows) {
+      throw new Error("Unable to update workout.");
+   }
+
+   return;
+};
+
 module.exports = {
    getWorkouts,
    createWorkout,
+   updateWorkout,
+   deleteWorkout,
 };

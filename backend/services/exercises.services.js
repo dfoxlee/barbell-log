@@ -1,8 +1,22 @@
 const pool = require("../db/dbConfig");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
-const getExercises = async ({ workoutId, exerciseName }) => {
-   const query = "";
-   const values = [];
+const getExerciseIds = async ({ workoutId }) => {
+   const [selectExerciseIdsResults] = await pool.execute(
+      `
+         SELECT exercise_id
+         FROM exercise
+         WHERE workout_id = ?
+      `,
+      [workoutId]
+   );
+
+   return selectExerciseIdsResults.map((set) => set.exercise_id);
+};
+
+const getExercises = async ({ workoutId, exerciseName, exerciseOrder }) => {
+   let query = "";
+   let values = [];
 
    if (workoutId && exerciseName) {
       query = `
@@ -13,6 +27,15 @@ const getExercises = async ({ workoutId, exerciseName }) => {
       `;
 
       values.push(exerciseName, workoutId);
+   } else if (workoutId && exerciseOrder) {
+      query = `
+         SELECT exercise_id AS exerciseId, workout_id AS workoutId, exercise_order AS exerciseOrder, exercise_name AS exerciseName
+         FROM exercise
+         WHERE workout_id = ?
+            AND exercise_order = ?;
+      `;
+
+      values.push(workoutId, exerciseOrder);
    } else if (workoutId) {
       query = `
          SELECT exercise_id AS exerciseId, workout_id AS workoutId, exercise_order AS exerciseOrder, exercise_name AS exerciseName
@@ -28,17 +51,13 @@ const getExercises = async ({ workoutId, exerciseName }) => {
    return selectNewExerciseResults;
 };
 
-const createExercise = async ({
-   newWorkoutId,
-   exerciseName,
-   exerciseOrder,
-}) => {
+const createExercise = async ({ workoutId, exerciseName, exerciseOrder }) => {
    const [insertExerciseResults] = await pool.execute(
       `
                INSERT INTO exercise (workout_id, exercise_name, exercise_order)
                VALUES (?, ?, ?)
             `,
-      [newWorkoutId, exerciseName, exerciseOrder]
+      [workoutId, exerciseName, exerciseOrder]
    );
 
    if (!insertExerciseResults.affectedRows) {
@@ -46,7 +65,54 @@ const createExercise = async ({
    }
 };
 
+const updateExercise = async ({ exerciseId, exerciseName, exerciseOrder }) => {
+   const [updateExerciseResults] = await pool.execute(
+      `
+         UPDATE exercise
+         SET exercise_name = ?, exercise_order = ?
+         WHERE exercise_id = ?
+      `,
+      [exerciseName, exerciseOrder, exerciseId]
+   );
+
+   if (!updateExerciseResults.affectedRows) {
+      throw new Error("Unable to update exercise.");
+   }
+};
+
+const deleteExercise = async ({ exerciseId, workoutId }) => {
+   let query = "";
+   let values = [];
+
+   if (exerciseId) {
+      query = `
+         DELETE FROM exercise
+         WHERE exercise_id = ?
+      `;
+
+      values.push(exerciseId);
+   } else if (workoutId) {
+      query = `
+         DELETE FROM exercise
+         WHERE workout_id = ?
+      `;
+
+      values.push(workoutId);
+   }
+
+   const [deleteExerciseResults] = await pool.execute(query, values);
+
+   if (!deleteExerciseResults.affectedRows) {
+      throw new Error("Unable to delete exercise.");
+   }
+
+   return;
+};
+
 module.exports = {
+   getExerciseIds,
    getExercises,
    createExercise,
+   updateExercise,
+   deleteExercise,
 };

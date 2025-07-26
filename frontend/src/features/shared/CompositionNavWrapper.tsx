@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../../stores/userStore";
 import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
-import { fetchCreateWorkout } from "../../services/workoutServices";
+import { fetchCreateWorkout, fetchUpdateWorkout } from "../../services/workoutServices";
 
 import styles from "./Navbar.module.css";
 
@@ -13,8 +13,12 @@ export default function CompositionNavWrapper() {
    const workoutComposition = useWorkoutCompositionStore(
       (state) => state.workoutComposition
    );
+   const resetWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.resetWorkoutComposition
+   );
 
    const handleCancelClick = () => {
+      resetWorkoutComposition();
       navigate(-1);
    };
 
@@ -37,30 +41,27 @@ export default function CompositionNavWrapper() {
                return alert("Something went wrong. Try again later.");
             }
          } else {
-            // const updateWorkoutRequest = await fetchUpdateWorkout({
-            //    workoutComposition,
-            //    token: user!.token,
-            // });
-            // if (updateWorkoutRequest.error) {
-            //    console.error(updateWorkoutRequest);
-            //    return alert("Something went wrong. Try again later.");
-            // }
-            console.log("Update workout: ", workoutComposition);
+            const updateWorkoutRequest = await fetchUpdateWorkout({
+               workoutComposition,
+               token: user!.token,
+            });
+
+            if (updateWorkoutRequest.error) {
+               console.error(updateWorkoutRequest);
+
+               return alert("Something went wrong. Try again later.");
+            }
          }
 
-         // workoutCompositionDispatch({
-         //    type: "RESET-WORKOUT",
-         // });
+         resetWorkoutComposition();
 
          return navigate(-1);
       } catch (error) {
          console.error(error);
-         
+
          return alert("Something went wrong. Try again later.");
       }
    };
-
-   console.log(workoutId);
 
    return (
       <nav className={styles.wrapper}>

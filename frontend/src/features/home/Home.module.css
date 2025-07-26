@@ -17,6 +17,7 @@
    margin-top: 30px;
 }
 
-.createWorkoutLink {
-   margin: 15px auto 0;
+.createWorkoutLinkWrapper {
+   text-align: center;
+   margin-top: 30px;
 }

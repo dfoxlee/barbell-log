@@ -16,7 +16,10 @@ export default function ReorderExercise({
 }) {
    const { workoutCompositionDispatch } = useWorkoutCompositionContext();
    const totalWeight = useMemo(() => {
-      return exercise.exerciseSets.reduce((acc, curr) => acc + curr.weight, 0);
+      return exercise.exerciseSets.reduce(
+         (acc, curr) => parseFloat(acc) + parseFloat(curr.weight),
+         0
+      );
    }, [exercise.exerciseSets]);
    const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });

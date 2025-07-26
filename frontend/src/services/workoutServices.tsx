@@ -27,10 +27,10 @@ export const fetchCreateWorkout = async ({
 };
 
 export const fetchUpdateWorkout = async ({
-   workout,
+   workoutComposition,
    token,
 }: {
-   workout: WorkoutType;
+   workoutComposition: WorkoutType;
    token: string;
 }) => {
    const req = await fetch(`${baseUrl}/workouts/update`, {
@@ -39,7 +39,7 @@ export const fetchUpdateWorkout = async ({
          "Content-Type": "application/json",
          Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ workout }),
+      body: JSON.stringify({ workoutComposition }),
    });
 
    const res = await req.json();
