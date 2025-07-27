@@ -7,7 +7,7 @@ const {
    comparePassword,
 } = require("../utils/authUtils");
 
-const findUserByEmail = async (email) => {
+const selectUserByEmail = async (email) => {
    const [results] = await pool.execute("SELECT * FROM user WHERE email = ?", [
       email,
    ]);
@@ -15,7 +15,7 @@ const findUserByEmail = async (email) => {
    return results;
 };
 
-const findUserById = async (userId) => {
+const selectUserById = async (userId) => {
    const [results] = await pool.execute(
       "SELECT * FROM user WHERE user_id = ?",
       [userId]
@@ -24,7 +24,7 @@ const findUserById = async (userId) => {
    return results;
 };
 
-const createUser = async ({ email, password }) => {
+const insertUser = async ({ email, password }) => {
    const [userSearchResults] = await pool.execute(
       `
       SELECT *
@@ -193,10 +193,10 @@ const updateWeightUnitPreference = async (userId, preference) => {
 };
 
 module.exports = {
-   createUser,
+   insertUser,
    validateUser,
-   findUserByEmail,
-   findUserById,
+   selectUserByEmail,
+   selectUserById,
    updateUserToken,
    deleteUser,
    updateWeightUnitPreference,

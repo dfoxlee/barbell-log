@@ -1,6 +1,6 @@
 const pool = require("../db/dbConfig");
 
-const getCompletedExerciseSets = async ({ completedExerciseId }) => {
+const selectCompletedExerciseSets = async ({ completedExerciseId }) => {
    const [selectCompletedExerciseSetsResults] = await pool.execute(
       `
          SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
@@ -33,7 +33,7 @@ const getCompletedExerciseSets = async ({ completedExerciseId }) => {
    return selectCompletedExerciseSetsResults;
 };
 
-const createCompletedExerciseSet = async ({
+const insertCompletedExerciseSet = async ({
    completedExerciseId,
    exerciseSetId,
    completedExerciseSetOrder,
@@ -162,8 +162,8 @@ const deleteCompletedExerciseSet = async ({
 };
 
 module.exports = {
-   getCompletedExerciseSets,
-   createCompletedExerciseSet,
+   selectCompletedExerciseSets,
+   insertCompletedExerciseSet,
    updateCompletedExerciseSet,
    deleteCompletedExerciseSet,
 };

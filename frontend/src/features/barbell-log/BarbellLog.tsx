@@ -53,13 +53,6 @@ export default function BarbellLog() {
             getBarbellLog({ token: user?.token, workoutId });
          }
       }
-
-      if (barbellLogError) {
-         toastify({
-            message: barbellLogError,
-            type: "error",
-         });
-      }
    }, [workoutId, completedWorkoutId]);
 
    const handleExerciseSelectChange = (event) => {

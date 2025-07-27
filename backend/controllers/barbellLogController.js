@@ -1,24 +1,24 @@
 const {
-   getCompletedExercises,
+   selectCompletedExercises,
    updateCompletedExercise,
-   createCompletedExercise,
+   insertCompletedExercise,
 } = require("../services/completedExercises.services");
 const {
-   getCompletedExerciseSets,
+   selectCompletedExerciseSets,
    updateCompletedExerciseSet,
-   createCompletedExerciseSet,
+   insertCompletedExerciseSet,
 } = require("../services/completedExerciseSets.services");
 const {
-   getCompletedWorkout,
-   createCompletedWorkout,
+   selectCompletedWorkout,
+   insertCompletedWorkout,
 } = require("../services/completedWorkouts.services");
-const { getExercises } = require("../services/exercises.services");
-const { getExerciseSets } = require("../services/exerciseSets.services");
-const { getWorkouts } = require("../services/workouts.services");
+const { selectExercises } = require("../services/exercises.services");
+const { selectExerciseSets } = require("../services/exerciseSets.services");
+const { selectWorkouts } = require("../services/workouts.services");
 
 const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
    if (completedWorkoutId) {
-      const completedWorkout = await getCompletedWorkout({
+      const completedWorkout = await selectCompletedWorkout({
          completedWorkoutId,
       });
 
@@ -26,13 +26,13 @@ const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
          throw new Error("Unable to find the completed workout.");
       }
 
-      const completedExercises = await getCompletedExercises({
+      const completedExercises = await selectCompletedExercises({
          completedWorkoutId,
       });
 
       const completedExercisesWithSets = await Promise.all(
          completedExercises.map(async (completedExercise) => {
-            const completedExerciseSets = await getCompletedExerciseSets({
+            const completedExerciseSets = await selectCompletedExerciseSets({
                completedExerciseId: completedExercise.completedExerciseId,
             });
 
@@ -48,7 +48,7 @@ const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
          completedExercises: completedExercisesWithSets,
       };
    } else {
-      const workout = await getWorkouts({ workoutId });
+      const workout = await selectWorkouts({ workoutId });
 
       if (!workout) {
          throw new Error("Unable to find workout.");
@@ -59,7 +59,7 @@ const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
          workoutName: workout[0].workoutName,
       };
 
-      const exercises = await getExercises({ workoutId });
+      const exercises = await selectExercises({ workoutId });
 
       if (!exercises) {
          return {
@@ -70,7 +70,7 @@ const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
 
       const completedExercises = await Promise.all(
          exercises.map(async (exercise) => {
-            const exerciseSets = await getExerciseSets({
+            const exerciseSets = await selectExerciseSets({
                exerciseId: exercise.exerciseId,
             });
 
@@ -148,29 +148,29 @@ const barbellLogComposition = async ({ barbellLog }) => {
          })
       );
    } else {
-      await createCompletedWorkout({
+      await insertCompletedWorkout({
          workoutId: barbellLog.workoutId,
       });
 
-      const newCompletedWorkout = await getCompletedWorkout({
+      const newCompletedWorkout = await selectCompletedWorkout({
          workoutId: barbellLog.workoutId,
       });
 
       barbellLog.completedExercises.forEach(async (completedExercise) => {
-         await createCompletedExercise({
+         await insertCompletedExercise({
             completedWorkoutId: newCompletedWorkout[0].completedWorkoutId,
             exerciseId: completedExercise.exerciseId,
             completedExerciseOrder: completedExercise.completedExerciseOrder,
          });
 
-         const newCompletedExercise = await getCompletedExercises({
+         const newCompletedExercise = await selectCompletedExercises({
             completedWorkoutId: newCompletedWorkout[0].completedWorkoutId,
             exerciseId: completedExercise.exerciseId,
          });
 
          completedExercise.completedExerciseSets.forEach(
             async (completedExerciseSet) => {
-               await createCompletedExerciseSet({
+               await insertCompletedExerciseSet({
                   completedExerciseId:
                      newCompletedExercise[0].completedExerciseId,
                   exerciseSetId: completedExerciseSet.exerciseSetId,

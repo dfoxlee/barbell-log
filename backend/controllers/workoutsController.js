@@ -1,45 +1,45 @@
 const {
-   getCompletedExercises,
+   selectCompletedExercises,
    deleteCompletedExercise,
 } = require("../services/completedExercises.services");
 const {
-   getCompletedExerciseSets,
+   selectCompletedExerciseSets,
    deleteCompletedExerciseSet,
 } = require("../services/completedExerciseSets.services");
 const {
-   getCompletedWorkout,
+   selectCompletedWorkout,
    deleteCompletedWorkout,
 } = require("../services/completedWorkouts.services");
 const {
-   createExercise,
-   getExercises,
-   getExerciseIds,
+   insertExercise,
+   selectExercises,
+   selectExerciseIds,
    updateExercise,
    deleteExercise,
 } = require("../services/exercises.services");
 const {
-   createExerciseSet,
-   getExerciseSets,
-   getExerciseSetIds,
+   insertExerciseSet,
+   selectExerciseSets,
+   selectExerciseSetIds,
    updateExerciseSet,
    deleteExerciseSet,
 } = require("../services/exerciseSets.services");
 const {
-   getWorkouts,
-   createWorkout,
+   selectWorkouts,
+   insertWorkout,
    updateWorkout,
    deleteWorkout,
 } = require("../services/workouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getAllUserWorkouts = async ({ userId }) => {
-   const selectWorkoutResults = await getWorkouts({ userId });
+   const selectWorkoutResults = await selectWorkouts({ userId });
 
    return selectWorkoutResults;
 };
 
 const getUserWorkout = async ({ workoutId }) => {
-   const selectWorkoutResults = await getWorkouts({ workoutId });
+   const selectWorkoutResults = await selectWorkouts({ workoutId });
 
    if (!selectWorkoutResults.length) {
       throw new Error("No workout found.");
@@ -47,7 +47,7 @@ const getUserWorkout = async ({ workoutId }) => {
 
    let workout = selectWorkoutResults[0];
 
-   const selectExercisesResults = await getExercises({ workoutId });
+   const selectExercisesResults = await selectExercises({ workoutId });
 
    if (!selectExercisesResults.length) {
       return selectWorkoutResults[0];
@@ -55,7 +55,7 @@ const getUserWorkout = async ({ workoutId }) => {
 
    const exercises = await Promise.all(
       selectExercisesResults.map(async (exercise) => {
-         const selectExerciseSetsResults = await getExerciseSets({
+         const selectExerciseSetsResults = await selectExerciseSets({
             exerciseId: exercise.exerciseId,
          });
 
@@ -81,27 +81,27 @@ const getUserWorkout = async ({ workoutId }) => {
 const addUserWorkout = async ({ userId, workoutComposition }) => {
    const workoutName = workoutComposition.workoutName;
 
-   const selectWorkoutResults = await getWorkouts({ userId, workoutName });
+   const selectWorkoutResults = await selectWorkouts({ userId, workoutName });
 
    if (selectWorkoutResults.length > 0) {
       throw new Error("Workout already exists.");
    }
 
-   await createWorkout({ userId, workoutName });
+   await insertWorkout({ userId, workoutName });
 
-   const selectNewWorkoutResults = await getWorkouts({ userId, workoutName });
+   const selectNewWorkoutResults = await selectWorkouts({ userId, workoutName });
 
    const newWorkoutId = selectNewWorkoutResults[0].workoutId;
 
    await Promise.all(
       workoutComposition.exercises.map(async (exercise) => {
-         await createExercise({
+         await insertExercise({
             workoutId: newWorkoutId,
             exerciseName: exercise.exerciseName,
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const selectNewExerciseResults = await getExercises({
+         const selectNewExerciseResults = await selectExercises({
             workoutId: newWorkoutId,
             exerciseName: exercise.exerciseName,
          });
@@ -110,7 +110,7 @@ const addUserWorkout = async ({ userId, workoutComposition }) => {
 
          await Promise.all(
             exercise.exerciseSets.map(async (set) => {
-               await createExerciseSet({
+               await insertExerciseSet({
                   exerciseId: newExerciseId,
                   reps: set.reps || 0,
                   weight: set.weight || 0,
@@ -140,7 +140,7 @@ const updateUserWorkout = async ({ workoutComposition }) => {
       workoutName,
    });
 
-   const existingExerciseIds = await getExerciseIds({ workoutId });
+   const existingExerciseIds = await selectExerciseIds({ workoutId });
 
    const newExerciseIds = exercises.map((exercise) => exercise.exerciseId);
 
@@ -158,7 +158,7 @@ const updateUserWorkout = async ({ workoutComposition }) => {
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const existingExerciseSetIds = await getExerciseSetIds({
+         const existingExerciseSetIds = await selectExerciseSetIds({
             exerciseId: exercise.exerciseId,
          });
 
@@ -178,7 +178,7 @@ const updateUserWorkout = async ({ workoutComposition }) => {
             if (set.exerciseSetId) {
                await updateExerciseSet({ ...set });
             } else {
-               await createExerciseSet({
+               await insertExerciseSet({
                   exerciseId: exercise.exerciseId,
                   reps: set.reps || 0,
                   weight: set.weight || 0,
@@ -198,13 +198,13 @@ const updateUserWorkout = async ({ workoutComposition }) => {
             }
          }
       } else {
-         await createExercise({
+         await insertExercise({
             workoutId,
             exerciseName: exercise.exerciseName,
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const selectNewExerciseResults = await getExercises({
+         const selectNewExerciseResults = await selectExercises({
             workoutId,
             exerciseOrder: exercise.exerciseOrder,
          });
@@ -212,7 +212,7 @@ const updateUserWorkout = async ({ workoutComposition }) => {
          exercise.exerciseId = selectNewExerciseResults[0].exerciseId;
 
          for (const set of exercise.exerciseSets) {
-            await createExerciseSet({
+            await insertExerciseSet({
                exerciseId: exercise.exerciseId,
                reps: set.reps || 0,
                weight: set.weight || 0,
@@ -237,20 +237,22 @@ const updateUserWorkout = async ({ workoutComposition }) => {
 };
 
 const deleteUserWorkout = async ({ workoutId }) => {
-   const completedWorkouts = await getCompletedWorkout({ workoutId });
+   const completedWorkouts = await selectCompletedWorkout({ workoutId });
 
    if (completedWorkouts) {
       completedWorkouts.forEach(async (completedWorkout) => {
-         const completedExercises = await getCompletedExercises({
+         const completedExercises = await selectCompletedExercises({
             completedWorkoutId: completedWorkout.completedWorkoutId,
          });
 
          if (completedExercises) {
             await Promise.all(
                completedExercises.map(async (completedExercise) => {
-                  const completedExerciseSets = await getCompletedExerciseSets({
-                     completedExerciseId: completedExercise.completedExerciseId,
-                  });
+                  const completedExerciseSets =
+                     await selectCompletedExerciseSets({
+                        completedExerciseId:
+                           completedExercise.completedExerciseId,
+                     });
 
                   if (completedExerciseSets) {
                      completedExerciseSets.forEach(
@@ -276,12 +278,12 @@ const deleteUserWorkout = async ({ workoutId }) => {
       });
    }
 
-   const exercises = await getExercises({ workoutId });
+   const exercises = await selectExercises({ workoutId });
 
    if (exercises) {
       await Promise.all(
          exercises.map(async (exercise) => {
-            const exerciseSets = await getExerciseSets({
+            const exerciseSets = await selectExerciseSets({
                exerciseId: exercise.exerciseId,
             });
 

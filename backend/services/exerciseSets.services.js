@@ -1,7 +1,7 @@
 const pool = require("../db/dbConfig");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
-const getExerciseSetIds = async ({ exerciseId }) => {
+const selectExerciseSetIds = async ({ exerciseId }) => {
    const [selectExerciseSetIdsResults] = await pool.execute(
       `
          SELECT exercise_set_id
@@ -14,7 +14,7 @@ const getExerciseSetIds = async ({ exerciseId }) => {
    return selectExerciseSetIdsResults.map((set) => set.exercise_set_id);
 };
 
-const getExerciseSets = async ({ exerciseId }) => {
+const selectExerciseSets = async ({ exerciseId }) => {
    let query = "";
    let values = [];
 
@@ -47,7 +47,7 @@ const getExerciseSets = async ({ exerciseId }) => {
    return selectExerciseSetsResults;
 };
 
-const createExerciseSet = async ({
+const insertExerciseSet = async ({
    exerciseId,
    reps,
    weight,
@@ -219,9 +219,9 @@ const deleteExerciseSet = async ({ exerciseSetId, exerciseId }) => {
 };
 
 module.exports = {
-   getExerciseSetIds,
-   getExerciseSets,
-   createExerciseSet,
+   selectExerciseSetIds,
+   selectExerciseSets,
+   insertExerciseSet,
    updateExerciseSet,
    deleteExerciseSet,
 };

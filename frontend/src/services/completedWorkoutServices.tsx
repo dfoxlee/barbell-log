@@ -51,16 +51,23 @@ export const fetchGetCompletedWorkout = async ({
 
 export const fetchGetCompletedWorkouts = async ({
    token,
+   skip,
+   take,
 }: {
    token: string;
+   skip: number;
+   take: number;
 }) => {
-   const req = await fetch(`${baseUrl}/completed-workouts`, {
-      method: "GET",
-      headers: {
-         "Content-Type": "application/json",
-         Authorization: `Bearer ${token}`,
-      },
-   });
+   const req = await fetch(
+      `${baseUrl}/completed-workouts?skip=${skip}&take=${take}`,
+      {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+      }
+   );
 
    const res = await req.json();
 

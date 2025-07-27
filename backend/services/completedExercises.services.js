@@ -1,6 +1,6 @@
 const pool = require("../db/dbConfig");
 
-const getCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
+const selectCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
    let query = ``;
    let values = [];
 
@@ -37,7 +37,7 @@ const getCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
    return selectCompletedExerciseResults;
 };
 
-const createCompletedExercise = async ({
+const insertCompletedExercise = async ({
    completedWorkoutId,
    exerciseId,
    completedExerciseOrder,
@@ -116,8 +116,8 @@ const deleteCompletedExercise = async ({
 };
 
 module.exports = {
-   getCompletedExercises,
-   createCompletedExercise,
+   selectCompletedExercises,
+   insertCompletedExercise,
    updateCompletedExercise,
    deleteCompletedExercise,
 };

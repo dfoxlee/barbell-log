@@ -1,6 +1,6 @@
 const pool = require("../db/dbConfig");
 
-const getWorkouts = async ({ userId, workoutName, workoutId }) => {
+const selectWorkouts = async ({ userId, workoutName, workoutId }) => {
    let query = "";
    let values = [];
 
@@ -36,7 +36,7 @@ const getWorkouts = async ({ userId, workoutName, workoutId }) => {
    return selectWorkoutsResults;
 };
 
-const createWorkout = async ({ userId, workoutName }) => {
+const insertWorkout = async ({ userId, workoutName }) => {
    const createdDate = new Date();
 
    const [insertWorkoutResults] = await pool.execute(
@@ -88,8 +88,8 @@ const deleteWorkout = async ({ workoutId }) => {
 };
 
 module.exports = {
-   getWorkouts,
-   createWorkout,
+   selectWorkouts,
+   insertWorkout,
    updateWorkout,
    deleteWorkout,
 };

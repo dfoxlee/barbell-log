@@ -8,3 +8,20 @@
    text-align: center;
    margin-top: 15px;
 }
+
+.paginationWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 20px;
+   gap: 20px;
+}
+
+.paginationBtn {
+   color: var(--primary);
+}
+
+.paginationPageDisabled {
+   color: var(--accent);
+   cursor: not-allowed;
+}

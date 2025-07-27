@@ -5,7 +5,7 @@ const {
    deleteCompletedWorkout,
 } = require("../controllers/completedWorkoutsController");
 const {
-   getCompletedWorkout,
+   selectCompletedWorkout,
 } = require("../services/completedWorkouts.services");
 const completedWorkoutRouter = require("express").Router();
 
@@ -14,7 +14,7 @@ completedWorkoutRouter.get("/", async (req, res, next) => {
       const userId = req.user.user_id;
       const { skip = 0, take = 10 } = req.query;
 
-      const completedWorkouts = await getCompletedWorkout({
+      const completedWorkouts = await selectCompletedWorkout({
          userId,
       });
 

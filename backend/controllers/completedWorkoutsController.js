@@ -1,25 +1,27 @@
 const pool = require("../db/dbConfig");
 const {
-   getCompletedExercises,
+   selectCompletedExercises,
 } = require("../services/completedExercises.services");
 const {
-   getCompletedExerciseSets,
+   selectCompletedExerciseSets,
 } = require("../services/completedExerciseSets.services");
 const {
-   getCompletedWorkout,
+   selectCompletedWorkout,
 } = require("../services/completedWorkouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getCompletedWorkout = async ({ completedWorkoutId }) => {
-   const completedWorkout = await getCompletedWorkout({ completedWorkoutId });
+   const completedWorkout = await selectCompletedWorkout({
+      completedWorkoutId,
+   });
 
-   let completedExercises = await getCompletedExercises({
+   let completedExercises = await selectCompletedExercises({
       completedWorkoutId,
    });
 
    completedExercises = await Promise.all(
       completedExercises.map(async (completedExercise) => {
-         const completedExerciseSets = await getCompletedExerciseSets({
+         const completedExerciseSets = await selectCompletedExerciseSets({
             completedExerciseId: completedExercise.completedExerciseId,
          });
 
@@ -37,7 +39,11 @@ const getCompletedWorkout = async ({ completedWorkoutId }) => {
 };
 
 const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {
-   const completedWorkouts = await getCompletedWorkout({ userId, page, take });
+   const completedWorkouts = await selectCompletedWorkout({
+      userId,
+      page,
+      take,
+   });
 
    return completedWorkouts;
 };

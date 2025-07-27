@@ -1,6 +1,7 @@
 export interface CompletedWorkoutType {
    completedWorkoutId?: string;
    workoutId: string;
+   workoutName?: string;
    completedDate?: Date | string;
    completedExercises: CompletedExerciseType[];
 }

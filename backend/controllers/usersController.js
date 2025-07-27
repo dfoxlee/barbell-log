@@ -1,11 +1,11 @@
 const {
-   createUser,
+   insertUser,
    validateUser,
    updateWeightUnitPreference,
 } = require("../services/users.services");
 
 const signUpUser = async ({ email, password }) => {
-   const user = await createUser({ email, password });
+   const user = await insertUser({ email, password });
 
    return user;
 };

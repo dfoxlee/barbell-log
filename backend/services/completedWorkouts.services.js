@@ -1,6 +1,6 @@
 const pool = require("../db/dbConfig");
 
-const getCompletedWorkout = async ({
+const selectCompletedWorkout = async ({
    completedWorkoutId,
    workoutId,
    userId,
@@ -32,7 +32,6 @@ const getCompletedWorkout = async ({
       `;
       values.push(workoutId);
    } else if (userId) {
-
       query = `
          SELECT cw.completed_workout_id AS completedWorkoutId,
                 cw.workout_id AS workoutId,
@@ -54,7 +53,7 @@ const getCompletedWorkout = async ({
    return selectCompletedWorkoutResults;
 };
 
-const createCompletedWorkout = async ({ workoutId }) => {
+const insertCompletedWorkout = async ({ workoutId }) => {
    const completedDate = new Date()
       .toISOString()
       .slice(0, 19)
@@ -107,7 +106,7 @@ const deleteCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
 };
 
 module.exports = {
-   getCompletedWorkout,
-   createCompletedWorkout,
+   selectCompletedWorkout,
+   insertCompletedWorkout,
    deleteCompletedWorkout,
 };
