@@ -3,9 +3,29 @@ const pool = require("../db/dbConfig");
 const getCompletedExerciseSets = async ({ completedExerciseId }) => {
    const [selectCompletedExerciseSetsResults] = await pool.execute(
       `
-         SELECT completed_exercise_set_id as completedExerciseSetId, completed_exercise_id as completedExerciseId, exercise_set_id as exerciseSetId, completed_exercise_set_order as completedExerciseSetOrder, completed_reps as completedReps, completed_weight as completedWeight, completed_distance as completedDistance, completed_hr as completedHr, completed_min as completedMin, completed_sec as completedSec, notes, is_complete as isComplete
-         FROM completed_exercise_set
-         WHERE completed_exercise_id = ?
+         SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
+            ces.completed_exercise_id AS completedExerciseId, 
+            ces.exercise_set_id AS exerciseSetId, 
+            ces.completed_exercise_set_order AS completedExerciseSetOrder,
+            es.has_reps AS hasReps,
+            es.is_bodyweight AS isBodyweight,
+            es.is_timed AS isTimed,
+            es.is_distance AS isDistance,
+            es.is_warmup AS isWarmup,
+            ces.completed_reps AS completedReps, 
+            ces.completed_weight AS completedWeight, 
+            ces.completed_weight_unit AS completedWeightUnit,
+            ces.completed_distance AS completedDistance, 
+            ces.completed_distance_unit AS completedDistanceUnit,
+            ces.completed_hr AS completedHr, 
+            ces.completed_min AS completedMin, 
+            ces.completed_sec AS completedSec, 
+            ces.notes, 
+            ces.is_complete AS isComplete
+         FROM completed_exercise_set ces
+         INNER JOIN exercise_set es ON ces.exercise_set_id = es.exercise_set_id
+         WHERE ces.completed_exercise_id = ?
+         ORDER BY ces.completed_exercise_set_order
       `,
       [completedExerciseId]
    );
@@ -13,4 +33,91 @@ const getCompletedExerciseSets = async ({ completedExerciseId }) => {
    return selectCompletedExerciseSetsResults;
 };
 
-module.exports = { getCompletedExerciseSets };
+const createCompletedExerciseSet = async ({
+   completedExerciseId,
+   exerciseSetId,
+   completedExerciseSetOrder,
+   completedReps,
+   completedWeight,
+   completedWeightUnit,
+   completedDistance,
+   completedDistanceUnit,
+   completedHr,
+   completedMin,
+   completedSec,
+   notes,
+   isComplete,
+}) => {
+   const [insertCompletedExerciseSetResults] = await pool.execute(
+      `
+         INSERT INTO completed_exercise_set (completed_exercise_id, exercise_set_id, completed_exercise_set_order, completed_reps, completed_weight, completed_weight_unit, completed_distance, completed_distance_unit, completed_hr, completed_min, completed_sec, notes, is_complete)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+         completedExerciseId,
+         exerciseSetId,
+         completedExerciseSetOrder,
+         completedReps,
+         completedWeight,
+         completedWeightUnit,
+         completedDistance,
+         completedDistanceUnit,
+         completedHr,
+         completedMin,
+         completedSec,
+         notes,
+         isComplete,
+      ]
+   );
+
+   return insertCompletedExerciseSetResults.insertId;
+};
+
+const updateCompletedExerciseSet = async ({
+   completedExerciseSetId,
+   completedExerciseSetOrder,
+   completedReps,
+   completedWeight,
+   completedWeightUnit,
+   completedDistance,
+   completedDistanceUnit,
+   completedHr,
+   completedMin,
+   completedSec,
+   notes,
+   isComplete,
+}) => {
+   const [updateCompletedExerciseSetResults] = await pool.execute(
+      `
+         UPDATE completed_exercise_set
+         SET completed_exercise_set_order = ?, completed_reps = ?, completed_weight = ?, completed_weight_unit = ?, completed_distance = ?, completed_distance_unit = ?, completed_hr = ?, completed_min = ?, completed_sec = ?, notes = ?, is_complete = ?
+         WHERE completed_exercise_set_id = ?
+      `,
+      [
+         completedExerciseSetOrder,
+         completedReps,
+         completedWeight,
+         completedWeightUnit,
+         completedDistance,
+         completedDistanceUnit,
+         completedHr,
+         completedMin,
+         completedSec,
+         notes,
+         isComplete,
+         completedExerciseSetId,
+      ]
+   );
+
+   if (!updateCompletedExerciseSetResults.affectedRows) {
+      throw new Error("Unable to update completed exercise set.");
+   }
+
+   return;
+};
+
+module.exports = {
+   getCompletedExerciseSets,
+   createCompletedExerciseSet,
+   updateCompletedExerciseSet,
+};

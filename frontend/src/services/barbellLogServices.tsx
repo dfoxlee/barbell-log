@@ -1,3 +1,5 @@
+import type { BarbellLogType } from "../types/barbellLogTypes";
+
 const baseUrl =
    import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
       ? import.meta.env.VITE_PRODUCTION_URL
@@ -15,7 +17,7 @@ export const fetchGetBarbellLog = async ({
    const params = completedWorkoutId
       ? `${workoutId}/${completedWorkoutId}`
       : `${workoutId}`;
-      
+
    const req = await fetch(`${baseUrl}/barbell-log/${params}`, {
       method: "GET",
       headers: {
@@ -23,9 +25,34 @@ export const fetchGetBarbellLog = async ({
          Authorization: `Bearer ${token}`,
       },
    });
-
+   
    if (!req.ok) {
       throw new Error("Something went wrong getting barbell log.");
+   }
+   
+   const res = await req.json();
+   
+   return res;
+};
+
+export const fetchBarbellLogComposition = async ({
+   token,
+   barbellLog,
+}: {
+   token: string;
+   barbellLog: BarbellLogType;
+}) => {
+   const req = await fetch(`${baseUrl}/barbell-log/composition`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(barbellLog),
+   });
+
+   if (!req.ok) {
+      throw new Error("Something went wrong getting barbell log composition.");
    }
 
    const res = await req.json();

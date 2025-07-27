@@ -24,6 +24,7 @@ export default function Home() {
       }
 
       if (workoutsError) {
+         console.error("Error fetching workouts:", workoutsError);
          toastify({
             message: "Something went wrong getting workouts. Try again later.",
             type: "error",

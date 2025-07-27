@@ -31,6 +31,7 @@ export const useWorkoutsStore = create<WorkoutsStoreType>((set, get) => ({
 
          set({ workouts: workoutRequest });
       } catch (error: any) {
+         console.error("Error fetching workouts:", error);
          set({
             workoutsError:
                typeof error === typeof Error

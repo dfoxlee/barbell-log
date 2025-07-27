@@ -8,7 +8,6 @@ import BarbellLog from "./features/barbell-log/BarbellLog";
 import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import WorkoutHistory from "./features/workout-history/WorkoutHistory";
-import CompletedWorkout from "./features/completed-workout/CompletedWorkout";
 import Measurements from "./features/measurements/Measurements";
 
 function App() {
@@ -28,10 +27,6 @@ function App() {
             />
             <Route path="measurements" element={<Measurements />} />
             <Route path="workout-history" element={<WorkoutHistory />} />
-            <Route
-               path="completed-workout/:completed-workout-id"
-               element={<CompletedWorkout />}
-            />
             <Route path="settings" element={<Settings />} />
          </Route>
          <Route path="*" element={<NotFound404 />} />

@@ -1,5 +1,14 @@
-import styles from './Measurements.module.css';
+import Seperator from "../shared/Seperator";
+import UnderConstruction from "../shared/UnderConstruction";
 
-export default function Measurements () {
-return (<div>Measurements</div>);
-};
+import styles from "./Measurements.module.css";
+
+export default function Measurements() {
+   return (
+      <div className={styles.container}>
+         <h2 className={styles.title}>Measurements</h2>
+         <Seperator />
+         <UnderConstruction />
+      </div>
+   );
+}

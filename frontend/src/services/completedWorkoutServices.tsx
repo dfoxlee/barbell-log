@@ -1,5 +1,4 @@
-import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
-import type { WorkoutType } from "../types/workoutTypes";
+import type { BarbellLogType } from "../types/barbellLogTypes";
 
 const baseUrl =
    import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
@@ -10,7 +9,7 @@ export const fetchCreateCompletedWorkout = async ({
    workout,
    token,
 }: {
-   workout: WorkoutType;
+   workout: BarbellLogType;
    token: string;
 }) => {
    const req = await fetch(`${baseUrl}/completed-workouts/create`, {
@@ -91,7 +90,7 @@ export const fetchUpdateCompletedWorkout = async ({
    completedWorkout,
 }: {
    token: string;
-   completedWorkout: CompletedWorkoutType;
+   completedWorkout: BarbellLogType;
 }) => {
    const req = await fetch(`${baseUrl}/completed-workouts/update`, {
       method: "PUT",

@@ -43,7 +43,6 @@ export default function BarbellLog() {
 
    useEffect(() => {
       if (
-         !barbellLog &&
          !barbellLogLoading &&
          !barbellLogError &&
          user?.token &&

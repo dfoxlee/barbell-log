@@ -6,6 +6,7 @@ import toastify from "../../utils/toastify";
 
 import styles from "./Settings.module.css";
 import { useUserStore } from "../../stores/userStore";
+import { distanceUnits } from "../../enums/constants";
 
 export default function Settings() {
    const user = useUserStore((state) => state.user);
@@ -51,21 +52,39 @@ export default function Settings() {
          <button className={styles.logoutBtn} onClick={handleLogoutClick}>
             Logout
          </button>
-         <div>
-            <h3 className={styles.weightPreferenceTitle}>Weight Preference</h3>
-            <div className={styles.weightUnitToggleWrapper}>
-               <span className={styles.weightUnitLabel}>kg</span>
-               <button
-                  className={styles.weightUnitBtn}
-                  onClick={handleWeightUnitPreferenceToggleClick}
+         <div className={styles.unitPreferencesWrapper}>
+            <div className={styles.unitPreferenceWrapper}>
+               <h3 className={styles.unitPreferenceTitle}>Weight Preference</h3>
+               <div className={styles.weightUnitToggleWrapper}>
+                  <span className={styles.weightUnitLabel}>kg</span>
+                  <button
+                     className={styles.weightUnitBtn}
+                     onClick={handleWeightUnitPreferenceToggleClick}
+                  >
+                     {user?.weightUnitPreference === "lb" ? (
+                        <FaToggleOn />
+                     ) : (
+                        <FaToggleOff />
+                     )}
+                  </button>
+                  <span className={styles.weightUnitLabel}>lb</span>
+               </div>
+            </div>
+            <div className={styles.unitPreferenceWrapper}>
+               <h3 className={styles.unitPreferenceTitle}>
+                  Distance Preference
+               </h3>
+               <select
+                  className={styles.distanceUnitSelect}
+                  name="distance-preference"
+                  id="distance-preference"
                >
-                  {user?.weightUnitPreference === "lb" ? (
-                     <FaToggleOn />
-                  ) : (
-                     <FaToggleOff />
-                  )}
-               </button>
-               <span className={styles.weightUnitLabel}>lb</span>
+                  {distanceUnits.map((unit) => (
+                     <option key={unit.id} value={unit.label}>
+                        {unit.label}
+                     </option>
+                  ))}
+               </select>
             </div>
          </div>
          <div className={styles.accountOptionsWrapper}>
