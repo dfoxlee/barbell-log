@@ -2,11 +2,11 @@ import { FaGlasses, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import styles from "./CompletedWorkout.module.css";
-import { useAuthContext } from "../../../hooks/useAuthContext";
 import { fetchDeleteCompeletedWorkout } from "../../../services/completedWorkoutServices";
+import { useUserStore } from "../../../stores/userStore";
 
 export default function CompletedWorkout({ completedWorkout }) {
-   const { user } = useAuthContext();
+   const user = useUserStore(state => state.user);
 
    const handleDeleteClick = async () => {
       console.log(completedWorkout);

@@ -1,13 +1,16 @@
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle, FaStickyNote } from "react-icons/fa";
 import DistanceInput from "./DistanceInput";
 import styles from "./ExerciseSetsTable.module.css";
 import RepsInput from "./RepsInput";
 import TimedInput from "./TimedInput";
 import WeightInput from "./WeightInput";
 import { useBarbellLogStore } from "../../../stores/barbellLogStore";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export default function ExerciseSetsTable() {
+   const [showExerciseSetNotes, setShowExerciseSetNotes] = useState<number[]>(
+      []
+   );
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
@@ -201,6 +204,50 @@ export default function ExerciseSetsTable() {
       }
    };
 
+   const updateShowExerciseSetNotes = (exerciseSetOrder: number) => {
+      setShowExerciseSetNotes((prev) => {
+         if (prev.includes(exerciseSetOrder)) {
+            return prev.filter((order) => order !== exerciseSetOrder);
+         }
+         return [...prev, exerciseSetOrder];
+      });
+   };
+
+   const updateExerciseSetNotes = ({
+      exerciseSetOrder,
+      notes,
+   }: {
+      exerciseSetOrder: number;
+      notes: string;
+   }) => {
+      if (barbellLog) {
+         const updatedCompletedExerciseSets =
+            currentExercise?.completedExerciseSets.map((set) =>
+               set.completedExerciseSetOrder === exerciseSetOrder
+                  ? { ...set, notes }
+                  : set
+            );
+
+         const updatedCurrentExercise = {
+            ...currentExercise,
+            completedExerciseSets: updatedCompletedExerciseSets,
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedCurrentExercise.completedExerciseOrder
+                  ? updatedCurrentExercise
+                  : exercise
+         );
+
+         updateBarbellLog({
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         });
+      }
+   };
+
    return (
       <table className={styles.tableWrapper}>
          <thead>
@@ -215,7 +262,12 @@ export default function ExerciseSetsTable() {
                exerciseSets.map((exerciseSet) => (
                   <tr key={exerciseSet.exerciseSetId}>
                      <td className={styles.tableData}>
-                        {exerciseSet.completedExerciseSetOrder}
+                        <div className={styles.setNumberWrapper}>
+                           {exerciseSet.isWarmup ? (
+                              <span className={styles.warmupIcon}>W</span>
+                           ) : null}
+                           <span>{exerciseSet.completedExerciseSetOrder}</span>
+                        </div>
                      </td>
                      <td className={styles.tableData}>
                         <div className={styles.repsWeightInputWrapper}>
@@ -243,7 +295,7 @@ export default function ExerciseSetsTable() {
                         </div>
                         {exerciseSet.isTimed ? (
                            <TimedInput
-                              hr={exerciseSet.compeltedHr}
+                              hr={exerciseSet.completedHr}
                               min={exerciseSet.completedMin}
                               sec={exerciseSet.completedSec}
                               updateHr={updateHr}
@@ -260,20 +312,61 @@ export default function ExerciseSetsTable() {
                         ) : null}
                      </td>
                      <td className={styles.tableData}>
-                        <button
-                           className={`standardIconBtn ${
-                              exerciseSet.isComplete
-                                 ? styles.completeBtn
-                                 : styles.notCompleteBtn
-                           }`}
-                           onClick={() =>
-                              updateIsComplete(
+                        <div className={styles.exerciseSetOptionsWrapper}>
+                           <div className={styles.noteWrapper}>
+                              <button
+                                 className={`standardIconBtn ${
+                                    exerciseSet.notes
+                                       ? styles.notesBtnActive
+                                       : styles.notesBtn
+                                 }`}
+                                 onClick={() =>
+                                    updateShowExerciseSetNotes(
+                                       exerciseSet.completedExerciseSetOrder
+                                    )
+                                 }
+                              >
+                                 <FaStickyNote />
+                              </button>
+                              {showExerciseSetNotes.includes(
                                  exerciseSet.completedExerciseSetOrder
-                              )
-                           }
-                        >
-                           <FaCheckCircle />
-                        </button>
+                              ) ? (
+                                 <div className={styles.noteModalWrapper}>
+                                    <input
+                                       className={`standardInput ${styles.noteInput}`}
+                                       type="text"
+                                       value={exerciseSet.notes || ""}
+                                       onChange={(e) =>
+                                          updateExerciseSetNotes({
+                                             exerciseSetOrder:
+                                                exerciseSet.completedExerciseSetOrder,
+                                             notes: e.target.value,
+                                          })
+                                       }
+                                       onBlur={() =>
+                                          updateShowExerciseSetNotes(
+                                             exerciseSet.completedExerciseSetOrder
+                                          )
+                                       }
+                                    />
+                                 </div>
+                              ) : null}
+                           </div>
+                           <button
+                              className={`standardIconBtn ${
+                                 exerciseSet.isComplete
+                                    ? styles.completeBtn
+                                    : styles.notCompleteBtn
+                              }`}
+                              onClick={() =>
+                                 updateIsComplete(
+                                    exerciseSet.completedExerciseSetOrder
+                                 )
+                              }
+                           >
+                              <FaCheckCircle />
+                           </button>
+                        </div>
                      </td>
                   </tr>
                ))}

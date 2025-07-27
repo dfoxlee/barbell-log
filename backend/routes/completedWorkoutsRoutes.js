@@ -1,19 +1,33 @@
 const {
    createCompletedWorkout,
    getCompletedWorkouts,
-   getCompletedWorkout,
    updateCompletedWorkout,
    deleteCompletedWorkout,
 } = require("../controllers/completedWorkoutsController");
+const {
+   getCompletedWorkout,
+} = require("../services/completedWorkouts.services");
 const completedWorkoutRouter = require("express").Router();
 
 completedWorkoutRouter.get("/", async (req, res, next) => {
    try {
       const userId = req.user.user_id;
+      const { skip = 0, take = 10 } = req.query;
 
-      const completedWorkouts = await getCompletedWorkouts({ userId });
+      const completedWorkouts = await getCompletedWorkout({
+         userId,
+      });
 
-      return res.status(201).json(completedWorkouts);
+      const totalWorkouts = completedWorkouts.length;
+
+      const paginatedWorkouts = completedWorkouts.slice(
+         Number(skip),
+         Number(skip) + Number(take)
+      );
+
+      return res
+         .status(201)
+         .json({ workouts: paginatedWorkouts, totalWorkouts });
    } catch (error) {
       next(error);
    }

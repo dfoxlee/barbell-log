@@ -1,5 +1,4 @@
 import { FaGripVertical, FaTrash } from "react-icons/fa";
-import { useWorkoutCompositionContext } from "../../../hooks/useWorkoutCompositionContext";
 import { useMemo } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
@@ -14,7 +13,6 @@ export default function ReorderExercise({
    exercise: ExerciseType;
    id: number;
 }) {
-   const { workoutCompositionDispatch } = useWorkoutCompositionContext();
    const totalWeight = useMemo(() => {
       return exercise.exerciseSets.reduce(
          (acc, curr) => parseFloat(acc) + parseFloat(curr.weight),
@@ -35,17 +33,17 @@ export default function ReorderExercise({
          exerciseName: event.target.value,
       };
 
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: newExercise,
-      });
+      // workoutCompositionDispatch({
+      //    type: "UPDATE-EXERCISE",
+      //    payload: newExercise,
+      // });
    };
 
    const handleDeleteExerciseClick = () => {
-      workoutCompositionDispatch({
-         type: "DELETE-EXERCISE",
-         payload: exercise.exerciseOrder,
-      });
+      // workoutCompositionDispatch({
+      //    type: "DELETE-EXERCISE",
+      //    payload: exercise.exerciseOrder,
+      // });
    };
 
    return (

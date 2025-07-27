@@ -1,6 +1,10 @@
 const pool = require("../db/dbConfig");
 
-const getCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
+const getCompletedWorkout = async ({
+   completedWorkoutId,
+   workoutId,
+   userId,
+}) => {
    let query = ``;
    let values = [];
 
@@ -27,6 +31,20 @@ const getCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
          WHERE cw.workout_id = ?;
       `;
       values.push(workoutId);
+   } else if (userId) {
+
+      query = `
+         SELECT cw.completed_workout_id AS completedWorkoutId,
+                cw.workout_id AS workoutId,
+                w.workout_name AS workoutName,
+                cw.completed_date AS completedDate
+         FROM completed_workout cw
+         INNER JOIN workout w ON w.workout_id = cw.workout_id
+         WHERE w.user_id = ?
+         ORDER BY cw.completed_date DESC
+      `;
+
+      values.push(userId);
    } else {
       return;
    }

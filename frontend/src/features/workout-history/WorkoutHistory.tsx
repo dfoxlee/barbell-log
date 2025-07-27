@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Seperator from "../shared/Seperator";
 import Workouts from "./components/Workouts";
+import Exercises from "./components/Exercises";
 
 import styles from "./WorkoutHistory.module.css";
-import Exercises from "./components/Exercises";
 
 export default function WorkoutHistory() {
    const [historyType, setHistoryType] = useState("workouts");
@@ -18,21 +18,21 @@ export default function WorkoutHistory() {
          <Seperator />
          <div className={styles.optionBtnsWrapper}>
             <button
-               className={
+               className={`standardBtn ${
                   historyType === "workouts"
-                     ? `${styles.optionBtn} ${styles.optionBtnActive}`
+                     ? styles.optionBtnActive
                      : styles.optionBtn
-               }
+               }`}
                onClick={(e) => updateHistoryType("workouts")}
             >
                Workouts
             </button>
             <button
-               className={
+               className={`standardBtn ${
                   historyType === "exercises"
-                     ? `${styles.optionBtn} ${styles.optionBtnActive}`
+                     ? styles.optionBtnActive
                      : styles.optionBtn
-               }
+               }`}
                onClick={(e) => updateHistoryType("exercises")}
             >
                Exercises

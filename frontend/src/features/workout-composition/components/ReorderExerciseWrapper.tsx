@@ -5,10 +5,10 @@ import {
    useSensor,
    useSensors,
 } from "@dnd-kit/core";
-import { useWorkoutCompositionContext } from "../../../hooks/useWorkoutCompositionContext";
+// import { useWorkoutCompositionContext } from "../../../hooks/useWorkoutCompositionContext";
 
 export default function ReorderExerciseWrapper({ children }) {
-   const { workoutCompositionDispatch } = useWorkoutCompositionContext();
+   // const { workoutCompositionDispatch } = useWorkoutCompositionContext();
 
    const sensors = useSensors(useSensor(PointerSensor));
 
@@ -16,13 +16,13 @@ export default function ReorderExerciseWrapper({ children }) {
       const { active, over } = event;
 
       if (active.id !== over.id) {
-         workoutCompositionDispatch({
-            type: "MOVE-EXERCISE",
-            payload: {
-               dragExerciseOrder: active.id,
-               hoverExerciseOrder: over.id,
-            },
-         });
+         // workoutCompositionDispatch({
+         //    type: "MOVE-EXERCISE",
+         //    payload: {
+         //       dragExerciseOrder: active.id,
+         //       hoverExerciseOrder: over.id,
+         //    },
+         // });
       }
    };
 

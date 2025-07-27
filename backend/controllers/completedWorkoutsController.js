@@ -5,6 +5,9 @@ const {
 const {
    getCompletedExerciseSets,
 } = require("../services/completedExerciseSets.services");
+const {
+   getCompletedWorkout,
+} = require("../services/completedWorkouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getCompletedWorkout = async ({ completedWorkoutId }) => {
@@ -34,40 +37,7 @@ const getCompletedWorkout = async ({ completedWorkoutId }) => {
 };
 
 const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {
-   const [selectDistinctWorkoutNameResults] = await pool.execute(
-      `
-         SELECT DISTINCT workout.workout_name as workoutName, workout.workout_id as workoutId, COUNT(completed_workout.completed_workout_id) AS totalCompletedWorkouts
-         FROM workout
-         LEFT JOIN completed_workout ON completed_workout.workout_id = workout.workout_id
-         WHERE workout.user_id = ?
-         GROUP BY workout.workout_name, workout.workout_id
-         ORDER BY totalCompletedWorkouts DESC;
-      `,
-      [userId]
-   );
-
-   const offset = Number(page) * Number(take);
-
-   const [selectRecentWorkouts] = await pool.execute(
-      `
-      SELECT
-         workout.workout_name as workoutName, 
-         workout.workout_id as workoutId, 
-         completed_workout.completed_workout_id as completedWorkoutId, 
-         completed_workout.completed_date as completedDate
-      FROM workout
-      INNER JOIN completed_workout ON workout.workout_id = completed_workout.workout_id
-      WHERE user_id = ?
-      ORDER BY completed_workout.completed_date DESC
-      LIMIT ? OFFSET ?
-   `,
-      [userId, take.toString(), offset.toString()]
-   );
-
-   const completedWorkouts = {
-      workouts: selectDistinctWorkoutNameResults,
-      recentWorkouts: selectRecentWorkouts,
-   };
+   const completedWorkouts = await getCompletedWorkout({ userId, page, take });
 
    return completedWorkouts;
 };
