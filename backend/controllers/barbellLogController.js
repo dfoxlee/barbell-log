@@ -114,29 +114,36 @@ const barbellLogComposition = async ({ barbellLog }) => {
 
    if (completedWorkoutId) {
       await Promise.all(
-         barbellLog.completedExercises.foreach(async (completedExercise) => {
+         barbellLog.completedExercises.map(async (completedExercise) => {
             await updateCompletedExercise({
                completedExerciseId: completedExercise.completedExerciseId,
                completedExerciseOrder: completedExercise.completedExerciseOrder,
             });
 
-            completedExercise.completedExerciseSets.forEach(
-               async (completedExerciseSet) => {
-                  await updateCompletedExerciseSet({
-                     completedExerciseSetId:
-                        completedExerciseSet.completedExerciseSetId,
-                     completedExerciseSetOrder:
-                        completedExerciseSet.completedExerciseSetOrder,
-                     completedReps: completedExerciseSet.completedReps,
-                     completedWeight: completedExerciseSet.completedWeight,
-                     completedDistance: completedExerciseSet.completedDistance,
-                     completedHr: completedExerciseSet.completedHr,
-                     completedMin: completedExerciseSet.completedMin,
-                     completedSec: completedExerciseSet.completedSec,
-                     notes: completedExerciseSet.notes,
-                     isComplete: completedExerciseSet.isComplete,
-                  });
-               }
+            await Promise.all(
+               completedExercise.completedExerciseSets.map(
+                  async (completedExerciseSet) => {
+                     await updateCompletedExerciseSet({
+                        completedExerciseSetId:
+                           completedExerciseSet.completedExerciseSetId,
+                        completedExerciseSetOrder:
+                           completedExerciseSet.completedExerciseSetOrder,
+                        completedReps: completedExerciseSet.completedReps,
+                        completedWeight: completedExerciseSet.completedWeight,
+                        completedWeightUnit:
+                           completedExerciseSet.completedWeightUnit,
+                        completedDistance:
+                           completedExerciseSet.completedDistance,
+                        completedDistanceUnit:
+                           completedExerciseSet.completedDistanceUnit,
+                        completedHr: completedExerciseSet.completedHr,
+                        completedMin: completedExerciseSet.completedMin,
+                        completedSec: completedExerciseSet.completedSec,
+                        notes: completedExerciseSet.notes,
+                        isComplete: completedExerciseSet.isComplete,
+                     });
+                  }
+               )
             );
          })
       );

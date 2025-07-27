@@ -1,4 +1,16 @@
 const {
+   getCompletedExercises,
+   deleteCompletedExercise,
+} = require("../services/completedExercises.services");
+const {
+   getCompletedExerciseSets,
+   deleteCompletedExerciseSet,
+} = require("../services/completedExerciseSets.services");
+const {
+   getCompletedWorkout,
+   deleteCompletedWorkout,
+} = require("../services/completedWorkouts.services");
+const {
    createExercise,
    getExercises,
    getExerciseIds,
@@ -121,18 +133,24 @@ const addUserWorkout = async ({ userId, workoutComposition }) => {
    );
 };
 
-const updateUserWorkout = async ({ userId, workoutComposition }) => {
+const updateUserWorkout = async ({ workoutComposition }) => {
    const { workoutId, workoutName, exercises } = workoutComposition;
-
-   await updateWorkout({ workoutId, workoutName });
+   await updateWorkout({
+      workoutId,
+      workoutName,
+   });
 
    const existingExerciseIds = await getExerciseIds({ workoutId });
 
-   if (existingExerciseIds.length === 0) {
-      return;
+   const newExerciseIds = exercises.map((exercise) => exercise.exerciseId);
+
+   for (const existingExerciseId of existingExerciseIds) {
+      if (!newExerciseIds.includes(existingExerciseId)) {
+         await deleteExercise({ exerciseId: existingExerciseId });
+      }
    }
 
-   for (let exercise of exercises) {
+   for (const exercise of exercises) {
       if (exercise.exerciseId) {
          await updateExercise({
             exerciseId: exercise.exerciseId,
@@ -140,63 +158,44 @@ const updateUserWorkout = async ({ userId, workoutComposition }) => {
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const exerciseSetIds = await getExerciseSetIds({
+         const existingExerciseSetIds = await getExerciseSetIds({
             exerciseId: exercise.exerciseId,
          });
 
-         for (let set of exercise.exerciseSets) {
-            if (set.exerciseSetId) {
-               await updateExerciseSet({
-                  exerciseSetId: set.exerciseSetId,
-                  reps: set.reps,
-                  weight: set.weight,
-                  hasReps: set.hasReps,
-                  isBodyweight: set.isBodyweight,
-                  isTimed: set.isTimed,
-                  isDistance: set.isDistance,
-                  isWarmup: set.isWarmup,
-                  weightUnit: set.weightUnit,
-                  distanceUnit: set.distanceUnit,
-                  distance: set.distance,
-                  hr: set.hr,
-                  min: set.min,
-                  sec: set.sec,
-                  exerciseSetOrder: set.exerciseSetOrder,
-               });
+         const newExerciseSetIds = exercise.exerciseSets.map(
+            (set) => set.exerciseSetId
+         );
 
-               const index = exerciseSetIds.indexOf(set.exerciseSetId);
-
-               if (index > -1) {
-                  exerciseSetIds.splice(index, 1);
-               }
-            } else {
-               await createExerciseSet({
-                  exerciseId: set.exerciseId,
-                  reps: set.reps,
-                  weight: set.weight,
-                  hasReps: set.hasReps,
-                  isBodyweight: set.isBodyweight,
-                  isTimed: set.isTimed,
-                  isDistance: set.isDistance,
-                  isWarmup: set.isWarmup,
-                  weightUnit: set.weightUnit,
-                  distanceUnit: set.distanceUnit,
-                  distance: set.distance,
-                  hr: set.hr,
-                  min: set.min,
-                  sec: set.sec,
-                  exerciseSetOrder: set.exerciseSetOrder,
+         for (const existingExerciseSetId of existingExerciseSetIds) {
+            if (!newExerciseSetIds.includes(existingExerciseSetId)) {
+               await deleteExerciseSet({
+                  exerciseSetId: existingExerciseSetId,
                });
             }
          }
 
-         for (const setIdToDelete of exerciseSetIds) {
-            await deleteExerciseSet({ exerciseSetId: setIdToDelete });
-         }
-
-         const index = existingExerciseIds.indexOf(exercise.exerciseId);
-         if (index > -1) {
-            existingExerciseIds.splice(index, 1);
+         for (const set of exercise.exerciseSets) {
+            if (set.exerciseSetId) {
+               await updateExerciseSet({ ...set });
+            } else {
+               await createExerciseSet({
+                  exerciseId: exercise.exerciseId,
+                  reps: set.reps || 0,
+                  weight: set.weight || 0,
+                  hasReps: set.hasReps,
+                  isBodyweight: set.isBodyweight,
+                  isTimed: set.isTimed,
+                  isDistance: set.isDistance,
+                  isWarmup: set.isWarmup,
+                  weightUnit: set.weightUnit || "lb",
+                  distanceUnit: set.distanceUnit || "mi",
+                  distance: set.distance || 0,
+                  hr: set.hr || 0,
+                  min: set.min || 0,
+                  sec: set.sec || 0,
+                  exerciseSetOrder: set.exerciseSetOrder,
+               });
+            }
          }
       } else {
          await createExercise({
@@ -205,58 +204,103 @@ const updateUserWorkout = async ({ userId, workoutComposition }) => {
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const newExerciseResults = await getExercises({
+         const selectNewExerciseResults = await getExercises({
             workoutId,
             exerciseOrder: exercise.exerciseOrder,
          });
 
-         const newExercise = newExerciseResults[0];
+         exercise.exerciseId = selectNewExerciseResults[0].exerciseId;
 
-         for (let set of exercise.exerciseSets) {
+         for (const set of exercise.exerciseSets) {
             await createExerciseSet({
-               exerciseId: newExercise.exerciseId,
-               reps: set.reps,
-               weight: set.weight,
+               exerciseId: exercise.exerciseId,
+               reps: set.reps || 0,
+               weight: set.weight || 0,
                hasReps: set.hasReps,
                isBodyweight: set.isBodyweight,
                isTimed: set.isTimed,
                isDistance: set.isDistance,
                isWarmup: set.isWarmup,
-               weightUnit: set.weightUnit,
-               distanceUnit: set.distanceUnit,
-               distance: set.distance,
-               hr: set.hr,
-               min: set.min,
-               sec: set.sec,
+               weightUnit: set.weightUnit || "lb",
+               distanceUnit: set.distanceUnit || "mi",
+               distance: set.distance || 0,
+               hr: set.hr || 0,
+               min: set.min || 0,
+               sec: set.sec || 0,
                exerciseSetOrder: set.exerciseSetOrder,
             });
          }
       }
    }
 
-   for (const exerciseIdToDelete of existingExerciseIds) {
-      await deleteExerciseSet({ exerciseSetId: exerciseIdToDelete });
-
-      await deleteExercise({ exerciseId: exerciseIdToDelete });
-   }
-
    return;
 };
 
 const deleteUserWorkout = async ({ workoutId }) => {
-   const exerciseSearchResults = await getExercises({ workoutId });
+   const completedWorkouts = await getCompletedWorkout({ workoutId });
 
-   if (exerciseSearchResults.length) {
-      for (const exercise of exerciseSearchResults) {
-         await deleteExerciseSet({ exerciseId: exercise.exerciseId });
-      }
+   if (completedWorkouts) {
+      completedWorkouts.forEach(async (completedWorkout) => {
+         const completedExercises = await getCompletedExercises({
+            completedWorkoutId: completedWorkout.completedWorkoutId,
+         });
+
+         if (completedExercises) {
+            await Promise.all(
+               completedExercises.map(async (completedExercise) => {
+                  const completedExerciseSets = await getCompletedExerciseSets({
+                     completedExerciseId: completedExercise.completedExerciseId,
+                  });
+
+                  if (completedExerciseSets) {
+                     completedExerciseSets.forEach(
+                        async (completedExerciseSet) => {
+                           await deleteCompletedExerciseSet({
+                              completedExerciseSetId:
+                                 completedExerciseSet.completedExerciseSetId,
+                           });
+                        }
+                     );
+                  }
+
+                  await deleteCompletedExercise({
+                     completedWorkoutId: completedWorkout.completedWorkoutId,
+                  });
+               })
+            );
+         }
+
+         await deleteCompletedWorkout({
+            completedWorkoutId: completedWorkout.completedWorkoutId,
+         });
+      });
    }
 
-   await deleteExercise({ workoutId });
+   const exercises = await getExercises({ workoutId });
+
+   if (exercises) {
+      await Promise.all(
+         exercises.map(async (exercise) => {
+            const exerciseSets = await getExerciseSets({
+               exerciseId: exercise.exerciseId,
+            });
+
+            if (exerciseSets) {
+               await Promise.all(
+                  exerciseSets.map(async (exerciseSet) => {
+                     await deleteExerciseSet({
+                        exerciseSetId: exerciseSet.exerciseSetId,
+                     });
+                  })
+               );
+            }
+
+            await deleteExercise({ exerciseId: exercise.exerciseId });
+         })
+      );
+   }
 
    await deleteWorkout({ workoutId });
-
-   return;
 };
 
 module.exports = {

@@ -57,4 +57,39 @@ const createCompletedWorkout = async ({ workoutId }) => {
    return insertCompletedWorkoutResults.insertId;
 };
 
-module.exports = { getCompletedWorkout, createCompletedWorkout };
+const deleteCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
+   let query = ``;
+   let values = [];
+
+   if (completedWorkoutId) {
+      query = `
+         DELETE FROM completed_workout
+         WHERE completed_workout_id = ?;
+      `;
+
+      values.push(completedWorkoutId);
+   } else if (workoutId) {
+      query = `
+         DELETE FROM completed_workout
+         WHERE workout_id = ?;
+      `;
+
+      values.push(workoutId);
+   } else {
+      return;
+   }
+
+   const [deleteCompletedWorkoutResults] = await pool.execute(query, values);
+
+   if (!deleteCompletedWorkoutResults.affectedRows) {
+      throw new Error("Unable to delete completed workout.");
+   }
+
+   return;
+};
+
+module.exports = {
+   getCompletedWorkout,
+   createCompletedWorkout,
+   deleteCompletedWorkout,
+};

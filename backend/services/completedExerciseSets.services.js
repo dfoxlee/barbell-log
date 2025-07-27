@@ -116,8 +116,54 @@ const updateCompletedExerciseSet = async ({
    return;
 };
 
+const deleteCompletedExerciseSet = async ({
+   completedExerciseId,
+   completedExerciseSetId,
+   exerciseSetId,
+}) => {
+   let query = ``;
+   let values = [];
+
+   if (completedExerciseId) {
+      query = `
+         DELETE FROM completed_exercise_set
+         WHERE completed_exercise_id = ?
+      `;
+
+      values = [completedExerciseId];
+   } else if (completedExerciseSetId) {
+      query = `
+         DELETE FROM completed_exercise_set
+         WHERE completed_exercise_set_id = ?
+      `;
+
+      values = [completedExerciseSetId];
+   } else if (exerciseSetId) {
+      query = `
+         DELETE FROM completed_exercise_set
+         WHERE exercise_set_id = ?
+      `;
+
+      values = [exerciseSetId];
+   } else {
+      return;
+   }
+
+   const [deleteCompletedExerciseSetResults] = await pool.execute(
+      query,
+      values
+   );
+
+   if (!deleteCompletedExerciseSetResults.affectedRows) {
+      throw new Error("Unable to delete completed exercise set.");
+   }
+
+   return;
+};
+
 module.exports = {
    getCompletedExerciseSets,
    createCompletedExerciseSet,
    updateCompletedExerciseSet,
+   deleteCompletedExerciseSet,
 };

@@ -63,6 +63,8 @@ export default function ExerciseComposition() {
 
          const newExerciseSetOrder = latestSet.exerciseSetOrder + 1;
 
+         delete latestSet.exerciseSetId;
+
          const updatedExerciseSets = [
             ...currentExercise.exerciseSets,
             {

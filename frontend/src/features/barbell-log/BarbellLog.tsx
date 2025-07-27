@@ -25,9 +25,9 @@ export default function BarbellLog() {
    );
    const exerciseNames = useMemo(
       () =>
-         barbellLog?.completedExercises.map(
-            (completedExercise) => completedExercise.exerciseName
-         ),
+         barbellLog?.completedExercises
+            .sort((a, b) => a.completedExerciseOrder - b.completedExerciseOrder)
+            .map((completedExercise) => completedExercise.exerciseName),
       [barbellLog]
    );
 
@@ -42,12 +42,7 @@ export default function BarbellLog() {
    );
 
    useEffect(() => {
-      if (
-         !barbellLogLoading &&
-         !barbellLogError &&
-         user?.token &&
-         workoutId
-      ) {
+      if (!barbellLogLoading && !barbellLogError && user?.token && workoutId) {
          if (completedWorkoutId) {
             getBarbellLog({
                token: user?.token,

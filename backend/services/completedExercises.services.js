@@ -14,7 +14,7 @@ const getCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
       INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
       WHERE completed_workout_id = ? AND e.exercise_id = ?
       `;
-      
+
       values.push(completedWorkoutId, exerciseId);
    } else if (completedWorkoutId) {
       query = `
@@ -26,7 +26,7 @@ const getCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
       INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
       WHERE ce.completed_workout_id = ?
       `;
-      
+
       values.push(completedWorkoutId);
    } else {
       return [];
@@ -73,8 +73,51 @@ const updateCompletedExercise = async ({
    return;
 };
 
+const deleteCompletedExercise = async ({
+   completedWorkoutId,
+   completedExerciseId,
+   exerciseId,
+}) => {
+   let query = ``;
+   let values = [];
+
+   if (completedWorkoutId) {
+      query = `
+         DELETE FROM completed_exercise
+         WHERE completed_workout_id = ? AND completed_exercise_id = ?
+      `;
+
+      values = [completedWorkoutId, completedExerciseId];
+   } else if (completedExerciseId) {
+      query = `
+         DELETE FROM completed_exercise
+         WHERE completed_exercise_id = ?
+      `;
+
+      values = [completedExerciseId];
+   } else if (exerciseId) {
+      query = `
+         DELETE FROM completed_exercise
+         WHERE exercise_id = ?
+      `;
+
+      values = [exerciseId];
+   } else {
+      return;
+   }
+
+   const [deleteCompletedExerciseResults] = await pool.execute(query, values);
+
+   if (!deleteCompletedExerciseResults.affectedRows) {
+      throw new Error("Unable to delete completed exercise.");
+   }
+
+   return;
+};
+
 module.exports = {
    getCompletedExercises,
    createCompletedExercise,
    updateCompletedExercise,
+   deleteCompletedExercise,
 };

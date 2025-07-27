@@ -19,18 +19,19 @@ export default function Home() {
    const { user } = useUserStore();
 
    useEffect(() => {
-      if (!workoutsLoading && !workoutsError && user?.token) {
+      if (!workoutsLoading && user?.token) {
          getWorkouts(user.token);
       }
 
       if (workoutsError) {
          console.error("Error fetching workouts:", workoutsError);
+         
          toastify({
             message: "Something went wrong getting workouts. Try again later.",
             type: "error",
          });
       }
-   }, [user?.token, workoutsError]);
+   }, [user?.token]);
 
    if (workoutsLoading) {
       return <Loading />;
