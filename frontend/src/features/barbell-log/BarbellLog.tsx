@@ -3,11 +3,10 @@ import { useParams } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
-import toastify from "../../utils/toastify";
 import Seperator from "../shared/Seperator";
+import ExerciseSetsTable from "./components/ExerciseSetsTable";
 
 import styles from "./BarbellLog.module.css";
-import ExerciseSetsTable from "./components/ExerciseSetsTable";
 
 export default function BarbellLog() {
    const params = useParams();

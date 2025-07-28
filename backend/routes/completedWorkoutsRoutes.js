@@ -1,5 +1,6 @@
 const {
    createCompletedWorkout,
+   getCompletedWorkout,
    getCompletedWorkouts,
    updateCompletedWorkout,
    deleteCompletedWorkout,

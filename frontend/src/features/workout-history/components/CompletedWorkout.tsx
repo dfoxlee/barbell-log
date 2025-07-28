@@ -5,8 +5,11 @@ import styles from "./CompletedWorkout.module.css";
 import { fetchDeleteCompeletedWorkout } from "../../../services/completedWorkoutServices";
 import { useUserStore } from "../../../stores/userStore";
 
-export default function CompletedWorkout({ completedWorkout }) {
-   const user = useUserStore(state => state.user);
+export default function CompletedWorkout({
+   completedWorkout,
+   updateViewCompleteWorkoutId,
+}) {
+   const user = useUserStore((state) => state.user);
 
    const handleDeleteClick = async () => {
       console.log(completedWorkout);
@@ -16,6 +19,10 @@ export default function CompletedWorkout({ completedWorkout }) {
       });
 
       console.log(deleteRequest);
+   };
+
+   const handleViewWorkoutClick = () => {
+      updateViewCompleteWorkoutId(completedWorkout.completedWorkoutId);
    };
 
    return (
@@ -29,12 +36,12 @@ export default function CompletedWorkout({ completedWorkout }) {
             </p>
          </div>
          <div className={styles.linkWrapper}>
-            <Link
-               className={styles.navLink}
-               to={`/home/completed-workout/${completedWorkout.completedWorkoutId}`}
+            <button
+               className={`standardIconBtn ${styles.viewWorkoutBtn}`}
+               onClick={handleViewWorkoutClick}
             >
                <FaGlasses />
-            </Link>
+            </button>
             <Link
                className={styles.navLink}
                to={`/home/barbell-log/${completedWorkout.workoutId}/${completedWorkout.completedWorkoutId}`}

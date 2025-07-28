@@ -18,6 +18,7 @@ const getCompletedWorkout = async ({ completedWorkoutId }) => {
    let completedExercises = await selectCompletedExercises({
       completedWorkoutId,
    });
+   console.log(completedExercises);
 
    completedExercises = await Promise.all(
       completedExercises.map(async (completedExercise) => {
@@ -33,7 +34,7 @@ const getCompletedWorkout = async ({ completedWorkoutId }) => {
    );
 
    return {
-      ...completedWorkout,
+      ...completedWorkout[0],
       completedExercises,
    };
 };

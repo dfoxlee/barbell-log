@@ -57,6 +57,7 @@ export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
          set({ barbellLogLoading: false });
       }
    },
-   updateBarbellLog: (updatedBarbellLog: BarbellLogType) =>
-      set({ barbellLog: updatedBarbellLog }),
+   updateBarbellLog: (updatedBarbellLog: BarbellLogType) => {
+      set({ barbellLog: updatedBarbellLog });
+   },
 }));

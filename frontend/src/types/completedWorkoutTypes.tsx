@@ -9,6 +9,7 @@ export interface CompletedWorkoutType {
 export interface CompletedExerciseType {
    completedExerciseId?: string;
    exerciseId: string;
+   exerciseName?: string;
    completedExerciseOrder: number;
    completedExerciseSets: CompletedExerciseSetType[];
 }

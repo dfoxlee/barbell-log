@@ -38,6 +38,7 @@ export default function ExerciseSetEditRow({
          (exercise) => exercise.exerciseOrder === currentExerciseViewOrder
       );
    }, [workoutComposition.exercises, currentExerciseViewOrder]);
+
    const currentExerciseSet = useMemo(() => {
       if (currentExercise) {
          return currentExercise.exerciseSets.find(
@@ -170,6 +171,32 @@ export default function ExerciseSetEditRow({
          const updatedExerciseSet = {
             ...currentExerciseSet,
             reps: repsInput,
+         };
+
+         const updatedExerciseSets = currentExercise.exerciseSets.map(
+            (exerciseSet) =>
+               exerciseSet.exerciseSetOrder ===
+               updatedExerciseSet.exerciseSetOrder
+                  ? updatedExerciseSet
+                  : exerciseSet
+         );
+
+         const updatedExercise = {
+            ...currentExercise,
+            exerciseSets: updatedExerciseSets,
+         };
+
+         updateExercise(updatedExercise);
+      }
+   };
+
+   const handleWeightUnitChange = (event) => {
+      const weightUnit = event.target.value;
+
+      if (currentExercise && currentExerciseSet) {
+         const updatedExerciseSet = {
+            ...currentExerciseSet,
+            weightUnit,
          };
 
          const updatedExerciseSets = currentExercise.exerciseSets.map(
@@ -354,6 +381,32 @@ export default function ExerciseSetEditRow({
       }
    };
 
+   const handleDistanceUnitChange = (event) => {
+      const distanceUnit = event.target.value;
+
+      if (currentExercise && currentExerciseSet) {
+         const updatedExerciseSet = {
+            ...currentExerciseSet,
+            distanceUnit,
+         };
+
+         const updatedExerciseSets = currentExercise.exerciseSets.map(
+            (exerciseSet) =>
+               exerciseSet.exerciseSetOrder ===
+               updatedExerciseSet.exerciseSetOrder
+                  ? updatedExerciseSet
+                  : exerciseSet
+         );
+
+         const updatedExercise = {
+            ...currentExercise,
+            exerciseSets: updatedExerciseSets,
+         };
+
+         updateExercise(updatedExercise);
+      }
+   };
+
    const handleDeleteExerciseSetClick = () => {
       if (currentExercise?.exerciseSets.length === 1) {
          return toastify({
@@ -491,6 +544,8 @@ export default function ExerciseSetEditRow({
                            className={styles.unitSelector}
                            name="weight-unit"
                            id="weight-unit"
+                           value={exerciseSet.weightUnit}
+                           onChange={handleWeightUnitChange}
                         >
                            {weightUnits.map((unit) => (
                               <option key={unit.id} value={unit.label}>
@@ -548,6 +603,8 @@ export default function ExerciseSetEditRow({
                         className={styles.unitSelector}
                         name="distance-unit"
                         id="distance-unit"
+                        value={exerciseSet.distanceUnit}
+                        onChange={handleDistanceUnitChange}
                      >
                         {distanceUnits.map((unit) => (
                            <option key={unit.id} value={unit.label}>

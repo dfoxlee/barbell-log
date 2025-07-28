@@ -24,7 +24,11 @@
    display: flex;
    justify-content: space-evenly;
    align-items: center;
-   margin-top: 20px;
+   padding: 10px 0 30px;
+   position: sticky;
+   top: 0;
+   z-index: 10;
+   background: var(--secondary);
 }
 
 .exerciseNavContent {

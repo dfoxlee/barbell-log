@@ -1,16 +1,17 @@
-import { FaCheckCircle, FaPlusCircle, FaStickyNote } from "react-icons/fa";
+import { FaCheckCircle, FaStickyNote } from "react-icons/fa";
 import DistanceInput from "./DistanceInput";
 import styles from "./ExerciseSetsTable.module.css";
 import RepsInput from "./RepsInput";
 import TimedInput from "./TimedInput";
 import WeightInput from "./WeightInput";
 import { useBarbellLogStore } from "../../../stores/barbellLogStore";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function ExerciseSetsTable() {
    const [showExerciseSetNotes, setShowExerciseSetNotes] = useState<number[]>(
       []
    );
+   const noteModalRef = useRef<HTMLDivElement>(null);
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
@@ -29,69 +30,27 @@ export default function ExerciseSetsTable() {
       [currentExercise]
    );
 
-   const updateHr = (hr: number) => {
-      if (barbellLog) {
-         const updatedCompletedExercises = barbellLog?.completedExercises.map(
-            (exercise) =>
-               exercise.completedExerciseOrder ===
-               currentExercise?.completedExerciseOrder
-                  ? { ...exercise, completedHr: hr }
-                  : exercise
-         );
-
-         const updatedBarbellLog = {
-            ...barbellLog,
-            completedExercises: updatedCompletedExercises,
-         };
-
-         updateBarbellLog(updatedBarbellLog);
-      }
-   };
-
-   const updateMin = (min: number) => {
-      if (barbellLog) {
-         const updatedCompletedExercises = barbellLog?.completedExercises.map(
-            (exercise) =>
-               exercise.completedExerciseOrder ===
-               currentExercise?.completedExerciseOrder
-                  ? { ...exercise, completedMin: min }
-                  : exercise
-         );
-
-         const updatedBarbellLog = {
-            ...barbellLog,
-            completedExercises: updatedCompletedExercises,
-         };
-
-         updateBarbellLog(updatedBarbellLog);
-      }
-   };
-
-   const updateSec = (sec: number) => {
-      if (barbellLog) {
-         const updatedCompletedExercises = barbellLog?.completedExercises.map(
-            (exercise) =>
-               exercise.completedExerciseOrder ===
-               currentExercise?.completedExerciseOrder
-                  ? { ...exercise, completedSec: sec }
-                  : exercise
-         );
-
-         const updatedBarbellLog = {
-            ...barbellLog,
-            completedExercises: updatedCompletedExercises,
-         };
-
-         updateBarbellLog(updatedBarbellLog);
-      }
-   };
+   useEffect(() => {
+      const hnadleClickOutside = (event: MouseEvent) => {
+         if (
+            noteModalRef.current &&
+            !noteModalRef.current.contains(event.target as Node)
+         ) {
+            setShowExerciseSetNotes([]);
+         }
+      };
+      document.addEventListener("mousedown", hnadleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", hnadleClickOutside);
+      };
+   }, [showExerciseSetNotes]);
 
    const updateReps = ({
       completedExerciseSetOrder,
-      updatedReps,
+      reps,
    }: {
       completedExerciseSetOrder: number;
-      updatedReps: number;
+      reps: number;
    }) => {
       if (barbellLog) {
          const updatedExercise = {
@@ -99,7 +58,7 @@ export default function ExerciseSetsTable() {
             completedExerciseSets: currentExercise?.completedExerciseSets.map(
                (set) =>
                   set.completedExerciseSetOrder === completedExerciseSetOrder
-                     ? { ...set, completedReps: updatedReps }
+                     ? { ...set, completedReps: reps }
                      : set
             ),
          };
@@ -123,10 +82,10 @@ export default function ExerciseSetsTable() {
 
    const updateWeight = ({
       completedExerciseSetOrder,
-      updatedWeight,
+      weight,
    }: {
       completedExerciseSetOrder: number;
-      updatedWeight: number;
+      weight: number;
    }) => {
       if (barbellLog) {
          const updatedExercise = {
@@ -134,7 +93,7 @@ export default function ExerciseSetsTable() {
             completedExerciseSets: currentExercise?.completedExerciseSets.map(
                (set) =>
                   set.completedExerciseSetOrder === completedExerciseSetOrder
-                     ? { ...set, completedWeight: updatedWeight }
+                     ? { ...set, completedWeight: weight }
                      : set
             ),
          };
@@ -156,13 +115,134 @@ export default function ExerciseSetsTable() {
       }
    };
 
-   const updateDistance = (distance: number) => {
+   const updateHr = ({
+      completedExerciseSetOrder,
+      hr,
+   }: {
+      completedExerciseSetOrder: number;
+      hr: number;
+   }) => {
       if (barbellLog) {
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: currentExercise?.completedExerciseSets.map(
+               (set) =>
+                  set.completedExerciseSetOrder === completedExerciseSetOrder
+                     ? { ...set, completedHr: hr }
+                     : set
+            ),
+         };
+
          const updatedCompletedExercises = barbellLog?.completedExercises.map(
             (exercise) =>
                exercise.completedExerciseOrder ===
-               currentExercise?.completedExerciseOrder
-                  ? { ...exercise, completedDistance: distance }
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
+                  : exercise
+         );
+
+         const updatedBarbellLog = {
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         };
+
+         updateBarbellLog(updatedBarbellLog);
+      }
+   };
+
+   const updateMin = ({
+      completedExerciseSetOrder,
+      min,
+   }: {
+      completedExerciseSetOrder: number;
+      min: number;
+   }) => {
+      if (barbellLog) {
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: currentExercise?.completedExerciseSets.map(
+               (set) =>
+                  set.completedExerciseSetOrder === completedExerciseSetOrder
+                     ? { ...set, completedMin: min }
+                     : set
+            ),
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
+                  : exercise
+         );
+
+         const updatedBarbellLog = {
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         };
+
+         updateBarbellLog(updatedBarbellLog);
+      }
+   };
+
+   const updateSec = ({
+      completedExerciseSetOrder,
+      sec,
+   }: {
+      completedExerciseSetOrder: number;
+      sec: number;
+   }) => {
+      if (barbellLog) {
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: currentExercise?.completedExerciseSets.map(
+               (set) =>
+                  set.completedExerciseSetOrder === completedExerciseSetOrder
+                     ? { ...set, completedSec: sec }
+                     : set
+            ),
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
+                  : exercise
+         );
+
+         const updatedBarbellLog = {
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         };
+
+         updateBarbellLog(updatedBarbellLog);
+      }
+   };
+
+   const updateDistance = ({
+      completedExerciseSetOrder,
+      distance,
+   }: {
+      completedExerciseSetOrder: number;
+      distance: number;
+   }) => {
+      if (barbellLog) {
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: currentExercise?.completedExerciseSets.map(
+               (set) =>
+                  set.completedExerciseSetOrder === completedExerciseSetOrder
+                     ? { ...set, completedDistance: distance }
+                     : set
+            ),
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
                   : exercise
          );
 
@@ -295,6 +375,9 @@ export default function ExerciseSetsTable() {
                         </div>
                         {exerciseSet.isTimed ? (
                            <TimedInput
+                              completedExerciseSetOrder={
+                                 exerciseSet.completedExerciseSetOrder
+                              }
                               hr={exerciseSet.completedHr}
                               min={exerciseSet.completedMin}
                               sec={exerciseSet.completedSec}
@@ -331,7 +414,10 @@ export default function ExerciseSetsTable() {
                               {showExerciseSetNotes.includes(
                                  exerciseSet.completedExerciseSetOrder
                               ) ? (
-                                 <div className={styles.noteModalWrapper}>
+                                 <div
+                                    className={styles.noteModalWrapper}
+                                    ref={noteModalRef}
+                                 >
                                     <input
                                        className={`standardInput ${styles.noteInput}`}
                                        type="text"
