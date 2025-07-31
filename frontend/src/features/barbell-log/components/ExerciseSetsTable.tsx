@@ -47,10 +47,10 @@ export default function ExerciseSetsTable() {
 
    const updateReps = ({
       completedExerciseSetOrder,
-      reps,
+      updatedReps,
    }: {
       completedExerciseSetOrder: number;
-      reps: number;
+      updatedReps: number;
    }) => {
       if (barbellLog) {
          const updatedExercise = {
@@ -58,7 +58,7 @@ export default function ExerciseSetsTable() {
             completedExerciseSets: currentExercise?.completedExerciseSets.map(
                (set) =>
                   set.completedExerciseSetOrder === completedExerciseSetOrder
-                     ? { ...set, completedReps: reps }
+                     ? { ...set, completedReps: updatedReps }
                      : set
             ),
          };
@@ -340,7 +340,7 @@ export default function ExerciseSetsTable() {
          <tbody>
             {exerciseSets &&
                exerciseSets.map((exerciseSet) => (
-                  <tr key={exerciseSet.exerciseSetId}>
+                  <tr key={exerciseSet.completedExerciseSetOrder}>
                      <td className={styles.tableData}>
                         <div className={styles.setNumberWrapper}>
                            {exerciseSet.isWarmup ? (
@@ -388,6 +388,9 @@ export default function ExerciseSetsTable() {
                         ) : null}
                         {exerciseSet.isDistance ? (
                            <DistanceInput
+                              completedExerciseSetOrder={
+                                 exerciseSet.completedExerciseSetOrder
+                              }
                               distance={exerciseSet.completedDistance}
                               distanceUnit={exerciseSet.completedDistanceUnit}
                               updateDistance={updateDistance}

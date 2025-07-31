@@ -2,6 +2,7 @@ const {
    insertUser,
    validateUser,
    updateWeightUnitPreference,
+   updateDistanceUnitPreference,
 } = require("../services/users.services");
 
 const signUpUser = async ({ email, password }) => {
@@ -16,8 +17,19 @@ const loginUser = async ({ email, password }) => {
    return user;
 };
 
-const updateUserWeightPreference = async ({ userId, preference }) => {
-   return await updateWeightUnitPreference(userId, preference);
+const updateUnitPreferences = async ({
+   userId,
+   weightUnitPreference,
+   distanceUnitPreference,
+}) => {
+   if (weightUnitPreference) {
+      await updateWeightUnitPreference({ userId, weightUnitPreference });
+   }
+   if (distanceUnitPreference) {
+      await updateDistanceUnitPreference({ userId, distanceUnitPreference });
+   }
+
+   return;
 };
 
-module.exports = { signUpUser, loginUser, updateUserWeightPreference };
+module.exports = { signUpUser, loginUser, updateUnitPreferences };

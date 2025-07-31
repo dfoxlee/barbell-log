@@ -84,7 +84,7 @@ const deleteCompletedExercise = async ({
    if (completedWorkoutId) {
       query = `
          DELETE FROM completed_exercise
-         WHERE completed_workout_id = ? AND completed_exercise_id = ?
+         WHERE completed_workout_id = ?
       `;
 
       values = [completedWorkoutId, completedExerciseId];

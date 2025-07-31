@@ -9,9 +9,6 @@ import { useUserStore } from "../../stores/userStore";
 
 export default function WorkoutHistory() {
    const [historyType, setHistoryType] = useState("workouts");
-   const completedWorkouts = useCompletedWorkoutsStore(
-      (state) => state.completedWorkouts
-   );
    const completedWorkoutsLoading = useCompletedWorkoutsStore(
       (state) => state.completedWorkoutsLoading
    );

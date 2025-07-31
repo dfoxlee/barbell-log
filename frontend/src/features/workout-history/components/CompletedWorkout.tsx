@@ -4,21 +4,26 @@ import { Link } from "react-router-dom";
 import styles from "./CompletedWorkout.module.css";
 import { fetchDeleteCompeletedWorkout } from "../../../services/completedWorkoutServices";
 import { useUserStore } from "../../../stores/userStore";
+import { useCompletedWorkoutsStore } from "../../../stores/completedWorkoutsStore";
 
 export default function CompletedWorkout({
    completedWorkout,
    updateViewCompleteWorkoutId,
 }) {
+   const getCompletedWorkouts = useCompletedWorkoutsStore(
+      (state) => state.getCompletedWorkouts
+   );
    const user = useUserStore((state) => state.user);
 
    const handleDeleteClick = async () => {
-      console.log(completedWorkout);
-      const deleteRequest = await fetchDeleteCompeletedWorkout({
-         token: user?.token,
-         completedWorkoutId: completedWorkout.completedWorkoutId,
-      });
+      if (user?.token) {
+         await fetchDeleteCompeletedWorkout({
+            token: user?.token,
+            completedWorkoutId: completedWorkout.completedWorkoutId,
+         });
 
-      console.log(deleteRequest);
+         getCompletedWorkouts({ token: user?.token });
+      }
    };
 
    const handleViewWorkoutClick = () => {

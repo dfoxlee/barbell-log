@@ -9,6 +9,8 @@ export interface UserStoreType {
    authError: null;
    login: (userCredentials: AuthCredentialType) => Promise<void>;
    signUp: (userCredentials: AuthCredentialType) => Promise<void>;
+   updateWeightUnitPreference: (weightUnitPreference: string) => void;
+   updateDistanceUnitPreference: (distanceUnitPreference: string) => void;
    logout: () => void;
 }
 
@@ -84,5 +86,25 @@ export const useUserStore = create<UserStoreType>((set) => ({
          });
       }
    },
+   updateWeightUnitPreference: (weightUnitPreference: string) =>
+      set((state) => {
+         if (!state.user) return {};
+         return {
+            user: {
+               ...state.user,
+               weightUnitPreference,
+            },
+         };
+      }),
+   updateDistanceUnitPreference: (distanceUnitPreference: string) =>
+      set((state) => {
+         if (!state.user) return {};
+         return {
+            user: {
+               ...state.user,
+               distanceUnitPreference,
+            },
+         };
+      }),
    logout: () => set({ user: null }),
 }));

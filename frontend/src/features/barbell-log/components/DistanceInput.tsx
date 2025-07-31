@@ -4,9 +4,13 @@ export default function DistanceInput({
    distance,
    distanceUnit,
    updateDistance,
+   completedExerciseSetOrder,
 }) {
    const handleDistanceChange = (event) => {
-      updateDistance(event.target.value);
+      updateDistance({
+         distance: event.target.value,
+         completedExerciseSetOrder,
+      });
    };
 
    return (

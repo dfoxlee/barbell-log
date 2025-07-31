@@ -98,6 +98,42 @@ export default function BarbellLog() {
       }
    };
 
+   const handleAddSetClick = () => {
+      if (currentExercise && barbellLog) {
+         const latestSet = {
+            ...currentExercise?.completedExerciseSets[
+               currentExercise?.completedExerciseSets.length - 1
+            ],
+         };
+
+         latestSet.completedExerciseSetOrder =
+            latestSet.completedExerciseSetOrder + 1;
+
+         const updatedCompletedExerciseSets = [
+            ...currentExercise.completedExerciseSets,
+            latestSet,
+         ];
+
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: updatedCompletedExerciseSets,
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
+                  : exercise
+         );
+
+         updateBarbellLog({
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         });
+      }
+   };
+
    if (barbellLogLoading) {
       return <div>Loading...</div>;
    }
@@ -157,7 +193,10 @@ export default function BarbellLog() {
          <ExerciseSetsTable
             exerciseSets={currentExercise?.completedExerciseSets}
          />
-         <button className={`standardBtn ${styles.addSetBtn}`}>
+         <button
+            className={`standardBtn ${styles.addSetBtn}`}
+            onClick={handleAddSetClick}
+         >
             <FaPlus />
             <span>Set</span>
          </button>

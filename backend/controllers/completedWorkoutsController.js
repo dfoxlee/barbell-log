@@ -1,12 +1,17 @@
 const pool = require("../db/dbConfig");
 const {
    selectCompletedExercises,
+   deleteCompletedExercise,
 } = require("../services/completedExercises.services");
 const {
    selectCompletedExerciseSets,
+   deleteCompletedExerciseSet,
 } = require("../services/completedExerciseSets.services");
 const {
    selectCompletedWorkout,
+} = require("../services/completedWorkouts.services");
+const {
+   deleteCompletedWorkouts,
 } = require("../services/completedWorkouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
@@ -18,7 +23,6 @@ const getCompletedWorkout = async ({ completedWorkoutId }) => {
    let completedExercises = await selectCompletedExercises({
       completedWorkoutId,
    });
-   console.log(completedExercises);
 
    completedExercises = await Promise.all(
       completedExercises.map(async (completedExercise) => {
@@ -354,55 +358,23 @@ const updateCompletedWorkout = async ({ completedWorkout }) => {
 };
 
 const deleteCompletedWorkout = async ({ completedWorkoutId }) => {
-   // Delete all sets for all exercises in this workout
-   const [selectDeleteExerciseSets] = await pool.execute(
-      `
-      SELECT *
-      FROM completed_exercise_set
-      INNER JOIN completed_exercise ON completed_exercise.completed_exercise_id = completed_exercise_set.completed_exercise_id
-      WHERE completed_exercise.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
+   const completedExercises = await selectCompletedExercises({
+      completedWorkoutId,
+   });
+
+   await Promise.all(
+      completedExercises.map(async (exercise) => {
+         await deleteCompletedExerciseSet({
+            completedExerciseId: exercise.completedExerciseId,
+         });
+
+         await deleteCompletedExercise({
+            completedExerciseId: exercise.completedExerciseId,
+         });
+      })
    );
 
-   const [deleteExerciseSets] = await pool.execute(
-      `
-         DELETE completed_exercise_set FROM completed_exercise_set
-         INNER JOIN completed_exercise ON completed_exercise.completed_exercise_id = completed_exercise_set.completed_exercise_id
-         WHERE completed_exercise.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteExerciseSets.affectedRows) {
-      throw new Error("Unable to delete exercise sets.");
-   }
-
-   // Delete all exercises for this workout
-   const [deleteCompletedExercise] = await pool.execute(
-      `
-         DELETE FROM completed_exercise
-         WHERE completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteCompletedExercise.affectedRows) {
-      throw new Error("Unable to delete exercises");
-   }
-
-   // Delete the completed workout itself
-   const [deleteWorkoutResults] = await pool.execute(
-      `
-         DELETE FROM completed_workout
-         WHERE completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteWorkoutResults.affectedRows) {
-      throw new Error("Unable to delete completed workout.");
-   }
+   await deleteCompletedWorkouts({ completedWorkoutId });
 };
 
 module.exports = {

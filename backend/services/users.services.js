@@ -134,7 +134,7 @@ const validateUser = async ({ email, password }) => {
 
    const [returnUserSearch] = await pool.execute(
       `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference
+         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference, distance_unit_preference as distanceUnitPreference
          FROM user
          WHERE user_id = ?
       `,
@@ -177,14 +177,32 @@ const deleteUser = async (userId) => {
    return;
 };
 
-const updateWeightUnitPreference = async (userId, preference) => {
+const updateWeightUnitPreference = async ({ userId, weightUnitPreference }) => {
    const [updateWeightPreference] = await pool.execute(
       `
          UPDATE user
          SET weight_unit_preference = ?
          WHERE user_id = ?
       `,
-      [preference, userId]
+      [weightUnitPreference, userId]
+   );
+
+   if (!updateWeightPreference.affectedRows) {
+      throw new Error("Unable to update user weight preference.");
+   }
+};
+
+const updateDistanceUnitPreference = async ({
+   userId,
+   distanceUnitPreference,
+}) => {
+   const [updateWeightPreference] = await pool.execute(
+      `
+         UPDATE user
+         SET distance_unit_preference = ?
+         WHERE user_id = ?
+      `,
+      [distanceUnitPreference, userId]
    );
 
    if (!updateWeightPreference.affectedRows) {
@@ -200,4 +218,5 @@ module.exports = {
    updateUserToken,
    deleteUser,
    updateWeightUnitPreference,
+   updateDistanceUnitPreference,
 };

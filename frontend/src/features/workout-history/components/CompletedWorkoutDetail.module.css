@@ -1,0 +1,20 @@
+.recentWorkoutBtn {
+   margin: 20px auto 0;
+}
+
+.workoutNameTitle {
+   text-align: center;
+   font-size: 1.5rem;
+   font-weight: 600;
+   margin-top: 30px;
+}
+
+.exerciseNameTitle {
+   text-align: center;
+   font-size: 1.25rem;
+   font-weight: 600;
+}
+
+.tableWrapper {
+   width: 100%;
+}

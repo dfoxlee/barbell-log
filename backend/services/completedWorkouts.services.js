@@ -74,7 +74,7 @@ const insertCompletedWorkout = async ({ workoutId }) => {
    return insertCompletedWorkoutResults.insertId;
 };
 
-const deleteCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
+const deleteCompletedWorkouts = async ({ completedWorkoutId, workoutId }) => {
    let query = ``;
    let values = [];
 
@@ -108,5 +108,5 @@ const deleteCompletedWorkout = async ({ completedWorkoutId, workoutId }) => {
 module.exports = {
    selectCompletedWorkout,
    insertCompletedWorkout,
-   deleteCompletedWorkout,
+   deleteCompletedWorkouts,
 };

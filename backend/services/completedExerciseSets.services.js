@@ -1,9 +1,16 @@
 const pool = require("../db/dbConfig");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
-const selectCompletedExerciseSets = async ({ completedExerciseId }) => {
-   const [selectCompletedExerciseSetsResults] = await pool.execute(
-      `
-         SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
+const selectCompletedExerciseSets = async ({
+   completedExerciseId,
+   exerciseId,
+}) => {
+   let query = ``;
+   let values = [];
+
+   if (completedExerciseId) {
+      query = `
+      SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
             ces.completed_exercise_id AS completedExerciseId, 
             ces.exercise_set_id AS exerciseSetId, 
             ces.completed_exercise_set_order AS completedExerciseSetOrder,
@@ -26,8 +33,41 @@ const selectCompletedExerciseSets = async ({ completedExerciseId }) => {
          INNER JOIN exercise_set es ON ces.exercise_set_id = es.exercise_set_id
          WHERE ces.completed_exercise_id = ?
          ORDER BY ces.completed_exercise_set_order
-      `,
-      [completedExerciseId]
+      `;
+
+      values = [completedExerciseId];
+   } else if (exerciseId) {
+      query = `
+         SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
+            ces.completed_exercise_id AS completedExerciseId, 
+            ces.exercise_set_id AS exerciseSetId, 
+            ces.completed_exercise_set_order AS completedExerciseSetOrder,
+            es.has_reps AS hasReps,
+            es.is_bodyweight AS isBodyweight,
+            es.is_timed AS isTimed,
+            es.is_distance AS isDistance,
+            es.is_warmup AS isWarmup,
+            ces.completed_reps AS completedReps, 
+            ces.completed_weight AS completedWeight, 
+            ces.completed_weight_unit AS completedWeightUnit,
+            ces.completed_distance AS completedDistance, 
+            ces.completed_distance_unit AS completedDistanceUnit,
+            ces.completed_hr AS completedHr, 
+            ces.completed_min AS completedMin, 
+            ces.completed_sec AS completedSec, 
+            ces.notes, 
+            ces.is_complete AS isComplete
+            FROM completed_exercise_set AS ces
+            INNER JOIN exercise_set es ON ces.exercise_set_id = es.exercise_set_id
+            WHERE es.exercise_id = ?
+            ORDER BY ces.completed_exercise_set_order
+      `;
+
+      values = [exerciseId];
+   }
+   const [selectCompletedExerciseSetsResults] = await pool.execute(
+      query,
+      values
    );
 
    return selectCompletedExerciseSetsResults;
@@ -120,6 +160,7 @@ const deleteCompletedExerciseSet = async ({
    completedExerciseId,
    completedExerciseSetId,
    exerciseSetId,
+   exerciseId,
 }) => {
    let query = ``;
    let values = [];
@@ -145,6 +186,16 @@ const deleteCompletedExerciseSet = async ({
       `;
 
       values = [exerciseSetId];
+   } else if (exerciseId) {
+      debugConsoleLog(exerciseId);
+      query = `
+         DELETE ces
+         FROM completed_exercise_set AS ces
+         INNER JOIN completed_exercise AS ce ON ce.completed_exercise_id = ces.completed_exercise_id
+         WHERE ce.exercise_id = ?;
+      `;
+
+      values = [exerciseId];
    } else {
       return;
    }

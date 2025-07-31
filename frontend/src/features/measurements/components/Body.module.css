@@ -1,0 +1,9 @@
+.toggleEditBodyBtn {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 15px;
+   font-size: 2rem;
+   color: var(--primary);
+   margin: 30px auto 0;
+}  

@@ -1,18 +1,19 @@
 // import { distanceUnits, weightUnits } from "../enums/constants";
+import type { CompletedExerciseType } from "../types/barbellLogTypes";
 import type { ExerciseSetType } from "../types/workoutTypes";
 
-const rwtdCellFormat = (set: ExerciseSetType) => {
-   const reps = set.reps;
+const rwtdCellFormat = (set: ExerciseSetType | CompletedExerciseType) => {
+   const reps = set.reps || set.completedReps;
    const hasReps = set.hasReps;
-   const weight = set.weight;
-   const weightUnit = set.weightUnit;
+   const weight = set.weight || set.completedWeight;
+   const weightUnit = set.weightUnit || set.completedWeightUnit;
    const isBodyweight = set.isBodyweight;
-   const distance = set.distance;
-   const distanceUnit = set.distanceUnit;
+   const distance = set.distance || set.completedDistance;
+   const distanceUnit = set.distanceUnit || set.completedDistanceUnit;
    const isDistance = set.isDistance;
-   const hr = set.hr;
-   const min = set.min;
-   const sec = set.sec;
+   const hr = set.hr || set.completedHr;
+   const min = set.min || set.completedMin;
+   const sec = set.sec || set.completedSec;
    const isTimed = set.isTimed;
 
    let rwtdText = "";

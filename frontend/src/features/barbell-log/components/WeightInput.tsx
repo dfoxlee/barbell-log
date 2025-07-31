@@ -21,7 +21,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: event.target.value,
+         weight: event.target.value,
       });
    };
 
@@ -30,7 +30,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: newWeight,
+         weight: newWeight,
       });
    };
 
@@ -43,6 +43,11 @@ export default function WeightInput({
             type: "warning",
          });
       }
+
+      updateWeight({
+         completedExerciseSetOrder: completedExerciseSetOrder,
+         weight: newWeight,
+      });
    };
 
    const handle1IncrementClick = () => {
@@ -50,7 +55,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: newWeight,
+         weight: newWeight,
       });
    };
 
@@ -66,7 +71,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: newWeight,
+         weight: newWeight,
       });
    };
 
@@ -75,7 +80,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: newWeight,
+         weight: newWeight,
       });
    };
 
@@ -91,7 +96,7 @@ export default function WeightInput({
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedWeight: newWeight,
+         weight: newWeight,
       });
    };
 

@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import Seperator from "../shared/Seperator";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa";
-import { fetchUpdateWeightUnitPreference } from "../../services/userServices";
+import {
+   fetchUpdateDistanceUnitPreference,
+   fetchUpdateWeightUnitPreference,
+} from "../../services/userServices";
 import toastify from "../../utils/toastify";
 
 import styles from "./Settings.module.css";
@@ -11,6 +14,12 @@ import { distanceUnits } from "../../enums/constants";
 export default function Settings() {
    const user = useUserStore((state) => state.user);
    const logout = useUserStore((state) => state.logout);
+   const updateWeightUnitPreference = useUserStore(
+      (state) => state.updateWeightUnitPreference
+   );
+   const updateDistanceUnitPreference = useUserStore(
+      (state) => state.updateDistanceUnitPreference
+   );
    const navigate = useNavigate();
 
    const handleLogoutClick = () => {
@@ -29,12 +38,25 @@ export default function Settings() {
             weightUnitPreference: newWeightPreference,
          });
 
-         const newUser = {
-            ...user,
-            weightUnitPreference: newWeightPreference,
-         };
+         updateWeightUnitPreference(newWeightPreference);
+      } catch (error) {
+         console.error(error);
 
-         console.log("Updated weight unit preference", newUser);
+         return toastify({
+            message: "Something went wrong. Try again later.",
+            type: "error",
+         });
+      }
+   };
+
+   const handleDistanceUnitPreferenceChange = async (event) => {
+      try {
+         await fetchUpdateDistanceUnitPreference({
+            token: user?.token,
+            distanceUnitPreference: event.target.value,
+         });
+
+         updateDistanceUnitPreference(event.target.value);
       } catch (error) {
          console.error(error);
 
@@ -78,6 +100,8 @@ export default function Settings() {
                   className={styles.distanceUnitSelect}
                   name="distance-preference"
                   id="distance-preference"
+                  value={user?.distanceUnitPreference}
+                  onChange={handleDistanceUnitPreferenceChange}
                >
                   {distanceUnits.map((unit) => (
                      <option key={unit.id} value={unit.label}>

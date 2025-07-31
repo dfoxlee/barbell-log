@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "./CompletedWorkoutDetail.module.css";
-import { FaChevronLeft } from "react-icons/fa";
+import { FaCheck, FaChevronLeft, FaInfoCircle } from "react-icons/fa";
 import { fetchGetCompletedWorkout } from "../../../services/completedWorkoutServices";
 import { useUserStore } from "../../../stores/userStore";
 import toastify from "../../../utils/toastify";
 import Loading from "../../shared/Loading";
 import type { CompletedWorkoutType } from "../../../types/completedWorkoutTypes";
+import { rwtdCellFormat } from "../../../utils/formatting";
 
 export default function CompletedWorkoutDetail({
    completedWorkoutId,
@@ -54,20 +55,60 @@ export default function CompletedWorkoutDetail({
    if (completedWorkoutLoading) {
       return <Loading />;
    }
-   console.log(completedWorkout);
 
    if (completedWorkout) {
       return (
          <div>
-            <button className={`standardBtn`} onClick={handleReturnClick}>
+            <button
+               className={`standardBtn ${styles.recentWorkoutBtn}`}
+               onClick={handleReturnClick}
+            >
                <FaChevronLeft />
                <span>Recent Workouts</span>
             </button>
-            <h2>{completedWorkout.workoutName}</h2>
+            <h2 className={styles.workoutNameTitle}>
+               {completedWorkout.workoutName}
+            </h2>
             <div>
                {completedWorkout.completedExercises.map((completedExercise) => (
                   <div key={completedExercise.completedExerciseId}>
-                     <h3>{completedExercise.exerciseName}</h3>
+                     <h3 className={styles.exerciseNameTitle}>
+                        {completedExercise.exerciseName}
+                     </h3>
+                     <table className={styles.tableWrapper}>
+                        <thead>
+                           <tr>
+                              <th>set</th>
+                              <th>details</th>
+                              <th></th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {completedExercise.completedExerciseSets.map(
+                              (set) => (
+                                 <tr key={set.completedExerciseSetOrder}>
+                                    <td>
+                                       <div>
+                                          <span>
+                                             {set.completedExerciseSetOrder}
+                                          </span>
+                                          {set.isWarmup ? <span>W</span> : null}
+                                       </div>
+                                    </td>
+                                    <td>{rwtdCellFormat(set)}</td>
+                                    <td>
+                                       <div>
+                                          {set.isComplete ? <FaCheck /> : null}
+                                          {set.notes.length ? (
+                                             <FaInfoCircle />
+                                          ) : null}
+                                       </div>
+                                    </td>
+                                 </tr>
+                              )
+                           )}
+                        </tbody>
+                     </table>
                   </div>
                ))}
             </div>

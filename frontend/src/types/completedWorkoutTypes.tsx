@@ -16,8 +16,13 @@ export interface CompletedExerciseType {
 
 export interface CompletedExerciseSetType {
    completedExerciseSetId: string;
+   hasReps: boolean;
+   isWarmup: boolean;
+   isTimed: boolean;
+   isDistance: boolean;
+   isBodyweight: boolean;
    exerciseSetId: string;
-   completedSetOrder: number;
+   completedExerciseSetOrder: number;
    completedReps: number;
    completedWeight: number;
    completedHr: number;

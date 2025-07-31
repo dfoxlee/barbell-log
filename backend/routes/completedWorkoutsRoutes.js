@@ -8,6 +8,7 @@ const {
 const {
    selectCompletedWorkout,
 } = require("../services/completedWorkouts.services");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 const completedWorkoutRouter = require("express").Router();
 
 completedWorkoutRouter.get("/", async (req, res, next) => {

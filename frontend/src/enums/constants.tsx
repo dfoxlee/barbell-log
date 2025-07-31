@@ -39,6 +39,8 @@ export const distanceUnits = [
    },
 ];
 
+export const heightOptions = ["ft-in", "in", "cm", "m"];
+
 export const exercises = [
    { id: 0, group: "Chest", name: "Assisted Dip" },
    { id: 1, group: "Chest", name: "Band-Assisted Bench Press" },

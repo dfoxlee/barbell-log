@@ -57,7 +57,7 @@ export const fetchUpdateWeightUnitPreference = async ({
    weightUnitPreference: string;
 }) => {
    const weightUnitRequest = await fetch(
-      `${baseUrl}/users/update-weight-preference`,
+      `${baseUrl}/users/update-unit-preferences`,
       {
          method: "POST",
          headers: {
@@ -83,7 +83,7 @@ export const fetchUpdateDistanceUnitPreference = async ({
    distanceUnitPreference: string;
 }) => {
    const weightUnitRequest = await fetch(
-      `${baseUrl}/users/update-weight-preference`,
+      `${baseUrl}/users/update-unit-preferences`,
       {
          method: "POST",
          headers: {

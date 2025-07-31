@@ -56,10 +56,11 @@ export default function ExerciseComposition() {
 
    const handleAddSetClick = () => {
       if (currentExercise?.exerciseSets) {
-         const latestSet =
-            currentExercise.exerciseSets[
+         const latestSet = {
+            ...currentExercise.exerciseSets[
                currentExercise.exerciseSets.length - 1
-            ];
+            ],
+         };
 
          const newExerciseSetOrder = latestSet.exerciseSetOrder + 1;
 
