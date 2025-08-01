@@ -20,8 +20,15 @@
    padding: 10px 0;
 }
 
-.gridDataCell {
+.gridDataCell,
+.rowOptionsCell {
    padding: 5px 0;
+}
+
+.rowOptionsCell {
+   display: flex;
+   align-items: center;
+   gap: 20px;
 }
 
 .gridHeaderCell {
@@ -31,10 +38,11 @@
 }
 
 .deleteSetBtn {
-   background: none;
-   border-style: none;
-   font-size: 1.25rem;
    color: var(--warning);
+}
+
+.optionsBtn {
+   color: var(--primary);
 }
 
 /* ExerciseSetRow */
@@ -59,10 +67,22 @@
    margin-left: 5px;
 }
 
-/* ExerciseSetEditRow */
+.optionsWrapper {
+   position: relative;
+}
+
+.optionsDropDown {
+   position: absolute;
+   top: 100%;
+   left: -100%;
+   transform: translateX(-50%);
+   padding: 10px;
+   border-radius: 10px;
+   background-color: var(--accent);
+}
 
 .toggleBtn {
-   color: var(--primary);
+   color: var(--secondary);
    background: none;
    border-style: none;
    display: flex;
@@ -79,8 +99,10 @@
    font-size: 0.5rem;
    font-weight: 500;
    margin-left: 5px;
-   color: var(--accent);
+   color: var(--charcoal);
 }
+
+/* ExerciseSetEditRow */
 
 .setInputsWrapper {
    display: flex;

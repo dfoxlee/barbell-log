@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import { FaPencil } from "react-icons/fa6";
 import {
    FaChevronLeft,
    FaChevronRight,
-   FaGlasses,
    FaPlus,
    FaPlusCircle,
    FaTrashAlt,
@@ -21,9 +19,6 @@ export default function ExerciseComposition() {
    );
    const currentExerciseViewOrder = useWorkoutCompositionStore(
       (state) => state.currentExerciseViewOrder
-   );
-   const currentExerciseSetViewOrder = useWorkoutCompositionStore(
-      (state) => state.currentExerciseSetViewOrder
    );
    const updateExercise = useWorkoutCompositionStore(
       (state) => state.updateExercise
@@ -188,18 +183,11 @@ export default function ExerciseComposition() {
          {currentExercise ? (
             <ExerciseSetsGrid
                currentExercise={currentExercise}
-               currentExerciseSetViewOrder={currentExerciseSetViewOrder}
                viewAllExerciseSets={viewAllExerciseSets}
                toggleViewAllExerciseSets={toggleViewAllExerciseSets}
             />
          ) : null}
          <div className={styles.exerciseOptionsWrapper}>
-            <button
-               className={`standardIconBtn ${styles.saveSetBtn}`}
-               onClick={toggleViewAllExerciseSets}
-            >
-               {viewAllExerciseSets ? <FaPencil /> : <FaGlasses />}
-            </button>
             <button
                className={`standardBtn ${styles.addSetBtn}`}
                onClick={handleAddSetClick}

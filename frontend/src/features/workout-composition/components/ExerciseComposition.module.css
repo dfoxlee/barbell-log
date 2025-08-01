@@ -49,10 +49,6 @@
    font-size: 2rem;
 }
 
-.addSetBtn {
-   margin-left: 30px;
-}
-
 .addSetBtn > *:not(:first-child) {
    margin-left: 10px;
 }
