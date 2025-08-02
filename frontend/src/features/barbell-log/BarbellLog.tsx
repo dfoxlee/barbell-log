@@ -12,6 +12,7 @@ export default function BarbellLog() {
    const params = useParams();
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
+
    const user = useUserStore((state) => state.user);
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const getBarbellLog = useBarbellLogStore((state) => state.getBarbellLog);
@@ -22,6 +23,7 @@ export default function BarbellLog() {
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
    );
+
    const exerciseNames = useMemo(
       () =>
          barbellLog?.completedExercises
@@ -29,7 +31,6 @@ export default function BarbellLog() {
             .map((completedExercise) => completedExercise.exerciseName),
       [barbellLog]
    );
-
    const currentExercise = useMemo(
       () =>
          barbellLog?.completedExercises.find(
@@ -53,6 +54,7 @@ export default function BarbellLog() {
          }
       }
    }, [workoutId, completedWorkoutId]);
+   console.log(barbellLog);
 
    const handleExerciseSelectChange = (event) => {
       const switchToExercise = barbellLog?.completedExercises.find(

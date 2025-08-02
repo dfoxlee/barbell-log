@@ -56,21 +56,25 @@ export default function CompletedWorkoutDetail({
       return <Loading />;
    }
 
-   if (completedWorkout) {
-      return (
-         <div>
-            <button
-               className={`standardBtn ${styles.recentWorkoutBtn}`}
-               onClick={handleReturnClick}
-            >
-               <FaChevronLeft />
-               <span>Recent Workouts</span>
-            </button>
-            <h2 className={styles.workoutNameTitle}>
-               {completedWorkout.workoutName}
-            </h2>
-            <div>
-               {completedWorkout.completedExercises.map((completedExercise) => (
+   return (
+      <div>
+         <button
+            className={`standardBtn ${styles.recentWorkoutBtn}`}
+            onClick={handleReturnClick}
+         >
+            <FaChevronLeft />
+            <span>Recent Workouts</span>
+         </button>
+         <h2 className={styles.workoutNameTitle}>
+            {completedWorkout && completedWorkout.workoutName}
+         </h2>
+         <h4 className={styles.completedDate}>
+            {new Date(completedWorkout?.completedDate).toLocaleDateString()}
+         </h4>
+         <div className={styles.seperatorLine}></div>
+         <div className={styles.exercisesWrapper}>
+            {completedWorkout &&
+               completedWorkout.completedExercises.map((completedExercise) => (
                   <div key={completedExercise.completedExerciseId}>
                      <h3 className={styles.exerciseNameTitle}>
                         {completedExercise.exerciseName}
@@ -78,31 +82,48 @@ export default function CompletedWorkoutDetail({
                      <table className={styles.tableWrapper}>
                         <thead>
                            <tr>
-                              <th>set</th>
-                              <th>details</th>
-                              <th></th>
+                              <th className={styles.tableHeader}>set</th>
+                              <th className={styles.tableHeader}>details</th>
+                              <th className={styles.tableHeader}>complete</th>
+                              <th className={styles.tableHeader}>notes</th>
                            </tr>
                         </thead>
                         <tbody>
                            {completedExercise.completedExerciseSets.map(
                               (set) => (
                                  <tr key={set.completedExerciseSetOrder}>
-                                    <td>
-                                       <div>
+                                    <td className={styles.tableData}>
+                                       <div className={styles.setWarmupWrapper}>
+                                          {set.isWarmup ? (
+                                             <span
+                                                className={styles.warmupIcon}
+                                             >
+                                                W
+                                             </span>
+                                          ) : null}
                                           <span>
                                              {set.completedExerciseSetOrder}
                                           </span>
-                                          {set.isWarmup ? <span>W</span> : null}
                                        </div>
                                     </td>
-                                    <td>{rwtdCellFormat(set)}</td>
-                                    <td>
-                                       <div>
-                                          {set.isComplete ? <FaCheck /> : null}
-                                          {set.notes.length ? (
-                                             <FaInfoCircle />
-                                          ) : null}
-                                       </div>
+                                    <td className={styles.tableData}>
+                                       {rwtdCellFormat(set)}
+                                    </td>
+                                    <td className={styles.tableData}>
+                                       {set.isComplete ? (
+                                          <FaCheck
+                                             className={styles.completedIcon}
+                                          />
+                                       ) : (
+                                          <FaCheck
+                                             className={styles.incompletedIcon}
+                                          />
+                                       )}
+                                    </td>
+                                    <td className={styles.tableData}>
+                                       <p className={styles.notes}>
+                                          {set.notes}
+                                       </p>
                                     </td>
                                  </tr>
                               )
@@ -111,8 +132,7 @@ export default function CompletedWorkoutDetail({
                      </table>
                   </div>
                ))}
-            </div>
          </div>
-      );
-   }
+      </div>
+   );
 }

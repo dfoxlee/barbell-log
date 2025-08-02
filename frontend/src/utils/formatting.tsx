@@ -3,18 +3,60 @@ import type { CompletedExerciseType } from "../types/barbellLogTypes";
 import type { ExerciseSetType } from "../types/workoutTypes";
 
 const rwtdCellFormat = (set: ExerciseSetType | CompletedExerciseType) => {
-   const reps = set.reps || set.completedReps;
-   const hasReps = set.hasReps;
-   const weight = set.weight || set.completedWeight;
-   const weightUnit = set.weightUnit || set.completedWeightUnit;
-   const isBodyweight = set.isBodyweight;
-   const distance = set.distance || set.completedDistance;
-   const distanceUnit = set.distanceUnit || set.completedDistanceUnit;
-   const isDistance = set.isDistance;
-   const hr = set.hr || set.completedHr;
-   const min = set.min || set.completedMin;
-   const sec = set.sec || set.completedSec;
-   const isTimed = set.isTimed;
+   // Use nullish coalescing so 0 is not treated as falsy
+   const reps =
+      "reps" in set
+         ? set.reps ?? ""
+         : "completedReps" in set
+         ? set.completedReps ?? ""
+         : "";
+   const hasReps = "hasReps" in set ? set.hasReps ?? false : false;
+   const weight =
+      "weight" in set
+         ? set.weight ?? ""
+         : "completedWeight" in set
+         ? set.completedWeight ?? ""
+         : "";
+   const weightUnit =
+      "weightUnit" in set
+         ? set.weightUnit ?? ""
+         : "completedWeightUnit" in set
+         ? set.completedWeightUnit ?? ""
+         : "";
+   const isBodyweight =
+      "isBodyweight" in set ? set.isBodyweight ?? false : false;
+   const distance =
+      "distance" in set
+         ? set.distance ?? ""
+         : "completedDistance" in set
+         ? set.completedDistance ?? ""
+         : "";
+   const distanceUnit =
+      "distanceUnit" in set
+         ? set.distanceUnit ?? ""
+         : "completedDistanceUnit" in set
+         ? set.completedDistanceUnit ?? ""
+         : "";
+   const isDistance = "isDistance" in set ? set.isDistance ?? false : false;
+   const hr =
+      "hr" in set
+         ? set.hr ?? 0
+         : "completedHr" in set
+         ? set.completedHr ?? 0
+         : 0;
+   const min =
+      "min" in set
+         ? set.min ?? 0
+         : "completedMin" in set
+         ? set.completedMin ?? 0
+         : 0;
+   const sec =
+      "sec" in set
+         ? set.sec ?? 0
+         : "completedSec" in set
+         ? set.completedSec ?? 0
+         : 0;
+   const isTimed = "isTimed" in set ? set.isTimed ?? false : false;
 
    let rwtdText = "";
 

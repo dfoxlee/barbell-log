@@ -2,8 +2,10 @@
 
 .exerciseSetsGridWrapper {
    display: grid;
-   grid-template-columns: repeat(4, 1fr);
+   grid-template-columns: 1fr 1fr 7fr 2fr;
    margin-top: 10px;
+   gap: 10px 0;
+   width: 100%;
 }
 
 /* SharedSetRow */
@@ -27,6 +29,7 @@
 
 .rowOptionsCell {
    display: flex;
+   justify-content: center;
    align-items: center;
    gap: 20px;
 }
@@ -50,6 +53,7 @@
 .exerciseSetRowOptions {
    display: flex;
    align-items: center;
+   justify-content: center;
 }
 
 .skipToSetBtn {
@@ -69,6 +73,9 @@
 
 .optionsWrapper {
    position: relative;
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 
 .optionsDropDown {

@@ -7,6 +7,44 @@
    font-size: 1.5rem;
    font-weight: 600;
    margin-top: 30px;
+   text-decoration: underline;
+   text-underline-offset: 5px;
+}
+
+.completedDate {
+   text-align: center;
+   margin-top: 5px;
+   color: var(--accent);
+   font-size: 1rem;
+   font-weight: 500;
+}
+
+.setWarmupWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px
+}
+
+.warmupIcon {
+   background: var(--accent);
+   color: var(--secondary);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 23px;
+   aspect-ratio: 1 / 1;
+   border-radius: 50%;
+   font-weight: 500;
+   font-size: 0.75rem;
+}
+
+.exercisesWrapper {
+   margin-top: 20px;
+}
+
+.exercisesWrapper > *:not(:first-child) {
+   margin-top: 50px;
 }
 
 .exerciseNameTitle {
@@ -17,4 +55,35 @@
 
 .tableWrapper {
    width: 100%;
+   border-collapse: collapse;
+}
+
+.tableHeader {
+   font-size: 0.875rem;
+   color: var(--accent);
+   font-weight: 500;
+   border-bottom: 1px solid var(--primary);
+   text-align: center;
+}
+
+.tableData {
+   text-align: center;
+   padding: 5px 0;
+}
+
+.completedIcon,
+.incompletedIcon {
+   margin: 0 auto;
+}
+
+.completedIcon {
+   color: var(--primary);
+}
+
+.incompletedIcon {
+   color: var(--accent);
+}
+
+.notes {
+   font-size: 0.875rem;
 }

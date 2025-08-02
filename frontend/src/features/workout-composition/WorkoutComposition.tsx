@@ -16,10 +16,15 @@ import styles from "./WorkoutComposition.module.css";
 export default function WorkoutComposition() {
    const params = useParams();
    const workoutId = params["workout-id"];
+
    const [isReorderExercise, setIsReorderExercise] = useState(false);
    const user = useUserStore((state) => state.user);
+
    const workoutComposition = useWorkoutCompositionStore(
       (state) => state.workoutComposition
+   );
+   const workoutCompositionLoading = useWorkoutCompositionStore(
+      (state) => state.workoutCompositionLoading
    );
    const updateWorkoutComposition = useWorkoutCompositionStore(
       (state) => state.updateWorkoutComposition
@@ -33,9 +38,8 @@ export default function WorkoutComposition() {
 
    useEffect(() => {
       resetWorkoutComposition();
-      
-      if (workoutId && user?.token) {
 
+      if (workoutId && user?.token && !workoutCompositionLoading) {
          getWorkoutComposition({ token: user.token, workoutId });
       }
    }, [user?.token, workoutId]);

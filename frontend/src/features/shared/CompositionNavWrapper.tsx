@@ -7,6 +7,8 @@ import {
 } from "../../services/workoutServices";
 
 import styles from "./Navbar.module.css";
+import { workoutCompositionValidator } from "../../utils/validators";
+import toastify from "../../utils/toastify";
 
 export default function CompositionNavWrapper() {
    const navigate = useNavigate();
@@ -24,6 +26,15 @@ export default function CompositionNavWrapper() {
    const handleSaveClick = async () => {
       if (!user?.token) {
          navigate("/auth/login");
+      }
+
+      const workoutValid = workoutCompositionValidator({ workoutComposition });
+
+      if (!workoutValid.valid) {
+         return toastify({
+            message: workoutValid.message ?? "Workout not complete.",
+            type: "error",
+         });
       }
 
       try {

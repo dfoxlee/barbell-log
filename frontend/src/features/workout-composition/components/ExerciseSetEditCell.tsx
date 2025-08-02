@@ -50,7 +50,7 @@ export default function ExerciseSetEditCell({
       if (currentExercise && currentExerciseSet) {
          const updatedExerciseSet = {
             ...currentExerciseSet,
-            reps: repsInput,
+            reps: parseInt(repsInput),
          };
 
          const updatedExerciseSets = currentExercise.exerciseSets.map(
@@ -262,6 +262,7 @@ export default function ExerciseSetEditCell({
          updateExercise(updatedExercise);
       }
    };
+   
    const handleDistanceUnitChange = (
       event: React.ChangeEvent<HTMLSelectElement>
    ) => {

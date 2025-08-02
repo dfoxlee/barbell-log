@@ -13,13 +13,13 @@ export default function ExerciseSetsGrid({
    currentExercise,
    viewAllExerciseSets,
    toggleViewAllExerciseSets,
-}: ExerciseSetsGridPropsType) {
+}: ExerciseSetsGridPropsType) {   
    return (
       <div className={styles.exerciseSetsGridWrapper}>
          <span className={styles.gridHeaderCell}></span>
          <span className={styles.gridHeaderCell}>set</span>
          <span className={styles.gridHeaderCell}>details</span>
-         <span className={styles.gridHeaderCell}></span>
+         <span className={styles.gridHeaderCell}>options</span>
 
          {currentExercise?.exerciseSets.map((exerciseSet) => {
             return (
