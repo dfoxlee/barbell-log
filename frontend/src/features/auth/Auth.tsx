@@ -21,15 +21,11 @@ export default function Auth() {
          <Link to="/" className={styles.authTitleLink}>
             Barbell Log
          </Link>
-         {authTitle === "Sign Up" ? (
-            <UnderConstruction />
-         ) : (
-            <>
-               <h2 className={styles.authHeader}>{authTitle}</h2>
-               <FaUser className={styles.userIcon} />
-               <AuthForm authTitle={authTitle} />
-            </>
-         )}
+         <>
+            <h2 className={styles.authHeader}>{authTitle}</h2>
+            <FaUser className={styles.userIcon} />
+            <AuthForm authTitle={authTitle} />
+         </>
       </div>
    );
 }
