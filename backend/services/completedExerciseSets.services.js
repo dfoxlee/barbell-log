@@ -1,6 +1,22 @@
 const pool = require("../db/dbConfig");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
+const selectCompletedExerciseSetIds = async ({ completedExerciseId }) => {
+   const query = `
+      SELECT completed_exercise_set_id as completedExerciseSetId
+      FROM completed_exercise_set
+      WHERE completed_exercise_id = ?
+   `;
+   const values = [completedExerciseId];
+
+   const [selectCompletedExerciseSetIdsResult] = await pool.execute(
+      query,
+      values
+   );
+
+   return selectCompletedExerciseSetIdsResult.map(s => s.completedExerciseSetId);
+};
+
 const selectCompletedExerciseSets = async ({
    completedExerciseId,
    exerciseId,
@@ -213,6 +229,7 @@ const deleteCompletedExerciseSet = async ({
 };
 
 module.exports = {
+   selectCompletedExerciseSetIds,
    selectCompletedExerciseSets,
    insertCompletedExerciseSet,
    updateCompletedExerciseSet,

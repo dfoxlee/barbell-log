@@ -1,10 +1,26 @@
 const pool = require("../db/dbConfig");
 
-const selectCompletedExercises = async ({ completedWorkoutId, exerciseId }) => {
+const selectCompletedExercises = async ({
+   completedWorkoutId,
+   exerciseId,
+   completedExerciseOrder,
+}) => {
    let query = ``;
    let values = [];
 
-   if (completedWorkoutId && exerciseId) {
+   if (completedWorkoutId && completedExerciseOrder) {
+      query = `
+      SELECT ce.completed_exercise_id AS completedExerciseId, 
+      ce.exercise_id AS exerciseId, 
+      ce.completed_exercise_order AS completedExerciseOrder,
+      e.exercise_name AS exerciseName
+      FROM completed_exercise ce
+      INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
+      WHERE completed_workout_id = ? AND ce.completed_exercise_order = ?
+      `;
+
+      values.push(completedWorkoutId, completedExerciseOrder);
+   } else if (completedWorkoutId && exerciseId) {
       query = `
       SELECT ce.completed_exercise_id AS completedExerciseId, 
       ce.exercise_id AS exerciseId, 

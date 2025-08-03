@@ -14,11 +14,12 @@ const selectExerciseSetIds = async ({ exerciseId }) => {
    return selectExerciseSetIdsResults.map((set) => set.exercise_set_id);
 };
 
-const selectExerciseSets = async ({ exerciseId }) => {
+const selectExerciseSets = async ({ exerciseId, exerciseSetId }) => {
    let query = "";
    let values = [];
 
-   query = `
+   if (exerciseId) {
+      query = `
       SELECT exercise_set_id AS exerciseSetId,
          exercise_id AS exerciseId,
          reps,
@@ -40,7 +41,34 @@ const selectExerciseSets = async ({ exerciseId }) => {
       ORDER BY exerciseSetOrder
    `;
 
-   values.push(exerciseId);
+      values.push(exerciseId);
+   } else if (exerciseSetId) {
+      query = `
+      SELECT exercise_set_id AS exerciseSetId,
+         exercise_id AS exerciseId,
+         reps,
+         weight,
+         has_reps AS hasReps,
+         is_bodyweight AS isBodyweight,
+         is_timed AS isTimed,
+         is_distance AS isDistance,
+         is_warmup AS isWarmup,
+         weight_unit AS weightUnit,
+         distance,
+         distance_unit as distanceUnit,
+         hr,
+         min,
+         sec,
+         exercise_set_order AS exerciseSetOrder
+      FROM exercise_set
+      WHERE exercise_set_id = ?
+      ORDER BY exerciseSetOrder
+      `;
+
+      values.push(exerciseSetId);
+   } else {
+      return;
+   }
 
    const [selectExerciseSetsResults] = await pool.execute(query, values);
 

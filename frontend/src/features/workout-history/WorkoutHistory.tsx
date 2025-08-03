@@ -29,7 +29,7 @@ export default function WorkoutHistory() {
 
    return (
       <div className={styles.container}>
-         <h2 className={styles.title}>History</h2>
+         <h2 className={`pageTitle`}>History</h2>
          <Seperator />
          <div className={styles.optionBtnsWrapper}>
             <button

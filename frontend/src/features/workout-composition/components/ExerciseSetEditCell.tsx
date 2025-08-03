@@ -4,6 +4,7 @@ import styles from "./ExerciseSetsGrid.module.css";
 import toastify from "../../../utils/toastify";
 import { distanceUnits, weightUnits } from "../../../enums/constants";
 import type { ExerciseSetType } from "../../../types/workoutTypes";
+import { useUserStore } from "../../../stores/userStore";
 
 export default function ExerciseSetEditCell({
    exerciseSet,
@@ -22,6 +23,7 @@ export default function ExerciseSetEditCell({
    const updateExercise = useWorkoutCompositionStore(
       (state) => state.updateExercise
    );
+   const user = useUserStore((state) => state.user);
 
    const currentExercise = useMemo(() => {
       return workoutComposition.exercises.find(
@@ -262,7 +264,7 @@ export default function ExerciseSetEditCell({
          updateExercise(updatedExercise);
       }
    };
-   
+
    const handleDistanceUnitChange = (
       event: React.ChangeEvent<HTMLSelectElement>
    ) => {
@@ -322,7 +324,11 @@ export default function ExerciseSetEditCell({
                         className={styles.unitSelector}
                         name="weight-unit"
                         id="weight-unit"
-                        value={exerciseSet.weightUnit}
+                        value={
+                           exerciseSet.exerciseSetId
+                              ? exerciseSet.weightUnit
+                              : user?.weightUnitPreference
+                        }
                         onChange={handleWeightUnitChange}
                      >
                         {weightUnits.map((unit) => (
@@ -381,7 +387,11 @@ export default function ExerciseSetEditCell({
                      className={styles.unitSelector}
                      name="distance-unit"
                      id="distance-unit"
-                     value={exerciseSet.distanceUnit}
+                     value={
+                        exerciseSet.exerciseSetId
+                           ? exerciseSet.distanceUnit
+                           : user?.distanceUnitPreference
+                     }
                      onChange={handleDistanceUnitChange}
                   >
                      {distanceUnits.map((unit) => (

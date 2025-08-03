@@ -50,13 +50,14 @@ export default function Settings() {
    };
 
    const handleDistanceUnitPreferenceChange = async (event) => {
+      const updatedUnit = event.target.value;
       try {
          await fetchUpdateDistanceUnitPreference({
             token: user?.token,
-            distanceUnitPreference: event.target.value,
+            distanceUnitPreference: updatedUnit,
          });
 
-         updateDistanceUnitPreference(event.target.value);
+         updateDistanceUnitPreference(updatedUnit);
       } catch (error) {
          console.error(error);
 
@@ -69,7 +70,7 @@ export default function Settings() {
 
    return (
       <div className={styles.container}>
-         <h2 className={styles.title}>Settings</h2>
+         <h2 className={`pageTitle`}>Settings</h2>
          <Seperator />
          <button className={styles.logoutBtn} onClick={handleLogoutClick}>
             Logout
@@ -111,7 +112,7 @@ export default function Settings() {
                </select>
             </div>
          </div>
-         <div className={styles.accountOptionsWrapper}>
+         {/* <div className={styles.accountOptionsWrapper}>
             <button className={`standardBtn ${styles.accountOptionBtn}`}>
                Change Email
             </button>
@@ -121,7 +122,7 @@ export default function Settings() {
          </div>
          <button className={`standardBtn ${styles.deleteAccountBtn}`}>
             Delete Account
-         </button>
+         </button> */}
       </div>
    );
 }

@@ -25,13 +25,13 @@ export default function Home() {
 
       if (workoutsError) {
          console.error("Error fetching workouts:", workoutsError);
-         
+
          toastify({
             message: "Something went wrong getting workouts. Try again later.",
             type: "error",
          });
       }
-   }, [user?.token]);
+   }, [user?.token, workoutsError]);
 
    if (workoutsLoading) {
       return <Loading />;
@@ -39,7 +39,7 @@ export default function Home() {
 
    return (
       <div className={styles.container}>
-         <h1 className={styles.title}>Barbell Log</h1>
+         <h1 className={`pageTitle`}>Barbell Log</h1>
          <Seperator />
          <div className={styles.createWorkoutLinkWrapper}>
             <Link

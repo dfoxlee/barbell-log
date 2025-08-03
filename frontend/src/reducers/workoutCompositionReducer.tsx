@@ -93,11 +93,11 @@ const workoutCompositionReducer = (state, action) => {
       case "MOVE-EXERCISE": {
          const { dragExerciseOrder, hoverExerciseOrder } = action.payload;
 
-         console.log("drag", dragExerciseOrder, "hover", hoverExerciseOrder);
+         // console.log("drag", dragExerciseOrder, "hover", hoverExerciseOrder);
 
          const currentExercises = [...state.exercises];
 
-         console.log("current", currentExercises);
+         // console.log("current", currentExercises);
 
          const updatedExercises = arrayMove(
             currentExercises,
@@ -110,8 +110,8 @@ const workoutCompositionReducer = (state, action) => {
             exerciseOrder: index + 1,
          }));
 
-         console.log("updated", updatedExercises);
-         console.log("reordered", reorderedExercises);
+         // console.log("updated", updatedExercises);
+         // console.log("reordered", reorderedExercises);
 
          const newState = {
             ...state,

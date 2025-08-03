@@ -4,12 +4,6 @@
    margin: 0 auto;
 }
 
-.title {
-   text-align: center;
-   font-size: 1.5rem;
-   margin: 10px auto 0;
-}
-
 .optionBtnsWrapper {
    display: flex;
    justify-content: center;

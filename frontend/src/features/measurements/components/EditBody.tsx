@@ -30,9 +30,17 @@ export default function EditBody() {
             </select>
             {heightType === "ft-in" ? (
                <div>
-                  <input type="number" inputMode="numeric" />
+                  <input
+                     className={`standardInput`}
+                     type="number"
+                     inputMode="numeric"
+                  />
                   <span>ft</span>
-                  <input type="number" inputMode="numeric" />
+                  <input
+                     className={`standardInput`}
+                     type="number"
+                     inputMode="numeric"
+                  />
                   <span>in</span>
                </div>
             ) : (
@@ -59,35 +67,67 @@ export default function EditBody() {
          </div>
          <div>
             <label htmlFor="body-fat">Body Fat Percentage</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="neck-circumference">Neck Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="chest-circumference">Chest Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="bicep-circumference">Bicep Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="forearm-circumference">Forearm Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="waist-circumference">Waist Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="thigh-circumference">Thigh Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
          <div>
             <label htmlFor="calf-circumference">Calf Circumference</label>
-            <input type="number" inputMode="numeric" />
+            <input
+               className={`standardInput`}
+               type="number"
+               inputMode="numeric"
+            />
          </div>
       </div>
    );

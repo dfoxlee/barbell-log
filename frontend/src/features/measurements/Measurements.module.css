@@ -2,12 +2,7 @@
    width: 90vw;
    max-width: 600px;
    margin: 0 auto;
-}
-
-.title {
-   text-align: center;
-   font-size: 1.5rem;
-   margin: 10px auto 0;
+   padding-bottom: 100px;
 }
 
 .typeBtnsWrapper {

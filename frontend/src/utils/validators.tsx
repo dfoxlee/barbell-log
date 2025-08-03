@@ -5,7 +5,6 @@ export const workoutCompositionValidator = ({
 }: {
    workoutComposition: WorkoutType;
 }) => {
-   console.log(workoutComposition);
    if (workoutComposition.workoutName === "") {
       return { valid: false, message: "Workout name must have a value." };
    }

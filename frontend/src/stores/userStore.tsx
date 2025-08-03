@@ -87,21 +87,27 @@ export const useUserStore = create<UserStoreType>((set) => ({
       }
    },
    updateWeightUnitPreference: (weightUnitPreference: string) =>
-      set((state) => {
-         if (!state.user) return {};
+      set(({ user }) => {
+         if (!user) {
+            return {};
+         }
+
          return {
             user: {
-               ...state.user,
+               ...user,
                weightUnitPreference,
             },
          };
       }),
    updateDistanceUnitPreference: (distanceUnitPreference: string) =>
-      set((state) => {
-         if (!state.user) return {};
+      set(({ user }) => {
+         if (!user) {
+            return {};
+         }
+
          return {
             user: {
-               ...state.user,
+               ...user,
                distanceUnitPreference,
             },
          };

@@ -54,7 +54,6 @@ export default function BarbellLog() {
          }
       }
    }, [workoutId, completedWorkoutId]);
-   console.log(barbellLog);
 
    const handleExerciseSelectChange = (event) => {
       const switchToExercise = barbellLog?.completedExercises.find(
@@ -107,6 +106,8 @@ export default function BarbellLog() {
                currentExercise?.completedExerciseSets.length - 1
             ],
          };
+
+         delete latestSet.completedExerciseSetId;
 
          latestSet.completedExerciseSetOrder =
             latestSet.completedExerciseSetOrder + 1;

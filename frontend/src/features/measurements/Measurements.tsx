@@ -4,6 +4,7 @@ import Seperator from "../shared/Seperator";
 import styles from "./Measurements.module.css";
 import Body from "./components/Body";
 import Nutrition from "./components/Nutrition";
+import UnderConstruction from "../shared/UnderConstruction";
 
 export default function Measurements() {
    const [measurementType, setMeasurementType] = useState("body");
@@ -18,9 +19,9 @@ export default function Measurements() {
 
    return (
       <div className={styles.container}>
-         <h2 className={styles.title}>Measurements</h2>
+         <h2 className={`pageTitle`}>Measurements</h2>
          <Seperator />
-         <div className={styles.typeBtnsWrapper}>
+         {/* <div className={styles.typeBtnsWrapper}>
             <button
                className={`standardBtn ${
                   measurementType === "body"
@@ -42,7 +43,8 @@ export default function Measurements() {
                Nutrition
             </button>
          </div>
-         {measurementType === "body" ? <Body /> : <Nutrition />}
+         {measurementType === "body" ? <Body /> : <Nutrition />} */}
+         <UnderConstruction />
       </div>
    );
 }

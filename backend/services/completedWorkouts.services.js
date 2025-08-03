@@ -3,6 +3,7 @@ const pool = require("../db/dbConfig");
 const selectCompletedWorkout = async ({
    completedWorkoutId,
    workoutId,
+   completedDate,
    userId,
 }) => {
    let query = ``;
@@ -20,6 +21,18 @@ const selectCompletedWorkout = async ({
       `;
 
       values.push(completedWorkoutId);
+   } else if (workoutId && completedDate) {
+      query = `
+         SELECT cw.completed_workout_id AS completedWorkoutId,
+            cw.workout_id AS workoutId,
+            w.workout_name AS workoutName,
+            cw.completed_date AS completedDate
+         FROM completed_workout cw
+         INNER JOIN workout w ON w.workout_id = cw.workout_id
+         WHERE cw.workout_id = ?
+            AND cw.completed_date = ?;
+      `;
+      values.push(workoutId, completedDate);
    } else if (workoutId) {
       query = `
          SELECT cw.completed_workout_id AS completedWorkoutId,
@@ -53,12 +66,7 @@ const selectCompletedWorkout = async ({
    return selectCompletedWorkoutResults;
 };
 
-const insertCompletedWorkout = async ({ workoutId }) => {
-   const completedDate = new Date()
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-
+const insertCompletedWorkout = async ({ workoutId, completedDate }) => {
    const [insertCompletedWorkoutResults] = await pool.execute(
       `
          INSERT INTO completed_workout (workout_id, completed_date)

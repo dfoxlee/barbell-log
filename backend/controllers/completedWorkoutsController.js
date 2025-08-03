@@ -53,7 +53,7 @@ const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {
    return completedWorkouts;
 };
 
-const createCompletedWorkout = async ({ userId, workout }) => {
+const createCompletedWorkout = async ({ workout }) => {
    const createdDate = new Date();
    const workoutId = workout.workoutId;
 
