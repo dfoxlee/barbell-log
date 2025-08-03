@@ -6,6 +6,7 @@ const {
    updateUserWorkout,
    deleteUserWorkout,
 } = require("../controllers/workoutsController");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 workoutsRouter.get("/", async (req, res, next) => {
    const userId = req.user.user_id;
@@ -35,9 +36,9 @@ workoutsRouter.get("/:workoutId", async (req, res, next) => {
 workoutsRouter.post("/create", async (req, res, next) => {
    try {
       const userId = req.user.user_id;
-      const { workout } = req.body;
+      const { workoutComposition } = req.body;
 
-      await addUserWorkout({ userId, workout });
+      await addUserWorkout({ userId, workoutComposition });
 
       return res.status(201).json({ message: "Workout created successfully" });
    } catch (error) {
@@ -47,12 +48,12 @@ workoutsRouter.post("/create", async (req, res, next) => {
 
 workoutsRouter.put("/update", async (req, res, next) => {
    const userId = req.user.user_id;
-   const { workout } = req.body;
+   const { workoutComposition } = req.body;
 
    try {
       await updateUserWorkout({
          userId,
-         workout,
+         workoutComposition,
       });
 
       return res.status(200).json({ message: "Workout updated successfully" });
@@ -62,12 +63,10 @@ workoutsRouter.put("/update", async (req, res, next) => {
 });
 
 workoutsRouter.delete("/:workoutId", async (req, res, next) => {
-   const { user_id } = req.user;
    const { workoutId } = req.params;
 
    try {
       await deleteUserWorkout({
-         user_id,
          workoutId,
       });
 

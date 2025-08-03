@@ -1,49 +1,74 @@
-import { distanceUnits, weightUnits } from "../enums/constants";
+// import { distanceUnits, weightUnits } from "../enums/constants";
+import type { CompletedExerciseType } from "../types/barbellLogTypes";
+import type { ExerciseSetType } from "../types/workoutTypes";
 
-const rwtdCellFormat = (set) => {
-   const reps = set.reps;
-   const isReps = set.isReps;
-   const weight = set.weight;
-   const weightUnit = weightUnits.find(
-      (unit) => unit.id === parseInt(set.weightUnit)
-   )
-      ? weightUnits.find((unit) => unit.id === parseInt(set.weightUnit))?.label
-      : "";
-   const isBodyweight = set.isBodyweight;
-   const distance = set.distance;
-   const distanceUnit = distanceUnits.find(
-      (unit) => unit.id === parseInt(set.distanceUnit)
-   )
-      ? distanceUnits.find((unit) => unit.id === parseInt(set.distanceUnit))
-           ?.label
-      : "";
-   const isDistance = set.isDistance;
-   const isBar = set.isBar;
-   const isDumbbell = set.isDumbbell;
-   const hr = set.hr;
-   const min = set.min;
-   const sec = set.sec;
-   const isTimed = set.isTimed;
+const rwtdCellFormat = (set: ExerciseSetType | CompletedExerciseType) => {
+   // Use nullish coalescing so 0 is not treated as falsy
+   const reps =
+      "reps" in set
+         ? set.reps ?? ""
+         : "completedReps" in set
+         ? set.completedReps ?? ""
+         : "";
+   const hasReps = "hasReps" in set ? set.hasReps ?? false : false;
+   const weight =
+      "weight" in set
+         ? set.weight ?? ""
+         : "completedWeight" in set
+         ? set.completedWeight ?? ""
+         : "";
+   const weightUnit =
+      "weightUnit" in set
+         ? set.weightUnit ?? ""
+         : "completedWeightUnit" in set
+         ? set.completedWeightUnit ?? ""
+         : "";
+   const isBodyweight =
+      "isBodyweight" in set ? set.isBodyweight ?? false : false;
+   const distance =
+      "distance" in set
+         ? set.distance ?? ""
+         : "completedDistance" in set
+         ? set.completedDistance ?? ""
+         : "";
+   const distanceUnit =
+      "distanceUnit" in set
+         ? set.distanceUnit ?? ""
+         : "completedDistanceUnit" in set
+         ? set.completedDistanceUnit ?? ""
+         : "";
+   const isDistance = "isDistance" in set ? set.isDistance ?? false : false;
+   const hr =
+      "hr" in set
+         ? set.hr ?? 0
+         : "completedHr" in set
+         ? set.completedHr ?? 0
+         : 0;
+   const min =
+      "min" in set
+         ? set.min ?? 0
+         : "completedMin" in set
+         ? set.completedMin ?? 0
+         : 0;
+   const sec =
+      "sec" in set
+         ? set.sec ?? 0
+         : "completedSec" in set
+         ? set.completedSec ?? 0
+         : 0;
+   const isTimed = "isTimed" in set ? set.isTimed ?? false : false;
 
    let rwtdText = "";
 
-   if (isReps) {
-      if (isDumbbell) {
-         rwtdText += `${reps} x ${weight} ${weightUnit}/DB`;
-      } else if (isBodyweight) {
+   if (hasReps) {
+      if (isBodyweight) {
          rwtdText += `${reps} x BW`;
-      } else if (isBar) {
-         rwtdText += `${reps} x bar`;
       } else {
          rwtdText += `${reps} x ${weight} ${weightUnit}`;
       }
    } else {
-      if (isDumbbell) {
-         rwtdText += `${weight} ${weightUnit}/DB`;
-      } else if (isBodyweight) {
+      if (isBodyweight) {
          rwtdText += `BW`;
-      } else if (isBar) {
-         rwtdText += `bar`;
       } else {
          rwtdText += `${weight} ${weightUnit}`;
       }

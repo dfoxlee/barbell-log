@@ -1,63 +1,71 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useWorkoutCompositionContext } from "../../hooks/useWorkoutCompositionContext";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useUserStore } from "../../stores/userStore";
+import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
 import {
    fetchCreateWorkout,
    fetchUpdateWorkout,
 } from "../../services/workoutServices";
 
 import styles from "./Navbar.module.css";
+import { workoutCompositionValidator } from "../../utils/validators";
+import toastify from "../../utils/toastify";
 
 export default function CompositionNavWrapper() {
    const navigate = useNavigate();
-   const { workoutCompositionState, workoutCompositionDispatch } =
-      useWorkoutCompositionContext();
-   const { user } = useAuthContext();
+   const user = useUserStore((state) => state.user);
    const params = useParams();
-   const compositionType = params["composition-type"];
+   const workoutId = params["workout-id"];
+   const workoutComposition = useWorkoutCompositionStore(
+      (state) => state.workoutComposition
+   );
 
    const handleCancelClick = () => {
-      workoutCompositionDispatch({
-         type: "RESET-WORKOUT",
-      });
-
       navigate(-1);
    };
 
    const handleSaveClick = async () => {
+      if (!user?.token) {
+         navigate("/auth/login");
+      }
+
+      const workoutValid = workoutCompositionValidator({ workoutComposition });
+
+      if (!workoutValid.valid) {
+         return toastify({
+            message: workoutValid.message ?? "Workout not complete.",
+            type: "error",
+         });
+      }
+
       try {
-         const workout = workoutCompositionState;
-         if (compositionType === "create") {
+         if (!workoutId) {
             const createWorkoutRequest = await fetchCreateWorkout({
-               workout,
-               token: user.token,
+               workoutComposition,
+               token: user!.token,
             });
 
             if (createWorkoutRequest.error) {
                console.error(createWorkoutRequest);
+
                return alert("Something went wrong. Try again later.");
             }
-         }
-
-         if (compositionType === "edit") {
+         } else {
             const updateWorkoutRequest = await fetchUpdateWorkout({
-               workout,
-               token: user.token,
+               workoutComposition,
+               token: user!.token,
             });
 
             if (updateWorkoutRequest.error) {
                console.error(updateWorkoutRequest);
+
                return alert("Something went wrong. Try again later.");
             }
          }
 
-         workoutCompositionDispatch({
-            type: "RESET-WORKOUT",
-         });
-
          return navigate(-1);
       } catch (error) {
          console.error(error);
+
          return alert("Something went wrong. Try again later.");
       }
    };
@@ -68,7 +76,7 @@ export default function CompositionNavWrapper() {
             Cancel
          </button>
          <button className={styles.saveBtn} onClick={handleSaveClick}>
-            {compositionType === "create" ? "Save" : "Update"}
+            {!workoutId ? "Save" : "Update"}
          </button>
       </nav>
    );

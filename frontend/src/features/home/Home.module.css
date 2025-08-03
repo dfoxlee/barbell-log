@@ -4,12 +4,6 @@
    margin: 0 auto 80px;
 }
 
-.title {
-   text-align: center;
-   font-size: 1.5rem;
-   margin: 10px auto 0;
-}
-
 .createWorkoutWrapper {
    display: flex;
    justify-content: center;
@@ -17,13 +11,7 @@
    margin-top: 30px;
 }
 
-.createWorkoutLink {
+.createWorkoutLinkWrapper {
    text-align: center;
-   text-decoration: none;
-   color: var(--primary);
-   border: 1px solid;
-   width: 60%;
-   border-radius: 5px;
-   padding: 5px 10px;
-   font-size: 1.25rem;
+   margin-top: 30px;
 }

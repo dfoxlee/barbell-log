@@ -1,0 +1,63 @@
+.inputsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.inputWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.incrementBtn {
+   color: var(--primary);
+}
+
+.numberInput,
+.decimalInput {
+   margin: 10px auto;
+   font-size: 1.5rem;
+   text-align: center;
+}
+
+.numberInput {
+   width: 80px;
+}
+
+.decimalInput {
+   width: 120px;
+}
+
+.weightIncrementWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+}
+
+.weightIncrementBtn,
+.weightDecrementBtn {
+   font-size: 0.5rem;
+   color: var(--secondary);
+   border-radius: 1000px;
+   width: 30px;
+   aspect-ratio: 1 / 1;
+   border-style: none;
+   text-align: center;
+}
+
+.weightIncrementBtn {
+   background-color: var(--primary);
+}
+
+.weightDecrementBtn {
+   background-color: var(--warning);
+}
+
+.inputLabel {
+   font-size: 0.5rem;
+   color: var(--accent);
+   text-align: center;
+}

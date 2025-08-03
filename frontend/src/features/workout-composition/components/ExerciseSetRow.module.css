@@ -1,0 +1,12 @@
+.gridDataCell,
+.gridDoubleHeaderCell,
+.gridHeaderCell {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 5px 0;
+}
+
+.optionBtn {
+   color: var(--primary);
+}

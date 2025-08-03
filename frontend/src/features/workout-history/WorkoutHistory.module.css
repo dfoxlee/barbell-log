@@ -4,31 +4,39 @@
    margin: 0 auto;
 }
 
-.title {
-   text-align: center;
-   font-size: 1.5rem;
-   margin: 10px auto 0;
-}
-
 .optionBtnsWrapper {
    display: flex;
    justify-content: center;
    align-items: center;
    margin-top: 30px;
+   gap: 10px;
+   flex-wrap: wrap;
 }
 
 .optionBtn {
+   color: var(--accent) !important;
+   border-color: var(--accent) !important;
+}
+
+.optionBtnActive {
+   color: var(--primary);
+}
+
+.workoutHistorySelect,
+.workoutHistorySelectInactive {
+   padding: 5px 20px;
    background: none;
    border: 1px solid;
-   border-color: var(--primary);
-   color: var(--primary);
-   padding: 5px 10px;
-   margin: 5px;
    border-radius: 5px;
    font-size: 1.25rem;
 }
 
-.optionBtnActive {
-   background-color: var(--primary);
-   color: var(--secondary);
+.workoutHistorySelect {
+   color: var(--primary);
+   border-color: var(--primary);
+}
+
+.workoutHistorySelectInactive {
+   color: var(--accent);
+   border-color: var(--accent);
 }

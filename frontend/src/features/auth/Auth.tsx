@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 import AuthForm from "./components/AuthForm";
+import UnderConstruction from "../shared/UnderConstruction";
 
 import styles from "./Auth.module.css";
-import UnderConstruction from "../shared/UnderConstruction";
 
 export default function Auth() {
    const params = useParams();

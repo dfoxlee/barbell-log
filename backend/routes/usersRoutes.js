@@ -2,7 +2,7 @@ const usersRouter = require("express").Router();
 const {
    signUpUser,
    loginUser,
-   updateUserWeightPreference,
+   updateUnitPreferences,
 } = require("../controllers/usersController");
 const authMiddleware = require("../middleware/authMiddleware");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
@@ -44,16 +44,18 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 usersRouter.post(
-   "/update-weight-preference",
+   "/update-unit-preferences",
    authMiddleware,
    async (req, res, next) => {
       const userId = req.user.user_id;
-      const { weightUnitPreference } = req.body;
+
+      const { weightUnitPreference, distanceUnitPreference } = req.body;
 
       try {
-         await updateUserWeightPreference({
+         await updateUnitPreferences({
             userId,
-            preference: weightUnitPreference,
+            weightUnitPreference,
+            distanceUnitPreference,
          });
 
          res.status(200).json("Weight unit updated.");

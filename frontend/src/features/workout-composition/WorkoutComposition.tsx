@@ -1,58 +1,53 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
-import { useWorkoutCompositionContext } from "../../hooks/useWorkoutCompositionContext";
 import ExerciseComposition from "./components/ExerciseComposition";
 import Seperator from "../shared/Seperator";
 import ReorderExercise from "./components/ReorderExercise";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { fetchGetWorkout } from "../../services/workoutServices";
+import { useUserStore } from "../../stores/userStore";
 import {
    verticalListSortingStrategy,
    SortableContext,
 } from "@dnd-kit/sortable";
 import ReorderExerciseWrapper from "./components/ReorderExerciseWrapper";
+import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
 
 import styles from "./WorkoutComposition.module.css";
 
 export default function WorkoutComposition() {
-   const { workoutCompositionState, workoutCompositionDispatch } =
-      useWorkoutCompositionContext();
    const params = useParams();
-   const [isReorderExercise, setIsReorderExercise] = useState(false);
-   const { user } = useAuthContext();
-   const compositionType = params["composition-type"];
    const workoutId = params["workout-id"];
 
-   useEffect(() => {
-      const getEditingWorkout = async () => {
-         try {
-            const req = await fetchGetWorkout({ token: user.token, workoutId });
+   const [isReorderExercise, setIsReorderExercise] = useState(false);
+   const user = useUserStore((state) => state.user);
 
-            workoutCompositionDispatch({
-               type: "UPDATE-WORKOUT",
-               payload: req,
-            });
-         } catch (error) {
-            console.error(error);
-            return alert("Something went wrong. Try again later.");
-         }
-      };
-      if (compositionType === "edit") {
-         getEditingWorkout();
+   const workoutComposition = useWorkoutCompositionStore(
+      (state) => state.workoutComposition
+   );
+   const workoutCompositionLoading = useWorkoutCompositionStore(
+      (state) => state.workoutCompositionLoading
+   );
+   const updateWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.updateWorkoutComposition
+   );
+   const getWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.getWorkoutComposition
+   );
+   const resetWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.resetWorkoutComposition
+   );
+
+   useEffect(() => {
+      resetWorkoutComposition();
+
+      if (workoutId && user?.token && !workoutCompositionLoading) {
+         getWorkoutComposition({ token: user.token, workoutId });
       }
-   }, [compositionType, user.token, workoutId, workoutCompositionDispatch]);
+   }, [user?.token, workoutId]);
 
    const handleWorkoutNameInput = (event) => {
-      workoutCompositionDispatch({
-         type: "UPDATE-WORKOUT-NAME",
-         payload: event.target.value,
-      });
-   };
-
-   const handleCreateExerciseClick = () => {
-      workoutCompositionDispatch({
-         type: "NEW-EXERCISE",
+      updateWorkoutComposition({
+         ...workoutComposition,
+         workoutName: event.target.value,
       });
    };
 
@@ -66,25 +61,25 @@ export default function WorkoutComposition() {
             className={styles.workoutNameInput}
             type="text"
             placeholder="workout name..."
+            value={workoutComposition.workoutName}
             onChange={handleWorkoutNameInput}
-            value={workoutCompositionState.workoutName}
          />
          <button
             className={styles.reorderExerciseBtn}
             onClick={handleReorderExerciseClick}
          >
-            {isReorderExercise ? `Break-out Sets` : `Reorder Exercises`}
+            {isReorderExercise ? `Exercise Details` : `Reorder Exercises`}
          </button>
          <Seperator />
          {isReorderExercise ? (
             <ReorderExerciseWrapper>
                <SortableContext
-                  items={workoutCompositionState.exercises.map(
+                  items={workoutComposition.exercises.map(
                      (exercise) => exercise.exerciseOrder
                   )}
                   strategy={verticalListSortingStrategy}
                >
-                  {workoutCompositionState.exercises.map((exercise) => (
+                  {workoutComposition.exercises.map((exercise) => (
                      <ReorderExercise
                         key={exercise.exerciseOrder}
                         id={exercise.exerciseOrder}
@@ -94,20 +89,8 @@ export default function WorkoutComposition() {
                </SortableContext>
             </ReorderExerciseWrapper>
          ) : (
-            workoutCompositionState.exercises.map((exercise) => (
-               <ExerciseComposition
-                  key={exercise.exerciseOrder}
-                  exercise={exercise}
-               />
-            ))
+            <ExerciseComposition />
          )}
-         <button
-            className={styles.addExerciseBtn}
-            onClick={handleCreateExerciseClick}
-         >
-            <FaPlusCircle className={styles.addExerciseIcon} />
-            <span className={styles.addExerciseText}>Exercise</span>
-         </button>
       </div>
    );
 }

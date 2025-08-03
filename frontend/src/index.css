@@ -126,6 +126,12 @@ button {
    cursor: pointer;
 }
 
+.pageTitle {
+   font-size: 1.5rem;
+   text-align: center;
+   font-weight: 600;
+}
+
 .standardInput {
    display: block;
    background: none;
@@ -137,7 +143,10 @@ button {
    min-width: 0;
    appearance: textfield;
    border-radius: 5px;
-   font-size: 1.25rem;
+}
+
+.linkWrapper {
+   text-align: center;
 }
 
 .standardLink,
@@ -149,22 +158,28 @@ button {
    border-color: var(--primary);
    padding: 5px 30px;
    border-radius: 5px;
-   display: block;
-}
-
-.standardLink {
-   text-decoration: none;
+   text-align: center;
 }
 
 .standardBtn {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    cursor: pointer;
    font-size: 1.25rem;
+   gap: 5px;
+}
+
+.standardLink {
+   display: inline-block;
+   text-decoration: none;
 }
 
 .standardIconBtn {
-
+   background: none;
+   border-style: none;
+   font-size: 1.5rem;
 }
 
 .standardIconLink {
-
 }

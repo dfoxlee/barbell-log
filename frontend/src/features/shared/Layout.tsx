@@ -1,14 +1,14 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { useEffect } from "react";
+import { useUserStore } from "../../stores/userStore";
 
 export default function Layout() {
-   const { user } = useAuthContext();
+   const { user } = useUserStore();
    const navigate = useNavigate();
 
    useEffect(() => {
-      if (!user) {
+      if (!user?.token) {
          navigate("/auth/login");
       }
    }, [user, navigate]);

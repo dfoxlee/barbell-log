@@ -7,7 +7,7 @@ const {
    comparePassword,
 } = require("../utils/authUtils");
 
-const findUserByEmail = async (email) => {
+const selectUserByEmail = async (email) => {
    const [results] = await pool.execute("SELECT * FROM user WHERE email = ?", [
       email,
    ]);
@@ -15,7 +15,7 @@ const findUserByEmail = async (email) => {
    return results;
 };
 
-const findUserById = async (userId) => {
+const selectUserById = async (userId) => {
    const [results] = await pool.execute(
       "SELECT * FROM user WHERE user_id = ?",
       [userId]
@@ -24,7 +24,7 @@ const findUserById = async (userId) => {
    return results;
 };
 
-const createUser = async ({ email, password }) => {
+const insertUser = async ({ email, password }) => {
    const [userSearchResults] = await pool.execute(
       `
       SELECT *
@@ -134,7 +134,7 @@ const validateUser = async ({ email, password }) => {
 
    const [returnUserSearch] = await pool.execute(
       `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference
+         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference, distance_unit_preference as distanceUnitPreference
          FROM user
          WHERE user_id = ?
       `,
@@ -177,14 +177,32 @@ const deleteUser = async (userId) => {
    return;
 };
 
-const updateWeightUnitPreference = async (userId, preference) => {
+const updateWeightUnitPreference = async ({ userId, weightUnitPreference }) => {
    const [updateWeightPreference] = await pool.execute(
       `
          UPDATE user
          SET weight_unit_preference = ?
          WHERE user_id = ?
       `,
-      [preference, userId]
+      [weightUnitPreference, userId]
+   );
+
+   if (!updateWeightPreference.affectedRows) {
+      throw new Error("Unable to update user weight preference.");
+   }
+};
+
+const updateDistanceUnitPreference = async ({
+   userId,
+   distanceUnitPreference,
+}) => {
+   const [updateWeightPreference] = await pool.execute(
+      `
+         UPDATE user
+         SET distance_unit_preference = ?
+         WHERE user_id = ?
+      `,
+      [distanceUnitPreference, userId]
    );
 
    if (!updateWeightPreference.affectedRows) {
@@ -193,11 +211,12 @@ const updateWeightUnitPreference = async (userId, preference) => {
 };
 
 module.exports = {
-   createUser,
+   insertUser,
    validateUser,
-   findUserByEmail,
-   findUserById,
+   selectUserByEmail,
+   selectUserById,
    updateUserToken,
    deleteUser,
    updateWeightUnitPreference,
+   updateDistanceUnitPreference,
 };

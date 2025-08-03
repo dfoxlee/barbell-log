@@ -1,20 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchGetWorkout } from "../../services/workoutServices";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useBarbellLogContext } from "../../hooks/useBarbellLogContext";
+import { useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
+import { useBarbellLogStore } from "../../stores/barbellLogStore";
+import { useUserStore } from "../../stores/userStore";
 import Seperator from "../shared/Seperator";
-import SetsTable from "./components/SetsTable";
-import CurrentSet from "./components/CurrentSet";
-import { FaCheck, FaChevronRight, FaPlusCircle, FaTrash } from "react-icons/fa";
-import Loading from "../shared/Loading";
-import ExerciseModal from "./components/ExerciseModal";
-import {
-   fetchCreateCompletedWorkout,
-   fetchGetCompletedWorkout,
-   fetchUpdateCompletedWorkout,
-} from "../../services/completedWorkoutServices";
-import toastify from "../../utils/toastify";
+import ExerciseSetsTable from "./components/ExerciseSetsTable";
 
 import styles from "./BarbellLog.module.css";
 
@@ -22,307 +12,197 @@ export default function BarbellLog() {
    const params = useParams();
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
-   const { user } = useAuthContext();
-   const { barbellLogState, barbellLogDispatch } = useBarbellLogContext();
-   const [isLoading, setIsLoading] = useState(false);
-   const [error, setError] = useState(null);
-   const [exerciseModalOpen, setExerciseModalOpen] = useState(false);
-   const [includeSetNotes, setIncludeSetNotes] = useState(false);
-   const navigate = useNavigate();
+
+   const user = useUserStore((state) => state.user);
+   const barbellLog = useBarbellLogStore((state) => state.barbellLog);
+   const getBarbellLog = useBarbellLogStore((state) => state.getBarbellLog);
+   const barbellLogLoading = useBarbellLogStore(
+      (state) => state.barbellLogLoading
+   );
+   const barbellLogError = useBarbellLogStore((state) => state.barbellLogError);
+   const updateBarbellLog = useBarbellLogStore(
+      (state) => state.updateBarbellLog
+   );
+
+   const exerciseNames = useMemo(
+      () =>
+         barbellLog?.completedExercises
+            .sort((a, b) => a.completedExerciseOrder - b.completedExerciseOrder)
+            .map((completedExercise) => completedExercise.exerciseName),
+      [barbellLog]
+   );
    const currentExercise = useMemo(
       () =>
-         barbellLogState.completedExercises.find(
-            (exercise) =>
-               exercise.completedExerciseOrder ===
-               barbellLogState.currentExercise
+         barbellLog?.completedExercises.find(
+            (completedExercise) =>
+               completedExercise.completedExerciseOrder ===
+               barbellLog?.currentExerciseOrder
          ),
-      [barbellLogState]
-   );
-   const currentSet = useMemo(
-      () =>
-         currentExercise
-            ? currentExercise.completedSets.find(
-                 (set) => set.setOrder === barbellLogState.currentSet
-              )
-            : null,
-      [currentExercise, barbellLogState.currentSet]
+      [barbellLog]
    );
 
    useEffect(() => {
-      try {
-         setError(null);
-
-         const getWorkout = async ({ workoutId, token }) => {
-            const req = await fetchGetWorkout({ workoutId, token });
-
-            barbellLogDispatch({
-               type: "UPDATE-WORKOUT",
-               payload: req,
-            });
-         };
-
-         const getCompletedWorkout = async ({ completedWorkoutId, token }) => {
-            const req = await fetchGetCompletedWorkout({
-               token,
+      if (!barbellLogLoading && !barbellLogError && user?.token && workoutId) {
+         if (completedWorkoutId) {
+            getBarbellLog({
+               token: user?.token,
+               workoutId,
                completedWorkoutId,
             });
-
-            barbellLogDispatch({
-               type: "UPDATE-WORKOUT",
-               payload: req,
-            });
-         };
-
-         setIsLoading(true);
-         if (completedWorkoutId) {
-            getCompletedWorkout({ completedWorkoutId, token: user.token });
          } else {
-            getWorkout({ token: user.token, workoutId });
-         }
-      } catch (error) {
-         console.error(error);
-
-         setError(error.message);
-
-         return alert("Something went wrong. Try again later.");
-      } finally {
-         setIsLoading(false);
-      }
-   }, [barbellLogDispatch, user.token, workoutId]);
-
-   const toggleExerciseModal = () => {
-      setExerciseModalOpen((prev) => !prev);
-   };
-
-   const handleOpenExerciseModal = () => {
-      toggleExerciseModal();
-   };
-
-   const handleToggleSetNotes = () => {
-      if (includeSetNotes) {
-         barbellLogDispatch({
-            type: "UPDATE-SET",
-            payload: {
-               ...currentSet,
-               notes: "",
-            },
-         });
-      }
-
-      setIncludeSetNotes((prev) => !prev);
-   };
-
-   const handleCompleteExerciseClick = async () => {
-      if (
-         currentExercise.completedExerciseOrder ===
-         barbellLogState.completedExercises.length
-      ) {
-         try {
-            if (completedWorkoutId) {
-               const request = await fetchUpdateCompletedWorkout({
-                  token: user?.token,
-                  completedWorkout: barbellLogState,
-               });
-
-               if (request.error) {
-                  toastify({
-                     message: "Something went wrong. Please try again later",
-                     type: "error",
-                  });
-
-                  return console.log(request);
-               }
-            } else {
-               const request = await fetchCreateCompletedWorkout({
-                  token: user?.token,
-                  workout: barbellLogState,
-               });
-
-               if (request.error) {
-                  toastify({
-                     message: "Something went wrong. Please try again later",
-                     type: "error",
-                  });
-
-                  return console.log(request);
-               }
-            }
-
-            return navigate(-1);
-         } catch (error) {
-            toastify({
-               message: "Something went wrong. Please try again later",
-               type: "error",
-            });
-
-            return console.log(error);
+            getBarbellLog({ token: user?.token, workoutId });
          }
       }
+   }, [workoutId, completedWorkoutId]);
 
-      barbellLogDispatch({
-         type: "SKIP-TO-EXERCISE",
-         payload: barbellLogState.currentExercise + 1,
-      });
-   };
-
-   const handleAddSetClick = () => {
-      barbellLogDispatch({
-         type: "ADD-SET",
-         payload: currentExercise.completedExerciseOrder,
-      });
-   };
-
-   const handleSetNotesChange = (e) => {
-      const { value } = e.target;
-
-      barbellLogDispatch({
-         type: "UPDATE-SET",
-         payload: {
-            ...currentSet,
-            notes: value,
-         },
-      });
-   };
-
-   const handleCompleteSetClick = () => {
-      const updatedSet = currentExercise.completedSets.find(
-         (set) => set.setOrder === barbellLogState.currentSet
+   const handleExerciseSelectChange = (event) => {
+      const switchToExercise = barbellLog?.completedExercises.find(
+         (completedExercise) =>
+            completedExercise.exerciseName === event.target.value
       );
 
-      const isComplete = !updatedSet.isComplete;
+      if (switchToExercise && barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: switchToExercise?.completedExerciseOrder,
+         });
+      }
+   };
 
-      // handle the case for the last exercise and last set.
+   const handleExerciseIncrementClick = () => {
       if (
-         currentExercise &&
-         currentSet &&
-         currentExercise.completedExerciseOrder ===
-            barbellLogState.completedExercises.length &&
-         currentSet.setOrder === currentExercise.completedSets.length
+         barbellLog !== null &&
+         barbellLog?.currentExerciseOrder >=
+            barbellLog?.completedExercises.length
       ) {
-         if (isComplete) {
-            return barbellLogDispatch({
-               type: "UPDATE-SET",
-               payload: {
-                  ...updatedSet,
-                  isComplete,
-               },
-            });
-         }
-
          return;
       }
 
-      // handle if the set is already complete
-      if (updatedSet.isComplete) {
-         if (
-            currentExercise.completedSets.length === barbellLogState.currentSet
-         ) {
-            return barbellLogDispatch({
-               type: "SKIP-TO-EXERCISE",
-               payload: barbellLogState.currentExercise + 1,
-            });
-         }
-
-         return barbellLogDispatch({
-            type: "SKIP-TO-SET",
-            payload: barbellLogState.currentSet + 1,
+      if (barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: barbellLog.currentExerciseOrder + 1,
          });
       }
-
-      barbellLogDispatch({
-         type: "UPDATE-SET",
-         payload: {
-            ...updatedSet,
-            isComplete,
-         },
-      });
-
-      if (currentExercise.completedSets.length === barbellLogState.currentSet) {
-         return barbellLogDispatch({
-            type: "SKIP-TO-EXERCISE",
-            payload: barbellLogState.currentExercise + 1,
-         });
-      }
-
-      return barbellLogDispatch({
-         type: "SKIP-TO-SET",
-         payload: barbellLogState.currentSet + 1,
-      });
    };
 
-   if (isLoading) {
-      return <Loading />;
+   const handleExerciseDecrementClick = () => {
+      if (barbellLog != null && barbellLog?.currentExerciseOrder <= 1) {
+         return;
+      }
+
+      if (barbellLog) {
+         updateBarbellLog({
+            ...barbellLog,
+            currentExerciseOrder: barbellLog.currentExerciseOrder - 1,
+         });
+      }
+   };
+
+   const handleAddSetClick = () => {
+      if (currentExercise && barbellLog) {
+         const latestSet = {
+            ...currentExercise?.completedExerciseSets[
+               currentExercise?.completedExerciseSets.length - 1
+            ],
+         };
+
+         delete latestSet.completedExerciseSetId;
+
+         latestSet.completedExerciseSetOrder =
+            latestSet.completedExerciseSetOrder + 1;
+
+         const updatedCompletedExerciseSets = [
+            ...currentExercise.completedExerciseSets,
+            latestSet,
+         ];
+
+         const updatedExercise = {
+            ...currentExercise,
+            completedExerciseSets: updatedCompletedExerciseSets,
+         };
+
+         const updatedCompletedExercises = barbellLog?.completedExercises.map(
+            (exercise) =>
+               exercise.completedExerciseOrder ===
+               updatedExercise.completedExerciseOrder
+                  ? updatedExercise
+                  : exercise
+         );
+
+         updateBarbellLog({
+            ...barbellLog,
+            completedExercises: updatedCompletedExercises,
+         });
+      }
+   };
+
+   if (barbellLogLoading) {
+      return <div>Loading...</div>;
    }
 
    return (
       <div className={styles.container}>
-         <ExerciseModal
-            exerciseModalOpen={exerciseModalOpen}
-            toggleExerciseModal={toggleExerciseModal}
-         />
-         <button
-            className={styles.openExerciseModalBtn}
-            onClick={handleOpenExerciseModal}
-         >
-            <FaChevronRight />
-         </button>
-         <h1 className={styles.title}>
-            {currentExercise && currentExercise.exerciseName}
+         <h1 className={`pageTitle ${styles.workoutNameTitle}`}>
+            {barbellLog?.workoutName}
          </h1>
          <Seperator />
-         <SetsTable />
-         <div className={styles.setOptionBtnsWrapper}>
-            <button className={styles.addSetBtn} onClick={handleAddSetClick}>
-               <FaPlusCircle />
-               <span>Set</span>
-            </button>
-            <button
-               className={styles.completeSetBtn}
-               onClick={handleCompleteSetClick}
-            >
-               <FaCheck />
-               <span>Set</span>
-            </button>
-         </div>
-         <CurrentSet />
-         {includeSetNotes ? (
-            <textarea
-               className={styles.setNotes}
-               rows={3}
-               cols={20}
-               placeholder="Enter set notes..."
-               onChange={handleSetNotesChange}
-               value={currentSet ? currentSet.notes : ""}
-            ></textarea>
-         ) : null}
-         <div className={styles.setOptionBtnsWrapper}>
+         <div className={styles.exerciseNavWrapper}>
             <button
                className={
-                  includeSetNotes
-                     ? styles.removeSetNotesBtn
-                     : styles.addSetNotesBtn
+                  barbellLog?.currentExerciseOrder === 1
+                     ? styles.exerciseNavBtnDisabled
+                     : styles.exerciseNavBtn
                }
-               onClick={handleToggleSetNotes}
+               disabled={barbellLog?.currentExerciseOrder === 1}
+               onClick={handleExerciseDecrementClick}
             >
-               {includeSetNotes ? <FaTrash /> : <FaPlusCircle />}
-               <span>Note</span>
+               <FaChevronLeft />
             </button>
+            <div className={styles.exerciseNavContent}>
+               <p
+                  className={styles.exerciseNavCount}
+               >{`Exercise: ${barbellLog?.currentExerciseOrder} / ${barbellLog?.completedExercises.length}`}</p>
+               <select
+                  className={styles.currentExerciseNavSelect}
+                  name="current-exercise"
+                  id="current-exercise"
+                  value={currentExercise?.exerciseName}
+                  onChange={handleExerciseSelectChange}
+               >
+                  {exerciseNames?.map((name) => (
+                     <option key={name}>{name}</option>
+                  ))}
+               </select>
+            </div>
             <button
-               className={styles.completeExerciseBtn}
-               onClick={handleCompleteExerciseClick}
+               className={
+                  barbellLog != null &&
+                  barbellLog?.currentExerciseOrder <
+                     barbellLog?.completedExercises.length
+                     ? styles.exerciseNavBtn
+                     : styles.exerciseNavBtnDisabled
+               }
+               disabled={
+                  barbellLog !== null &&
+                  barbellLog?.currentExerciseOrder >=
+                     barbellLog?.completedExercises.length
+               }
+               onClick={handleExerciseIncrementClick}
             >
-               {currentExercise &&
-               currentExercise.completedExerciseOrder ===
-                  barbellLogState.completedExercises.length ? (
-                  <span>{completedWorkoutId ? "Update" : "Complete"}</span>
-               ) : (
-                  <>
-                     <span>Exercise</span>
-                     <FaChevronRight />
-                  </>
-               )}
+               <FaChevronRight />
             </button>
          </div>
+         <ExerciseSetsTable
+            exerciseSets={currentExercise?.completedExerciseSets}
+         />
+         <button
+            className={`standardBtn ${styles.addSetBtn}`}
+            onClick={handleAddSetClick}
+         >
+            <FaPlus />
+            <span>Set</span>
+         </button>
       </div>
    );
 }

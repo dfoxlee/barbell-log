@@ -1,19 +1,24 @@
 import { FaGripVertical, FaTrash } from "react-icons/fa";
-import { useWorkoutCompositionContext } from "../../../hooks/useWorkoutCompositionContext";
 import { useMemo } from "react";
 import { CSS } from "@dnd-kit/utilities";
-
-import styles from "./ReorderExercise.module.css";
 import { useSortable } from "@dnd-kit/sortable";
 
-export default function ReorderExercise({ exercise, id }) {
-   const { workoutCompositionDispatch } = useWorkoutCompositionContext();
+import styles from "./ReorderExercise.module.css";
+import type { ExerciseType } from "../../../types/workoutTypes";
+
+export default function ReorderExercise({
+   exercise,
+   id,
+}: {
+   exercise: ExerciseType;
+   id: number;
+}) {
    const totalWeight = useMemo(() => {
-      return exercise.sets.reduce(
-         (acc, curr) => acc + parseInt(curr.weight),
+      return exercise.exerciseSets.reduce(
+         (acc, curr) => parseFloat(acc) + parseFloat(curr.weight),
          0
       );
-   }, [exercise.sets]);
+   }, [exercise.exerciseSets]);
    const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
 
@@ -28,17 +33,17 @@ export default function ReorderExercise({ exercise, id }) {
          exerciseName: event.target.value,
       };
 
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: newExercise,
-      });
+      // workoutCompositionDispatch({
+      //    type: "UPDATE-EXERCISE",
+      //    payload: newExercise,
+      // });
    };
 
    const handleDeleteExerciseClick = () => {
-      workoutCompositionDispatch({
-         type: "DELETE-EXERCISE",
-         payload: exercise.exerciseOrder,
-      });
+      // workoutCompositionDispatch({
+      //    type: "DELETE-EXERCISE",
+      //    payload: exercise.exerciseOrder,
+      // });
    };
 
    return (
@@ -64,7 +69,7 @@ export default function ReorderExercise({ exercise, id }) {
                onChange={handleExerciseNameChange}
             />
             <h4 className={styles.setCount}>
-               Total Sets: {exercise.sets.length}
+               Total Sets: {exercise.exerciseSets.length}
             </h4>
             <h4 className={styles.weightCount}>{totalWeight} lbs</h4>
          </div>

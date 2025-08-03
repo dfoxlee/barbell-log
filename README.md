@@ -60,6 +60,14 @@ Licensed under the MIT License.
 
 ## 8. Future Enhancements
 
-**Workout History**
-- Remove scoreboard for now
-- When a completed workout is deleted the workout needs deleted from compelted workouts
+**General**
+- sizing
+
+**Barbell Log**
+- timed incremet button logic
+
+**Completed Workout**
+- Add view workout component
+
+**Completed Workout EndPoint**
+- update exercise set values based on recently completed workouts

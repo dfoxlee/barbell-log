@@ -23,14 +23,6 @@ export const fetchSignUp = async ({
 
    const signUpResponse = await signUpRequest.json();
 
-   if (!signUpRequest.ok) {
-      if (signUpResponse.error) {
-         throw new Error(signUpResponse.message);
-      }
-
-      throw new Error("Internal server error.");
-   }
-
    return signUpResponse.user;
 };
 
@@ -54,29 +46,57 @@ export const fetchLogin = async ({
 
    const loginResponse = await loginRequest.json();
 
-   if (!loginRequest.ok) {
-      if (loginResponse.error) {
-         throw new Error(loginResponse.message);
-      }
-
-      throw new Error("Internal server error.");
-   }
-
    return loginResponse.user;
 };
 
-export const fetchUpdateWeightPreference = async ({
+export const fetchUpdateWeightUnitPreference = async ({
    token,
    weightUnitPreference,
+}: {
+   token: string;
+   weightUnitPreference: string;
 }) => {
-   return await fetch(`${baseUrl}/users/update-weight-preference`, {
-      method: "POST",
-      headers: {
-         "Content-Type": "application/json",
-         Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-         weightUnitPreference,
-      }),
-   });
+   const weightUnitRequest = await fetch(
+      `${baseUrl}/users/update-unit-preferences`,
+      {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            weightUnitPreference,
+         }),
+      }
+   );
+
+   const weightUnitResponse = await weightUnitRequest.json();
+
+   return weightUnitResponse;
+};
+
+export const fetchUpdateDistanceUnitPreference = async ({
+   token,
+   distanceUnitPreference,
+}: {
+   token: string;
+   distanceUnitPreference: string;
+}) => {
+   const weightUnitRequest = await fetch(
+      `${baseUrl}/users/update-unit-preferences`,
+      {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+            distanceUnitPreference,
+         }),
+      }
+   );
+
+   const weightUnitResponse = await weightUnitRequest.json();
+
+   return weightUnitResponse;
 };

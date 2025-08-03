@@ -1,4 +1,4 @@
-import { FaCalendar, FaCog, FaHome } from "react-icons/fa";
+import { FaCalendar, FaCog, FaHome, FaWeight } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 import styles from "./Navbar.module.css";
@@ -9,6 +9,16 @@ export default function HomeNavWrapper() {
 
    return (
       <nav className={styles.wrapper}>
+         <Link
+            className={
+               !currentPath
+                  ? `${styles.homeLink} ${styles.activeHomeLink}`
+                  : styles.homeLink
+            }
+            to="/home"
+         >
+            <FaHome />
+         </Link>
          <Link
             className={
                currentPath === "workout-history" ||
@@ -22,13 +32,13 @@ export default function HomeNavWrapper() {
          </Link>
          <Link
             className={
-               !currentPath
+               currentPath === "measurements"
                   ? `${styles.homeLink} ${styles.activeHomeLink}`
                   : styles.homeLink
             }
-            to="/home"
+            to="/home/measurements"
          >
-            <FaHome />
+            <FaWeight />
          </Link>
          <Link
             className={

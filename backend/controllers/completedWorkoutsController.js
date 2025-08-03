@@ -1,96 +1,59 @@
 const pool = require("../db/dbConfig");
+const {
+   selectCompletedExercises,
+   deleteCompletedExercise,
+} = require("../services/completedExercises.services");
+const {
+   selectCompletedExerciseSets,
+   deleteCompletedExerciseSet,
+} = require("../services/completedExerciseSets.services");
+const {
+   selectCompletedWorkout,
+} = require("../services/completedWorkouts.services");
+const {
+   deleteCompletedWorkouts,
+} = require("../services/completedWorkouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getCompletedWorkout = async ({ completedWorkoutId }) => {
-   const [selectCompletedWorkout] = await pool.execute(
-      `
-         SELECT completed_workout.completed_workout_id as completedWorkoutId, workout.workout_id as workoutId, completed_workout.completed_date as completedDate, workout.workout_name as workoutName
-         FROM completed_workout
-         INNER JOIN workout ON workout.workout_id = completed_workout.workout_id
-         WHERE completed_workout.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
+   const completedWorkout = await selectCompletedWorkout({
+      completedWorkoutId,
+   });
 
-   const [selectCompletedExercises] = await pool.execute(
-      `
-         SELECT completed_exercise.completed_exercise_id as completedExerciseId,completed_exercise.completed_exercise_order as completedExerciseOrder, exercise.exercise_name as exerciseName
-         FROM completed_exercise
-         INNER JOIN exercise ON exercise.exercise_id = completed_exercise.exercise_id
-         WHERE completed_exercise.completed_workout_id = ?
-         ORDER BY completed_exercise.completed_exercise_order
-      `,
-      [completedWorkoutId]
-   );
+   let completedExercises = await selectCompletedExercises({
+      completedWorkoutId,
+   });
 
-   const completedExercises = await Promise.all(
-      selectCompletedExercises.map(async (exercise) => {
-         const [selectCompletedSets] = await pool.execute(
-            `
-            SELECT completed_exercise_set.completed_exercise_id as completedExerciseId, completed_exercise_set.completed_exercise_set_id as completedExerciseSetId, completed_exercise_set.completed_reps as completedReps, completed_exercise_set.completed_weight as completedWeight, completed_exercise_set.exercise_set_id as exerciseSetId, completed_exercise_set.is_complete as isCompleted, completed_exercise_set.notes, exercise_set.set_order as setOrder
-            FROM completed_exercise_set
-            INNER JOIN exercise_set ON exercise_set.exercise_set_id = completed_exercise_set.exercise_set_id
-            WHERE completed_exercise_set.completed_exercise_id = ?
-            ORDER BY exercise_set.set_order
-         `,
-            [exercise.completedExerciseId]
-         );
+   completedExercises = await Promise.all(
+      completedExercises.map(async (completedExercise) => {
+         const completedExerciseSets = await selectCompletedExerciseSets({
+            completedExerciseId: completedExercise.completedExerciseId,
+         });
 
          return {
-            ...exercise,
-            completedSets: selectCompletedSets,
+            ...completedExercise,
+            completedExerciseSets,
          };
       })
    );
 
-   const workout = {
-      ...selectCompletedWorkout[0],
-      completedExercises: completedExercises,
+   return {
+      ...completedWorkout[0],
+      completedExercises,
    };
-
-   return workout;
 };
 
 const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {
-   const [selectDistinctWorkoutNameResults] = await pool.execute(
-      `
-         SELECT DISTINCT workout.workout_name as workoutName, workout.workout_id as workoutId, COUNT(completed_workout.completed_workout_id) AS totalCompletedWorkouts
-         FROM workout
-         LEFT JOIN completed_workout ON completed_workout.workout_id = workout.workout_id
-         WHERE workout.user_id = ?
-         GROUP BY workout.workout_name, workout.workout_id
-         ORDER BY totalCompletedWorkouts DESC;
-      `,
-      [userId]
-   );
-
-   const offset = Number(page) * Number(take);
-
-   const [selectRecentWorkouts] = await pool.execute(
-      `
-      SELECT
-         workout.workout_name as workoutName, 
-         workout.workout_id as workoutId, 
-         completed_workout.completed_workout_id as completedWorkoutId, 
-         completed_workout.completed_date as completedDate
-      FROM workout
-      INNER JOIN completed_workout ON workout.workout_id = completed_workout.workout_id
-      WHERE user_id = ?
-      ORDER BY completed_workout.completed_date DESC
-      LIMIT ? OFFSET ?
-   `,
-      [userId, take.toString(), offset.toString()]
-   );
-
-   const completedWorkouts = {
-      workouts: selectDistinctWorkoutNameResults,
-      recentWorkouts: selectRecentWorkouts,
-   };
+   const completedWorkouts = await selectCompletedWorkout({
+      userId,
+      page,
+      take,
+   });
 
    return completedWorkouts;
 };
 
-const createCompletedWorkout = async ({ userId, workout }) => {
+const createCompletedWorkout = async ({ workout }) => {
    const createdDate = new Date();
    const workoutId = workout.workoutId;
 
@@ -395,55 +358,23 @@ const updateCompletedWorkout = async ({ completedWorkout }) => {
 };
 
 const deleteCompletedWorkout = async ({ completedWorkoutId }) => {
-   // Delete all sets for all exercises in this workout
-   const [selectDeleteExerciseSets] = await pool.execute(
-      `
-      SELECT *
-      FROM completed_exercise_set
-      INNER JOIN completed_exercise ON completed_exercise.completed_exercise_id = completed_exercise_set.completed_exercise_id
-      WHERE completed_exercise.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
+   const completedExercises = await selectCompletedExercises({
+      completedWorkoutId,
+   });
+
+   await Promise.all(
+      completedExercises.map(async (exercise) => {
+         await deleteCompletedExerciseSet({
+            completedExerciseId: exercise.completedExerciseId,
+         });
+
+         await deleteCompletedExercise({
+            completedExerciseId: exercise.completedExerciseId,
+         });
+      })
    );
 
-   const [deleteExerciseSets] = await pool.execute(
-      `
-         DELETE completed_exercise_set FROM completed_exercise_set
-         INNER JOIN completed_exercise ON completed_exercise.completed_exercise_id = completed_exercise_set.completed_exercise_id
-         WHERE completed_exercise.completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteExerciseSets.affectedRows) {
-      throw new Error("Unable to delete exercise sets.");
-   }
-
-   // Delete all exercises for this workout
-   const [deleteCompletedExercise] = await pool.execute(
-      `
-         DELETE FROM completed_exercise
-         WHERE completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteCompletedExercise.affectedRows) {
-      throw new Error("Unable to delete exercises");
-   }
-
-   // Delete the completed workout itself
-   const [deleteWorkoutResults] = await pool.execute(
-      `
-         DELETE FROM completed_workout
-         WHERE completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-
-   if (!deleteWorkoutResults.affectedRows) {
-      throw new Error("Unable to delete completed workout.");
-   }
+   await deleteCompletedWorkouts({ completedWorkoutId });
 };
 
 module.exports = {

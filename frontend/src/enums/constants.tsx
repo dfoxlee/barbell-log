@@ -3,13 +3,11 @@ export const weightUnits = [
       id: 0,
       label: "lb",
       value: "pound",
-      plural: "pounds",
    },
    {
       id: 1,
       label: "kg",
       value: "kilogram",
-      plural: "kilograms",
    },
 ];
 
@@ -18,33 +16,30 @@ export const distanceUnits = [
       id: 0,
       label: "mi",
       value: "mile",
-      plural: "miles",
    },
    {
       id: 1,
       label: "yd",
       value: "yard",
-      plural: "yards",
    },
    {
       id: 2,
       label: "ft",
       value: "foot",
-      plural: "feet",
    },
    {
       id: 3,
       label: "m",
       value: "meter",
-      plural: "meters",
    },
    {
       id: 4,
       label: "km",
       value: "kilometer",
-      plural: "kilometers",
    },
 ];
+
+export const heightOptions = ["ft-in", "in", "cm", "m"];
 
 export const exercises = [
    { id: 0, group: "Chest", name: "Assisted Dip" },
@@ -101,8 +96,16 @@ export const exercises = [
    { id: 51, group: "Shoulder", name: "Cuban Press" },
    { id: 52, group: "Shoulder", name: "Devils Press" },
    { id: 53, group: "Shoulder", name: "Dumbbell Front Raise" },
-   { id: 54, group: "Shoulder", name: "Dumbbell Horizontal Internal Shoulder Rotation" },
-   { id: 55, group: "Shoulder", name: "Dumbbell Horizontal External Shoulder Rotation" },
+   {
+      id: 54,
+      group: "Shoulder",
+      name: "Dumbbell Horizontal Internal Shoulder Rotation",
+   },
+   {
+      id: 55,
+      group: "Shoulder",
+      name: "Dumbbell Horizontal External Shoulder Rotation",
+   },
    { id: 56, group: "Shoulder", name: "Dumbbell Lateral Raise" },
    { id: 57, group: "Shoulder", name: "Dumbbell Rear Delt Row" },
    { id: 58, group: "Shoulder", name: "Dumbbell Shoulder Press" },
@@ -112,8 +115,16 @@ export const exercises = [
    { id: 62, group: "Shoulder", name: "Jerk" },
    { id: 63, group: "Shoulder", name: "Kettlebell Halo" },
    { id: 64, group: "Shoulder", name: "Landmine Press" },
-   { id: 65, group: "Shoulder", name: "Lying Dumbbell External Shoulder Rotation" },
-   { id: 66, group: "Shoulder", name: "Lying Dumbbell Internal Shoulder Rotation" },
+   {
+      id: 65,
+      group: "Shoulder",
+      name: "Lying Dumbbell External Shoulder Rotation",
+   },
+   {
+      id: 66,
+      group: "Shoulder",
+      name: "Lying Dumbbell Internal Shoulder Rotation",
+   },
    { id: 67, group: "Shoulder", name: "Machine Lateral Raise" },
    { id: 68, group: "Shoulder", name: "Machine Shoulder Press" },
    { id: 69, group: "Shoulder", name: "Monkey Row" },
@@ -344,7 +355,11 @@ export const exercises = [
    { id: 294, group: "Calves", name: "Seated Calf Raise" },
    { id: 295, group: "Calves", name: "Standing Calf Raise" },
    { id: 296, group: "Forearms and Grip", name: "Barbell Wrist Curl" },
-   { id: 297, group: "Forearms and Grip", name: "Barbell Wrist Curl Behind the Back" },
+   {
+      id: 297,
+      group: "Forearms and Grip",
+      name: "Barbell Wrist Curl Behind the Back",
+   },
    { id: 298, group: "Forearms and Grip", name: "Bar Hang" },
    { id: 299, group: "Forearms and Grip", name: "Dumbbell Wrist Curl" },
    { id: 300, group: "Forearms and Grip", name: "Farmers Walk" },

@@ -1,191 +1,201 @@
-import { FaPlusCircle, FaTrash } from "react-icons/fa";
-import { useWorkoutCompositionContext } from "../../../hooks/useWorkoutCompositionContext";
+import { useMemo, useState } from "react";
+import {
+   FaChevronLeft,
+   FaChevronRight,
+   FaPlus,
+   FaPlusCircle,
+   FaTrashAlt,
+} from "react-icons/fa";
+import toastify from "../../../utils/toastify";
+import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
+import ExerciseSetsGrid from "./ExerciseSetsGrid";
 
 import styles from "./ExerciseComposition.module.css";
 
-export default function ExerciseComposition({ exercise }) {
-   const { workoutCompositionDispatch } = useWorkoutCompositionContext();
+export default function ExerciseComposition() {
+   const [viewAllExerciseSets, setViewAllExerciseSets] = useState(false);
+   const workoutComposition = useWorkoutCompositionStore(
+      (state) => state.workoutComposition
+   );
+   const currentExerciseViewOrder = useWorkoutCompositionStore(
+      (state) => state.currentExerciseViewOrder
+   );
+   const updateExercise = useWorkoutCompositionStore(
+      (state) => state.updateExercise
+   );
+   const updateCurrentExerciseViewOrder = useWorkoutCompositionStore(
+      (state) => state.updateCurrentExerciseViewOrder
+   );
+   const updateCurrentExerciseSetViewOrder = useWorkoutCompositionStore(
+      (state) => state.updateCurrentExerciseSetViewOrder
+   );
+   const updateWorkoutComposition = useWorkoutCompositionStore(
+      (state) => state.updateWorkoutComposition
+   );
+   const incrementExerciseViewOrder = useWorkoutCompositionStore(
+      (state) => state.incrementExerciseViewOrder
+   );
+   const decrementExerciseViewOrder = useWorkoutCompositionStore(
+      (state) => state.decrementExerciseViewOrder
+   );
+   const currentExercise = useMemo(() => {
+      return workoutComposition.exercises.find(
+         (exercise) => exercise.exerciseOrder === currentExerciseViewOrder
+      );
+   }, [currentExerciseViewOrder, workoutComposition.exercises]);
+   const latestExerciseOrder = useMemo(() => {
+      return workoutComposition.exercises.reduce((prev, curr) =>
+         curr.exerciseOrder > prev.exerciseOrder ? curr : prev
+      ).exerciseOrder;
+   }, [workoutComposition.exercises]);
+
+   const handleAddSetClick = () => {
+      if (currentExercise?.exerciseSets) {
+         const latestSet = {
+            ...currentExercise.exerciseSets[
+               currentExercise.exerciseSets.length - 1
+            ],
+         };
+
+         const newExerciseSetOrder = latestSet.exerciseSetOrder + 1;
+
+         delete latestSet.exerciseSetId;
+
+         const updatedExerciseSets = [
+            ...currentExercise.exerciseSets,
+            {
+               ...latestSet,
+               exerciseSetOrder: newExerciseSetOrder,
+            },
+         ];
+
+         const updatedExercise = {
+            ...currentExercise,
+            exerciseSets: updatedExerciseSets,
+         };
+
+         updateExercise(updatedExercise);
+         updateCurrentExerciseSetViewOrder(newExerciseSetOrder);
+         if (viewAllExerciseSets) {
+            toggleViewAllExerciseSets();
+         }
+      }
+   };
+
+   const handleExerciseDecrementClick = () => {
+      decrementExerciseViewOrder();
+   };
+
+   const handleExerciseIncrementClick = () => {
+      incrementExerciseViewOrder();
+   };
 
    const handleExerciseNameInput = (event) => {
-      const newExercise = {
-         ...exercise,
-         exerciseName: event.target.value,
-      };
+      if (currentExercise) {
+         updateExercise({
+            ...currentExercise,
+            exerciseName: event.target.value,
+         });
+      }
+   };
 
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: newExercise,
-      });
+   const toggleViewAllExerciseSets = () => {
+      setViewAllExerciseSets((prev) => !prev);
    };
 
    const handleDeleteExerciseClick = () => {
-      workoutCompositionDispatch({
-         type: "DELETE-EXERCISE",
-         payload: exercise.exerciseOrder,
-      });
-   };
+      if (workoutComposition.exercises.length === 1) {
+         return toastify({
+            message: "There must be at least one exercies per workout.",
+            type: "warning",
+         });
+      }
 
-   const handleDeleteSetClick = (deleteSetOrder) => {
-      const updatedSets = exercise.sets.filter(
-         (set) => set.setOrder !== deleteSetOrder
-      );
+      if (currentExercise) {
+         const updatedExercises = workoutComposition.exercises
+            .filter(
+               (exercise) =>
+                  exercise.exerciseOrder !== currentExercise?.exerciseOrder
+            )
+            .map((exercise, index) => ({
+               ...exercise,
+               exerciseOrder: index + 1,
+            }));
 
-      const updatedExercise = {
-         ...exercise,
-         sets: updatedSets.map((set, index) => ({
-            ...set,
-            setOrder: index + 1,
-         })),
-      };
+         const updatedWorkoutComposition = {
+            ...workoutComposition,
+            exercises: updatedExercises,
+         };
 
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: updatedExercise,
-      });
-   };
+         const newCurrentExerciseViewOrder =
+            updatedExercises[updatedExercises.length - 1].exerciseOrder;
 
-   const handleRepsInput = (setOrder, reps) => {
-      const updateSet = exercise.sets.find((set) => set.setOrder === setOrder);
-
-      const newSets = exercise.sets.map((set) => {
-         if (set.setOrder === setOrder) {
-            return {
-               ...updateSet,
-               reps: reps,
-            };
-         }
-
-         return set;
-      });
-
-      const newExercise = {
-         ...exercise,
-         sets: newSets,
-      };
-
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: newExercise,
-      });
-   };
-
-   const handleWeightInput = (setOrder, weight) => {
-      const updateSet = exercise.sets.find((set) => set.setOrder === setOrder);
-
-      const newSets = exercise.sets.map((set) => {
-         if (set.setOrder === setOrder) {
-            return {
-               ...updateSet,
-               weight: weight,
-            };
-         }
-
-         return set;
-      });
-
-      const newExercise = {
-         ...exercise,
-         sets: newSets,
-      };
-
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: newExercise,
-      });
-   };
-
-   const handleCreateSetClick = () => {
-      const previousSet = exercise.sets[exercise.sets.length - 1];
-      const newSet = {
-         setOrder: exercise.sets.length + 1,
-         reps: previousSet ? previousSet.reps : 0,
-         weight: previousSet ? previousSet.weight : 0,
-      };
-
-      const updatedExercise = {
-         ...exercise,
-         sets: [...exercise.sets, newSet],
-      };
-
-      workoutCompositionDispatch({
-         type: "UPDATE-EXERCISE",
-         payload: updatedExercise,
-      });
+         updateWorkoutComposition(updatedWorkoutComposition);
+         updateCurrentExerciseViewOrder(newCurrentExerciseViewOrder);
+      }
    };
 
    return (
       <div className={styles.container}>
-         <div className={styles.titleWrapper}>
+         <div className={styles.exerciseTitleWrapper}>
+            <h3
+               className={styles.exerciseCount}
+            >{`Exercise ${currentExerciseViewOrder} / ${workoutComposition.exercises.length}`}</h3>
+            {workoutComposition.exercises.length > 1 ? (
+               <button
+                  className={`standardIconBtn ${styles.deleteExerciseBtn}`}
+                  onClick={handleDeleteExerciseClick}
+               >
+                  <FaTrashAlt />
+               </button>
+            ) : null}
+         </div>
+         <div className={styles.exerciseNameInputWrapper}>
+            <button
+               className={
+                  currentExerciseViewOrder === 1
+                     ? `${styles.changeExerciseBtnDisabled} ${styles.changeExerciseBtn}`
+                     : styles.changeExerciseBtn
+               }
+               onClick={handleExerciseDecrementClick}
+               disabled={currentExerciseViewOrder === 1 ? true : false}
+            >
+               <FaChevronLeft />
+            </button>
             <input
-               className={styles.exerciseNameInput}
                type="text"
-               placeholder="exercise name..."
+               className={`standardInput ${styles.exerciseNameInput}`}
+               placeholder="Exercise name..."
                onChange={handleExerciseNameInput}
-               value={exercise.exerciseName}
+               value={currentExercise?.exerciseName}
             />
             <button
-               className={styles.deleteExerciseBtn}
-               onClick={handleDeleteExerciseClick}
+               className={styles.changeExerciseBtn}
+               onClick={handleExerciseIncrementClick}
             >
-               <FaTrash />
+               {latestExerciseOrder === currentExercise?.exerciseOrder ? (
+                  <FaPlusCircle />
+               ) : (
+                  <FaChevronRight />
+               )}
             </button>
          </div>
-         <table className={styles.tableWrapper}>
-            <thead>
-               <tr>
-                  {/* <th className={styles.tableHeader}>Shuffle</th> */}
-                  <th className={styles.tableHeader}>Set</th>
-                  <th className={styles.tableHeader}>Reps</th>
-                  <th className={styles.tableHeader}>Weight</th>
-                  <th className={styles.tableHeader}>Options</th>
-               </tr>
-            </thead>
-            <tbody>
-               {exercise.sets.map((set) => (
-                  <tr key={set.setOrder}>
-                     <td className={styles.tableData}>{set.setOrder}</td>
-                     <td className={styles.tableData}>
-                        <input
-                           className={styles.repsInput}
-                           type="number"
-                           inputMode="numeric"
-                           value={set.reps}
-                           onChange={(event) =>
-                              handleRepsInput(set.setOrder, event.target.value)
-                           }
-                        />
-                     </td>
-                     <td className={styles.tableData}>
-                        <input
-                           className={styles.weightInput}
-                           type="number"
-                           inputMode="decimal"
-                           value={set.weight}
-                           onChange={(event) =>
-                              handleWeightInput(
-                                 set.setOrder,
-                                 event.target.value
-                              )
-                           }
-                        />
-                     </td>
-                     <td className={styles.tableData}>
-                        <button
-                           className={styles.deleteSetBtn}
-                           onClick={() => handleDeleteSetClick(set.setOrder)}
-                        >
-                           <FaTrash />
-                        </button>
-                     </td>
-                  </tr>
-               ))}
-            </tbody>
-         </table>
-         <button className={styles.addSetBtn} onClick={handleCreateSetClick}>
-            <FaPlusCircle />
-            <span className={styles.addSetText}>Set</span>
-         </button>
-         <div className={styles.seperator}></div>
+         {currentExercise ? (
+            <ExerciseSetsGrid
+               currentExercise={currentExercise}
+               viewAllExerciseSets={viewAllExerciseSets}
+               toggleViewAllExerciseSets={toggleViewAllExerciseSets}
+            />
+         ) : null}
+         <div className={styles.exerciseOptionsWrapper}>
+            <button
+               className={`standardBtn ${styles.addSetBtn}`}
+               onClick={handleAddSetClick}
+            >
+               <FaPlus />
+               <span>Set</span>
+            </button>
+         </div>
       </div>
    );
 }

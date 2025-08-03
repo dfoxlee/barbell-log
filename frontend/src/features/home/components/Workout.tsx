@@ -1,40 +1,24 @@
 import { FaPencilAlt, FaRunning, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import type { WorkoutType } from "../../../types/workoutTypes";
+import { useUserStore } from "../../../stores/userStore";
+import { useWorkoutsStore } from "../../../stores/workoutsStore";
 
 import styles from "./Workout.module.css";
-import { fetchDeleteWorkout } from "../../../services/workoutServices";
-import { useAuthContext } from "../../../hooks/useAuthContext";
-import toastify from "../../../utils/toastify";
 
-export default function Workout({ workout, removeWorkout }) {
-   const { user } = useAuthContext();
-
+export default function Workout({ workout }: { workout: WorkoutType }) {
+   const user = useUserStore((state) => state.user);
+   const deleteWorkout = useWorkoutsStore((state) => state.deleteWorkout);
    const handleDeleteWorkoutClick = async () => {
-      try {
-         await fetchDeleteWorkout({
-            token: user?.token,
-            workoutId: workout.workoutId,
-         });
-
-         removeWorkout({ workoutId: workout.workoutId });
-      } catch (error) {
-         console.error(error);
-
-         return toastify({
-            message: "Something went wrong. Please try again later",
-            type: "error",
-         });
+      if (workout.workoutId && user?.token) {
+         deleteWorkout({ token: user?.token, workoutId: workout.workoutId });
       }
    };
+
    return (
       <div className={styles.container}>
          <div className={styles.contentWrapper}>
             <h3 className={styles.workoutName}>{workout.workoutName}</h3>
-            <span className={styles.workoutCountInfo}>
-               {workout.totalCompletedWorkouts
-                  ? `Total Completed: ${workout.totalCompletedWorkouts}`
-                  : "No workouts"}
-            </span>
          </div>
          <div className={styles.optionsWrapper}>
             <Link
@@ -45,7 +29,7 @@ export default function Workout({ workout, removeWorkout }) {
             </Link>
             <Link
                className={styles.optionLink}
-               to={`/home/workout-composition/edit/${workout.workoutId}`}
+               to={`/home/workout-composition/${workout.workoutId}`}
             >
                <FaPencilAlt />
             </Link>

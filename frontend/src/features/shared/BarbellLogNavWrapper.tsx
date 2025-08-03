@@ -1,50 +1,24 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Navbar.module.css";
-import {
-   fetchCreateCompletedWorkout,
-   fetchUpdateCompletedWorkout,
-} from "../../services/completedWorkoutServices";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useBarbellLogContext } from "../../hooks/useBarbellLogContext";
 import toastify from "../../utils/toastify";
+import { useBarbellLogStore } from "../../stores/barbellLogStore";
+import { useUserStore } from "../../stores/userStore";
+import { fetchBarbellLogComposition } from "../../services/barbellLogServices";
 
 export default function BarbellLogNavWrapper() {
    const navigate = useNavigate();
    const params = useParams();
    const completedWorkoutId = params["completed-workout-id"];
-   const { user } = useAuthContext();
-   const { barbellLogState } = useBarbellLogContext();
+   const barbellLog = useBarbellLogStore((state) => state.barbellLog);
+   const user = useUserStore((state) => state.user);
 
    const handleCompleteClick = async () => {
       try {
-         if (completedWorkoutId) {
-            const request = await fetchUpdateCompletedWorkout({
+         if (barbellLog && user?.token) {
+            await fetchBarbellLogComposition({
                token: user?.token,
-               completedWorkout: barbellLogState,
+               barbellLog,
             });
-
-            if (request.error) {
-               toastify({
-                  message: "Something went wrong. Please try again later",
-                  type: "error",
-               });
-
-               return console.log(request);
-            }
-         } else {
-            const request = await fetchCreateCompletedWorkout({
-               token: user?.token,
-               workout: barbellLogState,
-            });
-
-            if (request.error) {
-               toastify({
-                  message: "Something went wrong. Please try again later",
-                  type: "error",
-               });
-
-               return console.log(request);
-            }
          }
 
          return navigate(-1);

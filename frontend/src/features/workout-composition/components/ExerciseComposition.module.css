@@ -2,126 +2,60 @@
    display: flex;
    flex-flow: column;
    align-items: center;
-   margin-top: 20px;
 }
 
-.titleWrapper {
+.exerciseTitleWrapper {
    display: flex;
    justify-content: center;
    align-items: center;
-}
-
-.exerciseNameInput {
-   width: 80%;
-   color: white;
-   padding: 3px 8px;
-   border: 1px solid;
-   border-color: var(--accent);
-   border-radius: 5px;
-   background: none;
-   font-size: 1.25rem;
+   margin-top: 10px;
 }
 
 .deleteExerciseBtn {
-   background: none;
-   border-style: none;
-   font-size: 1.25rem;
+   min-width: 30px;
+   font-size: 1.5rem;
    color: var(--warning);
-   margin-left: 5px;
+   margin-left: 10px;
 }
 
-.tableWrapper {
-   width: 90vw;
-   max-width: 300px;
-   margin-top: 10px;
-}
-
-td,
-th {
-   text-align: center;
-}
-
-.tableHeader {
-   font-size: 0.625rem;
-   font-weight: 500;
-}
-
-.repsInput,
-.weightInput {
-   appearance: textfield;
-   margin: 0 auto;
-   text-align: center;
-   background: none;
-   border: 1px solid;
-   border-color: var(--accent);
-   color: white;
-   border-radius: 3px;
-   font-size: 1rem;
-   padding: 3px 5px;
-}
-
-.repsInput {
-   width: 40px;
-}
-
-.weightInput {
-   width: 70px;
-}
-
-.optionWrapper {
-   position: relative;
-}
-
-.optionsBtn {
-   background: none;
-   border-style: none;
-   font-size: 20px;
-   color: var(--primary);
-}
-
-.optionDropdownWrapper {
-   position: absolute;
-   background-color: var(--primary);
-   padding: 5px;
-   border-radius: 3px;
+.exerciseNameInputWrapper {
    display: flex;
-   flex-flow: column;
    align-items: center;
-   display: none;
-}
-
-.optionDropdownWrapperOpen {
-   display: block;
-}
-
-.deleteSetBtn {
-   background: none;
-   border-style: none;
-   font-size: 1.25rem;
-   color: var(--warning);
-}
-
-.addSetBtn {
-   border-style: none;
-   border-radius: 5px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   background-color: var(--accent);
-   color: var(--secondary);
-   margin-top: 10px;
-   width: 90%;
-   max-width: 300px;
-   font-size: 1.25rem;
-}
-
-.addSetText {
-   margin-left: 5px;
-}
-
-.seperator {
    width: 100%;
-   height: 1px;
-   background-color: white;
-   margin-top: 10px;
+   margin-top: 20px;
+   justify-content: center;
+}
+
+.changeExerciseBtn {
+   background: none;
+   border-style: none;
+   color: var(--primary);
+   font-size: 2rem;
+   min-width: 30px;
+}
+
+.changeExerciseBtnDisabled {
+   color: var(--accent);
+}
+
+.exerciseNameInput {
+   font-size: 1.25rem;
+   margin: 0 5px;
+   text-align: center;
+}
+
+.saveSetBtn {
+   color: var(--primary);
+   font-size: 2rem;
+}
+
+.addSetBtn > *:not(:first-child) {
+   margin-left: 10px;
+}
+
+.exerciseOptionsWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-top: 20px;
 }
