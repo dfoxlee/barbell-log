@@ -8,7 +8,7 @@ export default function Workouts() {
 
    return (
       <div className={styles.container}>
-         <h3 className={styles.workoutsTitle}>Workouts</h3>
+         <h3 className={`sectionTitle`}>Workouts</h3>
          {workouts.length &&
             workouts.map((workout) => (
                <Workout key={workout.workoutId} workout={workout} />

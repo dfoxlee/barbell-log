@@ -1,11 +1,13 @@
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import styles from "./Inputs.module.css";
+import toastify from "../../../utils/toastify";
 
 export interface TimedInputPropsType {
    hr: number;
    min: number;
    sec: number;
    completedExerciseSetOrder: number;
+   isComplete: boolean;
    updateHr: ({
       completedExerciseSetOrder,
       hr,
@@ -34,13 +36,23 @@ export default function TimedInput({
    min,
    sec,
    completedExerciseSetOrder,
+   isComplete,
    updateHr,
    updateMin,
    updateSec,
 }: TimedInputPropsType) {
    const handleHrChange = (event) => {
+      const hrInput = event.target.value;
+
+      if (hrInput !== "" && !/^[0-9]+$/.test(hrInput)) {
+         return toastify({
+            message: "Hours value must be a valid number.",
+            type: "warning",
+         });
+      }
+
       updateHr({
-         hr: event.target.value,
+         hr: hrInput,
          completedExerciseSetOrder,
       });
    };
@@ -58,8 +70,17 @@ export default function TimedInput({
    };
 
    const handleMinChange = (event) => {
+      const minInput = event.target.value;
+
+      if (minInput !== "" && !/^[0-9]+$/.test(minInput)) {
+         return toastify({
+            message: "Minutes value must be a valid number.",
+            type: "warning",
+         });
+      }
+
       updateMin({
-         min: event.target.value,
+         min: minInput,
          completedExerciseSetOrder,
       });
    };
@@ -77,7 +98,16 @@ export default function TimedInput({
    };
 
    const handleSecChange = (event) => {
-      updateSec({ sec: event.target.value, completedExerciseSetOrder });
+      const secInput = event.target.value;
+
+      if (secInput !== "" && !/^[0-9]+$/.test(secInput)) {
+         return toastify({
+            message: "Seconds value must be a valid number.",
+            type: "warning",
+         });
+      }
+
+      updateSec({ sec: secInput, completedExerciseSetOrder });
    };
 
    const handleSecIncrement = () => {
@@ -95,12 +125,14 @@ export default function TimedInput({
    return (
       <div className={styles.inputsWrapper}>
          <div className={styles.inputWrapper}>
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleHrIncrement}
-            >
-               <FaChevronUp />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleHrIncrement}
+               >
+                  <FaChevronUp />
+               </button>
+            ) : null}
             <input
                className={`standardInput ${styles.numberInput}`}
                type="number"
@@ -108,21 +140,25 @@ export default function TimedInput({
                value={hr}
                onChange={handleHrChange}
             />
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleHrDecrement}
-            >
-               <FaChevronDown />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleHrDecrement}
+               >
+                  <FaChevronDown />
+               </button>
+            ) : null}
             <span className={styles.inputLabel}>hr</span>
          </div>
          <div className={styles.inputWrapper}>
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleMinIncrement}
-            >
-               <FaChevronUp />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleMinIncrement}
+               >
+                  <FaChevronUp />
+               </button>
+            ) : null}
             <input
                className={`standardInput ${styles.numberInput}`}
                type="number"
@@ -130,21 +166,25 @@ export default function TimedInput({
                value={min}
                onChange={handleMinChange}
             />
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleMinDecrement}
-            >
-               <FaChevronDown />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleMinDecrement}
+               >
+                  <FaChevronDown />
+               </button>
+            ) : null}
             <span className={styles.inputLabel}>min</span>
          </div>
          <div className={styles.inputWrapper}>
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleSecIncrement}
-            >
-               <FaChevronUp />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleSecIncrement}
+               >
+                  <FaChevronUp />
+               </button>
+            ) : null}
             <input
                className={`standardInput ${styles.numberInput}`}
                type="number"
@@ -152,12 +192,14 @@ export default function TimedInput({
                value={sec}
                onChange={handleSecChange}
             />
-            <button
-               className={`standardIconBtn ${styles.incrementBtn}`}
-               onClick={handleSecDecrement}
-            >
-               <FaChevronDown />
-            </button>
+            {!isComplete ? (
+               <button
+                  className={`standardIconBtn ${styles.incrementBtn}`}
+                  onClick={handleSecDecrement}
+               >
+                  <FaChevronDown />
+               </button>
+            ) : null}
             <span className={styles.inputLabel}>sec</span>
          </div>
       </div>

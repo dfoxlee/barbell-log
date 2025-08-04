@@ -3,7 +3,6 @@
    border-collapse: collapse;
 }
 
-.tableHeader,
 .tableData {
    text-align: center;
 }
@@ -11,8 +10,6 @@
 .tableHeader {
    border-bottom: 1px solid var(--primary);
    color: var(--accent);
-   font-weight: 500;
-   font-size: 0.75rem;
 }
 
 .tableData {
@@ -41,7 +38,7 @@
 .repsWeightInputWrapper {
    display: flex;
    justify-content: center;
-   align-items: start;
+   align-items: center;
    gap: 20px;
 }
 
@@ -61,7 +58,7 @@
    right: -60px;
    width: 90vw;
    max-width: 400px;
-   background-color: rgba(0, 0, 0, 0.8);
+   background-color: var(--accent);
    display: flex;
    justify-content: center;
    align-items: center;

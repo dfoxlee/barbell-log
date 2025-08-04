@@ -7,9 +7,12 @@ export default function RepsInput({
    reps,
    updateReps,
    completedExerciseSetOrder,
+   isComplete,
 }) {
    const handleRepsChange = (event) => {
-      if (event.target.value !== "" && !parseInt(event.target.value)) {
+      const repsInput = event.target.value;
+
+      if (repsInput !== "" && !/^[0-9]+$/.test(repsInput)) {
          return toastify({
             message: "Value must be a valid number.",
             type: "warning",
@@ -18,7 +21,7 @@ export default function RepsInput({
 
       updateReps({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         updatedReps: event.target.value,
+         updatedReps: repsInput,
       });
    };
 
@@ -49,12 +52,14 @@ export default function RepsInput({
 
    return (
       <div className={styles.inputWrapper}>
-         <button
-            className={`standardIconBtn ${styles.incrementBtn}`}
-            onClick={handleIncrementClick}
-         >
-            <FaChevronUp />
-         </button>
+         {!isComplete ? (
+            <button
+               className={`standardIconBtn ${styles.incrementBtn}`}
+               onClick={handleIncrementClick}
+            >
+               <FaChevronUp />
+            </button>
+         ) : null}
          <input
             className={`standardInput ${styles.numberInput}`}
             type="number"
@@ -62,12 +67,14 @@ export default function RepsInput({
             value={reps}
             onChange={handleRepsChange}
          />
-         <button
-            className={`standardIconBtn ${styles.incrementBtn}`}
-            onClick={handleRepsDecrementClick}
-         >
-            <FaChevronDown />
-         </button>
+         {!isComplete ? (
+            <button
+               className={`standardIconBtn ${styles.incrementBtn}`}
+               onClick={handleRepsDecrementClick}
+            >
+               <FaChevronDown />
+            </button>
+         ) : null}
          <span className={styles.inputLabel}>reps</span>
       </div>
    );

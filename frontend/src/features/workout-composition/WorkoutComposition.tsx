@@ -58,14 +58,14 @@ export default function WorkoutComposition() {
    return (
       <div className={styles.container}>
          <input
-            className={styles.workoutNameInput}
+            className={`titleInput ${styles.workoutNameInput}`}
             type="text"
             placeholder="workout name..."
             value={workoutComposition.workoutName}
             onChange={handleWorkoutNameInput}
          />
          <button
-            className={styles.reorderExerciseBtn}
+            className={`standardBtn ${styles.reorderExerciseBtn}`}
             onClick={handleReorderExerciseClick}
          >
             {isReorderExercise ? `Exercise Details` : `Reorder Exercises`}

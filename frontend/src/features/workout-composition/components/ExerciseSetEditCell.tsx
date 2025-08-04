@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
-import styles from "./ExerciseSetsGrid.module.css";
 import toastify from "../../../utils/toastify";
 import { distanceUnits, weightUnits } from "../../../enums/constants";
 import type { ExerciseSetType } from "../../../types/workoutTypes";
 import { useUserStore } from "../../../stores/userStore";
+
+import styles from "./ExerciseSetsGrid.module.css";
 
 export default function ExerciseSetEditCell({
    exerciseSet,
@@ -42,7 +43,7 @@ export default function ExerciseSetEditCell({
    const handleRepsInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const repsInput = event.target.value;
 
-      if (repsInput !== "" && !parseInt(repsInput)) {
+      if (repsInput !== "" && !/^[0-9]+$/.test(repsInput)) {
          return toastify({
             message: "Reps value must be a valid number.",
             type: "warning",
@@ -52,7 +53,7 @@ export default function ExerciseSetEditCell({
       if (currentExercise && currentExerciseSet) {
          const updatedExerciseSet = {
             ...currentExerciseSet,
-            reps: parseInt(repsInput),
+            reps: repsInput,
          };
 
          const updatedExerciseSets = currentExercise.exerciseSets.map(
@@ -103,7 +104,7 @@ export default function ExerciseSetEditCell({
    const handleWeightInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const weightInput = event.target.value;
 
-      if (weightInput !== "" && !parseFloat(weightInput)) {
+      if (weightInput !== "" && !/^[0-9]*\.?[0-9]*$/.test(weightInput)) {
          return toastify({
             message: "Weights value must be a valid number.",
             type: "warning",
@@ -136,7 +137,7 @@ export default function ExerciseSetEditCell({
    const handleHrInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const hrInput = event.target.value;
 
-      if (hrInput !== "" && !parseInt(hrInput)) {
+      if (hrInput !== "" && !/^[0-9]+$/.test(hrInput)) {
          return toastify({
             message: "Hours value must be a valid number.",
             type: "warning",
@@ -169,7 +170,7 @@ export default function ExerciseSetEditCell({
    const handleMinInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const minInput = event.target.value;
 
-      if (minInput !== "" && !parseInt(minInput)) {
+      if (minInput !== "" && !/^[0-9]+$/.test(minInput)) {
          return toastify({
             message: "Minutes value must be a valid number.",
             type: "warning",
@@ -202,7 +203,7 @@ export default function ExerciseSetEditCell({
    const handleSecInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const secInput = event.target.value;
 
-      if (secInput !== "" && !parseInt(secInput)) {
+      if (secInput !== "" && !/^[0-9]+$/.test(secInput)) {
          return toastify({
             message: "Seconds value must be a valid number.",
             type: "warning",
@@ -235,7 +236,7 @@ export default function ExerciseSetEditCell({
    const handleDistanceInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const distanceInput = event.target.value;
 
-      if (distanceInput !== "" && !parseFloat(distanceInput)) {
+      if (distanceInput !== "" && !/^[0-9]*\.?[0-9]*$/.test(distanceInput)) {
          return toastify({
             message: "Distance value must be a valid number.",
             type: "warning",
@@ -301,7 +302,7 @@ export default function ExerciseSetEditCell({
                   <>
                      <input
                         inputMode="numeric"
-                        className={`standardInput ${styles.repsInput}`}
+                        className={`wholeValueInput`}
                         value={exerciseSet.reps}
                         min="0"
                         onChange={handleRepsInput}
@@ -315,7 +316,7 @@ export default function ExerciseSetEditCell({
                   <div className={styles.weightInputWrapper}>
                      <input
                         inputMode="decimal"
-                        className={`standardInput ${styles.weightInput}`}
+                        className={`decimalValueInput`}
                         value={exerciseSet.weight}
                         min="0"
                         onChange={handleWeightInput}
@@ -344,40 +345,40 @@ export default function ExerciseSetEditCell({
                <div className={styles.timeInputsWrapper}>
                   <div className={styles.timeInputWrapper}>
                      <input
-                        className={`standardInput ${styles.timeInput}`}
+                        className={`wholeValueInput`}
                         inputMode="numeric"
                         type="text"
                         onChange={handleHrInput}
                         value={currentExerciseSet.hr}
                      />
-                     <span className={styles.timeSubText}>hr</span>
+                     <span className={`subText`}>hr</span>
                   </div>
                   <div className={styles.timeInputWrapper}>
                      <input
-                        className={`standardInput ${styles.timeInput}`}
+                        className={`wholeValueInput`}
                         inputMode="numeric"
                         type="text"
                         onChange={handleMinInput}
                         value={currentExerciseSet.min}
                      />
-                     <span className={styles.timeSubText}>min</span>
+                     <span className={`subText`}>min</span>
                   </div>
                   <div className={styles.timeInputWrapper}>
                      <input
-                        className={`standardInput ${styles.timeInput}`}
+                        className={`wholeValueInput`}
                         inputMode="numeric"
                         type="text"
                         onChange={handleSecInput}
                         value={currentExerciseSet.sec}
                      />
-                     <span className={styles.timeSubText}>sec</span>
+                     <span className={`subText`}>sec</span>
                   </div>
                </div>
             ) : null}
             {currentExerciseSet?.isDistance ? (
                <div className={styles.distanceInputWrapper}>
                   <input
-                     className={`standardInput ${styles.distanceInput}`}
+                     className={`decimalValueInput`}
                      type="text"
                      inputMode="decimal"
                      onChange={handleDistanceInput}

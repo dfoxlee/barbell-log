@@ -139,7 +139,7 @@ export default function ExerciseComposition() {
       <div className={styles.container}>
          <div className={styles.exerciseTitleWrapper}>
             <h3
-               className={styles.exerciseCount}
+               className={`subTitle`}
             >{`Exercise ${currentExerciseViewOrder} / ${workoutComposition.exercises.length}`}</h3>
             {workoutComposition.exercises.length > 1 ? (
                <button
@@ -152,11 +152,11 @@ export default function ExerciseComposition() {
          </div>
          <div className={styles.exerciseNameInputWrapper}>
             <button
-               className={
+               className={`standardIconBtn ${
                   currentExerciseViewOrder === 1
                      ? `${styles.changeExerciseBtnDisabled} ${styles.changeExerciseBtn}`
                      : styles.changeExerciseBtn
-               }
+               }`}
                onClick={handleExerciseDecrementClick}
                disabled={currentExerciseViewOrder === 1 ? true : false}
             >
@@ -170,7 +170,7 @@ export default function ExerciseComposition() {
                value={currentExercise?.exerciseName}
             />
             <button
-               className={styles.changeExerciseBtn}
+               className={`standardIconBtn ${styles.changeExerciseBtn}`}
                onClick={handleExerciseIncrementClick}
             >
                {latestExerciseOrder === currentExercise?.exerciseOrder ? (

@@ -1,41 +1,32 @@
 .container {
-   margin-top: 30px;
+   margin: 30px auto 0;
    display: flex;
    align-items: center;
-   border-radius: 5px;
+   max-width: 320px;
+   gap: 20px;
 }
 
-.contentWrapper {
-   flex-grow: 1;
-}
-
-.workoutCountInfo {
-   font-size: 0.875rem;
-}
-
-.workoutName {
-   font-size: 1.25rem;
+.seperator {
+   flex: 1 0 auto;
+   height: 1px;
+   background-color: var(--accent);
 }
 
 .optionsWrapper {
    display: flex;
    align-items: center;
    justify-content: center;
+   flex-shrink: 0;
 }
 
 .optionsWrapper > *:not(:first-child) {
    margin-left: 20px;
 }
 
-.optionLink {
-   font-size: 1.5rem;
+.workoutOptionLink {
    color: var(--primary);
-   text-decoration: none;
 }
 
-.deleteWorkoutBtn {
-   background: none;
-   border-style: none;
+.trashBtn {
    color: var(--warning);
-   font-size: 1.25rem;
 }

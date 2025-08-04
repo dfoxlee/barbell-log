@@ -6,22 +6,21 @@ export default function WeightInput({
    weightUnit,
    updateWeight,
    completedExerciseSetOrder,
+   isComplete,
 }) {
    const handleWeightChange = (event) => {
-      if (
-         event.target.value !== "" &&
-         event.target.value !== "." &&
-         !parseFloat(event.target.value)
-      ) {
+      const weightInput = event.target.value;
+
+      if (weightInput !== "" && !/^[0-9]*\.?[0-9]*$/.test(weightInput)) {
          return toastify({
-            message: "Value must be a valid number.",
+            message: "Weights value must be a valid number.",
             type: "warning",
          });
       }
 
       updateWeight({
          completedExerciseSetOrder: completedExerciseSetOrder,
-         weight: event.target.value,
+         weight: weightInput,
       });
    };
 
@@ -102,26 +101,28 @@ export default function WeightInput({
 
    return (
       <div className={styles.inputWrapper}>
-         <div className={styles.weightIncrementWrapper}>
-            <button
-               className={styles.weightIncrementBtn}
-               onClick={handle05IncrementClick}
-            >
-               0.5
-            </button>
-            <button
-               className={styles.weightIncrementBtn}
-               onClick={handle1IncrementClick}
-            >
-               1
-            </button>
-            <button
-               className={styles.weightIncrementBtn}
-               onClick={handle5IncrementClick}
-            >
-               5
-            </button>
-         </div>
+         {!isComplete ? (
+            <div className={styles.weightIncrementWrapper}>
+               <button
+                  className={styles.weightIncrementBtn}
+                  onClick={handle05IncrementClick}
+               >
+                  0.5
+               </button>
+               <button
+                  className={styles.weightIncrementBtn}
+                  onClick={handle1IncrementClick}
+               >
+                  1
+               </button>
+               <button
+                  className={styles.weightIncrementBtn}
+                  onClick={handle5IncrementClick}
+               >
+                  5
+               </button>
+            </div>
+         ) : null}
          <input
             className={`standardInput ${styles.decimalInput}`}
             type="number"
@@ -129,26 +130,28 @@ export default function WeightInput({
             value={weight}
             onChange={handleWeightChange}
          />
-         <div className={styles.weightIncrementWrapper}>
-            <button
-               className={styles.weightDecrementBtn}
-               onClick={handle05DecrementClick}
-            >
-               0.5
-            </button>
-            <button
-               className={styles.weightDecrementBtn}
-               onClick={handle1DecrementClick}
-            >
-               1
-            </button>
-            <button
-               className={styles.weightDecrementBtn}
-               onClick={handle5DecrementClick}
-            >
-               5
-            </button>
-         </div>
+         {!isComplete ? (
+            <div className={styles.weightIncrementWrapper}>
+               <button
+                  className={styles.weightDecrementBtn}
+                  onClick={handle05DecrementClick}
+               >
+                  0.5
+               </button>
+               <button
+                  className={styles.weightDecrementBtn}
+                  onClick={handle1DecrementClick}
+               >
+                  1
+               </button>
+               <button
+                  className={styles.weightDecrementBtn}
+                  onClick={handle5DecrementClick}
+               >
+                  5
+               </button>
+            </div>
+         ) : null}
          <span className={styles.inputLabel}>{weightUnit}</span>
       </div>
    );

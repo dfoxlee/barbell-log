@@ -127,12 +127,50 @@ button {
 }
 
 .pageTitle {
-   font-size: 1.5rem;
+   margin-top: 20px;
+}
+
+.pageTitle,
+.sectionTitle,
+.titleInput,
+.standardInput,
+.wholeValueInput,
+.decimalValueInput {
    text-align: center;
+}
+
+.pageTitle,
+.standardIconBtn,
+.standardIconLink {
+   font-size: 32px;
+   font-weight: 700;
+}
+
+.sectionTitle,
+.titleInput,
+.wholeValueInput,
+.decimalValueInput {
+   font-size: 24px;
    font-weight: 600;
 }
 
-.standardInput {
+.regularText,
+.standardInput,
+.standardBtn,
+.standardLink {
+   font-size: 18px;
+   font-weight: 500;
+}
+
+.subText {
+   font-size: 14px;
+   font-weight: 400;
+}
+
+.standardInput,
+.titleInput,
+.wholeValueInput,
+.decimalValueInput {
    display: block;
    background: none;
    color: white;
@@ -151,7 +189,6 @@ button {
 
 .standardLink,
 .standardBtn {
-   font-size: 1.25rem;
    background: none;
    color: var(--primary);
    border: 1px solid;
@@ -166,7 +203,6 @@ button {
    justify-content: center;
    align-items: center;
    cursor: pointer;
-   font-size: 1.25rem;
    gap: 5px;
 }
 
@@ -178,8 +214,17 @@ button {
 .standardIconBtn {
    background: none;
    border-style: none;
-   font-size: 1.5rem;
+   min-width: 32px;
 }
 
 .standardIconLink {
+   text-decoration: none;
+}
+
+.wholeValueInput {
+   width: 60px;
+}
+
+.decimalValueInput {
+   width: 100px;
 }

@@ -81,7 +81,10 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
       <form className={styles.formWrapper} onSubmit={handleFormSubmit}>
          <div className={styles.inputsWrapper}>
             <div className={styles.inputWrapper}>
-               <label className={styles.inputLabel} htmlFor="email">
+               <label
+                  className={`subText ${styles.inputLabel}`}
+                  htmlFor="email"
+               >
                   email
                </label>
                <input
@@ -94,7 +97,10 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
             </div>
             <div className={styles.inputWrapper}>
                <div>
-                  <label className={styles.inputLabel} htmlFor="password">
+                  <label
+                     className={`subText ${styles.inputLabel}`}
+                     htmlFor="password"
+                  >
                      password
                   </label>
                   <input
@@ -108,7 +114,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
             {authTitle === "Sign Up" ? (
                <div className={styles.inputWrapper}>
                   <label
-                     className={styles.inputLabel}
+                     className={`subText ${styles.inputLabel}`}
                      htmlFor="confirm-password"
                   >
                      confirm password
@@ -125,7 +131,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          <p className={styles.changeAuthWrapper}>
             {authTitle === "Sign Up" ? (
                <>
-                  <span className={styles.changeAuthText}>
+                  <span className={`regularText ${styles.changeAuthText}`}>
                      Already have an account?
                   </span>
                   <Link className={styles.changeAuthLink} to="/auth/login">
@@ -134,10 +140,13 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
                </>
             ) : (
                <>
-                  <span className={styles.changeAuthText}>
+                  <span className={`regularText ${styles.changeAuthText}`}>
                      Need to create an account?
                   </span>
-                  <Link className={styles.changeAuthLink} to="/auth/sign-up">
+                  <Link
+                     className={`regularText ${styles.changeAuthLink}`}
+                     to="/auth/sign-up"
+                  >
                      Sign Up
                   </Link>
                </>

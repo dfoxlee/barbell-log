@@ -149,11 +149,11 @@ export default function BarbellLog() {
          <Seperator />
          <div className={styles.exerciseNavWrapper}>
             <button
-               className={
+               className={`standardIconBtn ${
                   barbellLog?.currentExerciseOrder === 1
                      ? styles.exerciseNavBtnDisabled
                      : styles.exerciseNavBtn
-               }
+               }`}
                disabled={barbellLog?.currentExerciseOrder === 1}
                onClick={handleExerciseDecrementClick}
             >
@@ -161,7 +161,7 @@ export default function BarbellLog() {
             </button>
             <div className={styles.exerciseNavContent}>
                <p
-                  className={styles.exerciseNavCount}
+                  className={`sectionTitle`}
                >{`Exercise: ${barbellLog?.currentExerciseOrder} / ${barbellLog?.completedExercises.length}`}</p>
                <select
                   className={styles.currentExerciseNavSelect}
@@ -176,13 +176,13 @@ export default function BarbellLog() {
                </select>
             </div>
             <button
-               className={
+               className={`standardIconBtn ${
                   barbellLog != null &&
                   barbellLog?.currentExerciseOrder <
                      barbellLog?.completedExercises.length
                      ? styles.exerciseNavBtn
                      : styles.exerciseNavBtnDisabled
-               }
+               }`}
                disabled={
                   barbellLog !== null &&
                   barbellLog?.currentExerciseOrder >=
@@ -193,9 +193,7 @@ export default function BarbellLog() {
                <FaChevronRight />
             </button>
          </div>
-         <ExerciseSetsTable
-            exerciseSets={currentExercise?.completedExerciseSets}
-         />
+         <ExerciseSetsTable />
          <button
             className={`standardBtn ${styles.addSetBtn}`}
             onClick={handleAddSetClick}

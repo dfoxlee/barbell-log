@@ -14,7 +14,9 @@ const selectCompletedExerciseSetIds = async ({ completedExerciseId }) => {
       values
    );
 
-   return selectCompletedExerciseSetIdsResult.map(s => s.completedExerciseSetId);
+   return selectCompletedExerciseSetIdsResult.map(
+      (s) => s.completedExerciseSetId
+   );
 };
 
 const selectCompletedExerciseSets = async ({
@@ -80,7 +82,10 @@ const selectCompletedExerciseSets = async ({
       `;
 
       values = [exerciseId];
+   } else {
+      throw new Error("No values match.");
    }
+
    const [selectCompletedExerciseSetsResults] = await pool.execute(
       query,
       values

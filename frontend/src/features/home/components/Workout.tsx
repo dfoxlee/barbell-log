@@ -18,23 +18,24 @@ export default function Workout({ workout }: { workout: WorkoutType }) {
    return (
       <div className={styles.container}>
          <div className={styles.contentWrapper}>
-            <h3 className={styles.workoutName}>{workout.workoutName}</h3>
+            <h3 className={`regularText`}>{workout.workoutName}</h3>
          </div>
+         <div className={styles.seperator}></div>
          <div className={styles.optionsWrapper}>
             <Link
-               className={styles.optionLink}
+               className={`standardIconLink ${styles.workoutOptionLink}`}
                to={`/home/barbell-log/${workout.workoutId}`}
             >
                <FaRunning />
             </Link>
             <Link
-               className={styles.optionLink}
+               className={`standardIconLink ${styles.workoutOptionLink}`}
                to={`/home/workout-composition/${workout.workoutId}`}
             >
                <FaPencilAlt />
             </Link>
             <button
-               className={styles.deleteWorkoutBtn}
+               className={`standardIconBtn ${styles.trashBtn}`}
                onClick={handleDeleteWorkoutClick}
             >
                <FaTrash />

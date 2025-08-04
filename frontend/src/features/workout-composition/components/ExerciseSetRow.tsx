@@ -296,7 +296,9 @@ export default function ExerciseSetRow({
                               ) : (
                                  <FaToggleOff className={styles.toggleIcon} />
                               )}
-                              <span className={styles.toggleSetOptionText}>
+                              <span
+                                 className={`subText ${styles.toggleSetOptionText}`}
+                              >
                                  Warmup?
                               </span>
                            </button>
@@ -309,7 +311,9 @@ export default function ExerciseSetRow({
                               ) : (
                                  <FaToggleOff className={styles.toggleIcon} />
                               )}
-                              <span className={styles.toggleSetOptionText}>
+                              <span
+                                 className={`subText ${styles.toggleSetOptionText}`}
+                              >
                                  Timed?
                               </span>
                            </button>
@@ -322,7 +326,9 @@ export default function ExerciseSetRow({
                               ) : (
                                  <FaToggleOff className={styles.toggleIcon} />
                               )}
-                              <span className={styles.toggleSetOptionText}>
+                              <span
+                                 className={`subText ${styles.toggleSetOptionText}`}
+                              >
                                  Distance?
                               </span>
                            </button>
@@ -335,7 +341,9 @@ export default function ExerciseSetRow({
                               ) : (
                                  <FaToggleOff className={styles.toggleIcon} />
                               )}
-                              <span className={styles.toggleSetOptionText}>
+                              <span
+                                 className={`subText ${styles.toggleSetOptionText}`}
+                              >
                                  Reps?
                               </span>
                            </button>
@@ -348,7 +356,9 @@ export default function ExerciseSetRow({
                               ) : (
                                  <FaToggleOff className={styles.toggleIcon} />
                               )}
-                              <span className={styles.toggleSetOptionText}>
+                              <span
+                                 className={`subText ${styles.toggleSetOptionText}`}
+                              >
                                  Bodyweight?
                               </span>
                            </button>

@@ -332,9 +332,9 @@ export default function ExerciseSetsTable() {
       <table className={styles.tableWrapper}>
          <thead>
             <tr>
-               <th className={styles.tableHeader}>set</th>
-               <th className={styles.tableHeader}>details</th>
-               <th className={styles.tableHeader}>complete</th>
+               <th className={`subText ${styles.tableHeader}`}>set</th>
+               <th className={`subText ${styles.tableHeader}`}>details</th>
+               <th className={`subText ${styles.tableHeader}`}>complete</th>
             </tr>
          </thead>
          <tbody>
@@ -352,13 +352,17 @@ export default function ExerciseSetsTable() {
                      <td className={styles.tableData}>
                         <div className={styles.repsWeightInputWrapper}>
                            {exerciseSet.hasReps ? (
-                              <RepsInput
-                                 completedExerciseSetOrder={
-                                    exerciseSet.completedExerciseSetOrder
-                                 }
-                                 reps={exerciseSet.completedReps}
-                                 updateReps={updateReps}
-                              />
+                              <>
+                                 <RepsInput
+                                    completedExerciseSetOrder={
+                                       exerciseSet.completedExerciseSetOrder
+                                    }
+                                    reps={exerciseSet.completedReps}
+                                    updateReps={updateReps}
+                                    isComplete={exerciseSet.isComplete}
+                                 />
+                                 <span>X</span>
+                              </>
                            ) : null}
                            {exerciseSet.isBodyweight ? (
                               "BW"
@@ -370,6 +374,7 @@ export default function ExerciseSetsTable() {
                                  completedExerciseSetOrder={
                                     exerciseSet.completedExerciseSetOrder
                                  }
+                                 isComplete={exerciseSet.isComplete}
                               />
                            )}
                         </div>
@@ -384,6 +389,7 @@ export default function ExerciseSetsTable() {
                               updateHr={updateHr}
                               updateMin={updateMin}
                               updateSec={updateSec}
+                              isComplete={exerciseSet.isComplete}
                            />
                         ) : null}
                         {exerciseSet.isDistance ? (
@@ -394,6 +400,7 @@ export default function ExerciseSetsTable() {
                               distance={exerciseSet.completedDistance}
                               distanceUnit={exerciseSet.completedDistanceUnit}
                               updateDistance={updateDistance}
+                              isComplete={exerciseSet.isComplete}
                            />
                         ) : null}
                      </td>

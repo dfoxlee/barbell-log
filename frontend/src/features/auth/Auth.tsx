@@ -18,13 +18,17 @@ export default function Auth() {
 
    return (
       <div className={styles.container}>
-         <Link to="/" className={styles.authTitleLink}>
+         <Link to="/" className={`pageTitle ${styles.authTitleLink}`}>
             Barbell Log
          </Link>
          <>
-            <h2 className={styles.authHeader}>{authTitle}</h2>
+            <h2 className={`pageTitle ${styles.authHeader}`}>{authTitle}</h2>
             <FaUser className={styles.userIcon} />
-            <AuthForm authTitle={authTitle} />
+            {authTitle === "Sign Up" ? (
+               <UnderConstruction />
+            ) : (
+               <AuthForm authTitle={authTitle} />
+            )}
          </>
       </div>
    );

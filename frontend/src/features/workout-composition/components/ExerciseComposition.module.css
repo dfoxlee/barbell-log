@@ -12,8 +12,6 @@
 }
 
 .deleteExerciseBtn {
-   min-width: 30px;
-   font-size: 1.5rem;
    color: var(--warning);
    margin-left: 10px;
 }
@@ -24,29 +22,15 @@
    width: 100%;
    margin-top: 20px;
    justify-content: center;
+   gap: 10px;
 }
 
 .changeExerciseBtn {
-   background: none;
-   border-style: none;
    color: var(--primary);
-   font-size: 2rem;
-   min-width: 30px;
 }
 
 .changeExerciseBtnDisabled {
    color: var(--accent);
-}
-
-.exerciseNameInput {
-   font-size: 1.25rem;
-   margin: 0 5px;
-   text-align: center;
-}
-
-.saveSetBtn {
-   color: var(--primary);
-   font-size: 2rem;
 }
 
 .addSetBtn > *:not(:first-child) {
