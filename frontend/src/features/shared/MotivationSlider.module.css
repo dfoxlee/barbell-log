@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Beastly&display=swap");
+
+.container {
+   position: fixed;
+   top: 0;
+   bottom: 0;
+   width: 100vw;
+   left: 100%;
+   overflow: hidden;
+   background-color: rgba(0, 0, 0, 0.8);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 100;
+}
+
+.containerSlide {
+   animation: page-slide 1.5s 1 forwards;
+}
+
+@keyframes page-slide {
+   0% {
+      left: -100%;
+   }
+   100% {
+      left: 100%;
+   }
+}
+
+.lightWeightTitleWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.lightWeightTitleWrapper > *:not(:first-child) {
+   margin-top: 15px;
+}
+
+.lightWeightTitle {
+   font-family: "Rubik Beastly";
+   font-size: 8rem;
+   color: var(--primary);
+   transform: rotate(20deg);
+}

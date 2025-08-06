@@ -60,14 +60,4 @@ Licensed under the MIT License.
 
 ## 8. Future Enhancements
 
-**General**
-- sizing
-
-**Barbell Log**
-- timed incremet button logic
-
-**Completed Workout**
-- Add view workout component
-
-**Completed Workout EndPoint**
-- update exercise set values based on recently completed workouts
+- Stopwatch that triggers on events

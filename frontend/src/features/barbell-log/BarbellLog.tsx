@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
@@ -7,12 +7,13 @@ import Seperator from "../shared/Seperator";
 import ExerciseSetsTable from "./components/ExerciseSetsTable";
 
 import styles from "./BarbellLog.module.css";
+import MotivationSlider from "../shared/MotivationSlider";
 
 export default function BarbellLog() {
    const params = useParams();
+   const [slideContainer, setSlideContainer] = useState(false);
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
-
    const user = useUserStore((state) => state.user);
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const getBarbellLog = useBarbellLogStore((state) => state.getBarbellLog);
@@ -141,8 +142,16 @@ export default function BarbellLog() {
       return <div>Loading...</div>;
    }
 
+   const toggleMotivationalSlider = () => {
+      setSlideContainer(false);
+      setTimeout(() => {
+         setSlideContainer(true);
+      }, 50);
+   };
+
    return (
       <div className={styles.container}>
+         <MotivationSlider slideContainer={slideContainer} />
          <h1 className={`pageTitle ${styles.workoutNameTitle}`}>
             {barbellLog?.workoutName}
          </h1>
@@ -193,7 +202,7 @@ export default function BarbellLog() {
                <FaChevronRight />
             </button>
          </div>
-         <ExerciseSetsTable />
+         <ExerciseSetsTable toggleMotivationalSlider={toggleMotivationalSlider} />
          <button
             className={`standardBtn ${styles.addSetBtn}`}
             onClick={handleAddSetClick}
