@@ -11,7 +11,7 @@ import MotivationSlider from "../shared/MotivationSlider";
 
 export default function BarbellLog() {
    const params = useParams();
-   const [slideContainer, setSlideContainer] = useState(false);
+   const [showMotivationSlider, setShowMotivationSlider] = useState(false);
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
    const user = useUserStore((state) => state.user);
@@ -143,15 +143,14 @@ export default function BarbellLog() {
    }
 
    const toggleMotivationalSlider = () => {
-      setSlideContainer(false);
-      setTimeout(() => {
-         setSlideContainer(true);
-      }, 50);
+      setShowMotivationSlider(true);
    };
 
    return (
       <div className={styles.container}>
-         <MotivationSlider slideContainer={slideContainer} />
+         {showMotivationSlider ? (
+            <MotivationSlider onFadeOutComplete={() => setShowMotivationSlider(false)} />
+         ) : null}
          <h1 className={`pageTitle ${styles.workoutNameTitle}`}>
             {barbellLog?.workoutName}
          </h1>
@@ -202,7 +201,9 @@ export default function BarbellLog() {
                <FaChevronRight />
             </button>
          </div>
-         <ExerciseSetsTable toggleMotivationalSlider={toggleMotivationalSlider} />
+         <ExerciseSetsTable
+            toggleMotivationalSlider={toggleMotivationalSlider}
+         />
          <button
             className={`standardBtn ${styles.addSetBtn}`}
             onClick={handleAddSetClick}

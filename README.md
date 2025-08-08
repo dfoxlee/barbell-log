@@ -60,4 +60,5 @@ Licensed under the MIT License.
 
 ## 8. Future Enhancements
 
-- Stopwatch that triggers on events
+- Split barbell log composition into create and update methods.
+- Workout timer

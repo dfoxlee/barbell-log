@@ -2,35 +2,29 @@
 
 .container {
    position: fixed;
-   top: 0;
-   bottom: 0;
-   width: 100vw;
-   left: 100%;
-   overflow: hidden;
-   background-color: rgba(0, 0, 0, 0.8);
+   inset: 0;
    display: flex;
+   overflow: hidden;
    justify-content: center;
    align-items: center;
    z-index: 100;
+   pointer-events: none;
+   transition: background-color 500ms ease-out;
+   background-color: rgba(0, 0, 0, 0.6);
 }
 
-.containerSlide {
-   animation: page-slide 1.5s 1 forwards;
-}
-
-@keyframes page-slide {
-   0% {
-      left: -100%;
-   }
-   100% {
-      left: 100%;
-   }
+.fadeOut {
+   background-color: transparent;
 }
 
 .lightWeightTitleWrapper {
    display: flex;
    flex-direction: column;
    align-items: center;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
 }
 
 .lightWeightTitleWrapper > *:not(:first-child) {
@@ -39,7 +33,7 @@
 
 .lightWeightTitle {
    font-family: "Rubik Beastly";
-   font-size: 8rem;
+   font-size: 6rem;
    color: var(--primary);
    transform: rotate(20deg);
 }

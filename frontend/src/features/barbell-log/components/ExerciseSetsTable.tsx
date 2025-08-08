@@ -285,13 +285,6 @@ export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
             completedExercises: updatedCompletedExercises,
          };
 
-         console.log(
-            completedSetOrder,
-            currentExercise?.completedExerciseSets[
-               currentExercise?.completedExerciseSets.length - 1
-            ]
-         );
-
          if (
             completedSetOrder ===
                currentExercise?.completedExerciseSets[

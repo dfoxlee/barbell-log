@@ -1,13 +1,27 @@
+import { useEffect, useState } from "react";
 import styles from "./MotivationSlider.module.css";
 
-export default function MotivationSlider({ slideContainer }) {
+export default function MotivationSlider({ onFadeOutComplete }) {
+   const [isFadingOut, setIsFadingOut] = useState(false);
+
+   useEffect(() => {
+      const showOverlayTimer = setTimeout(() => {
+         setIsFadingOut(true);
+      }, 500);
+
+      const removeOverlayTimer = setTimeout(() => {
+         onFadeOutComplete();
+      }, 1000);
+
+      return () => {
+         clearTimeout(showOverlayTimer);
+         clearTimeout(removeOverlayTimer);
+      };
+   }, [onFadeOutComplete]);
+
    return (
       <div
-         className={
-            slideContainer
-               ? `${styles.container} ${styles.containerSlide}`
-               : styles.container
-         }
+         className={`${styles.container} ${isFadingOut ? styles.fadeOut : ""}`}
       >
          <div className={styles.lightWeightTitleWrapper}>
             <h2 className={styles.lightWeightTitle}>Light</h2>
