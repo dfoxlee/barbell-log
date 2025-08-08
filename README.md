@@ -62,3 +62,4 @@ Licensed under the MIT License.
 
 - Split barbell log composition into create and update methods.
 - Workout timer
+- For light weight have rotating motivational sayings. Hang in there with cat. Memes?
