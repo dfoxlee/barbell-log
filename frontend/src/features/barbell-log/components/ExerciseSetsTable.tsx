@@ -5,9 +5,12 @@ import RepsInput from "./RepsInput";
 import TimedInput from "./TimedInput";
 import WeightInput from "./WeightInput";
 import { useBarbellLogStore } from "../../../stores/barbellLogStore";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
+export default function ExerciseSetsTable({
+   toggleMotivationalSlider,
+   nextSaying,
+}) {
    const [showExerciseSetNote, setShowExerciseSetNote] = useState<
       number | null
    >(null);
@@ -28,8 +31,13 @@ export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
       () => currentExercise?.completedExerciseSets,
       [currentExercise]
    );
+   const noteInputRef = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
+      if (showExerciseSetNote !== null) {
+         noteInputRef.current?.focus();
+      }
+
       const handleClickOutside = (event: MouseEvent) => {
          if (showExerciseSetNote !== null) {
             const openModalRow = document.querySelector(
@@ -298,8 +306,20 @@ export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
             updatedBarbellLog.currentExerciseOrder =
                updatedBarbellLog.currentExerciseOrder + 1;
 
+            nextSaying();
             toggleMotivationalSlider();
+
+            window.scrollTo(0, 0);
+         } else if (
+            completedSetOrder ===
+            currentExercise?.completedExerciseSets[
+               currentExercise?.completedExerciseSets.length - 1
+            ].completedExerciseSetOrder
+         ) {
+            nextSaying();
             
+            toggleMotivationalSlider();
+
             window.scrollTo(0, 0);
          }
 
@@ -311,6 +331,8 @@ export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
       setShowExerciseSetNote((prev) =>
          prev === exerciseSetOrder ? null : exerciseSetOrder
       );
+
+      noteBtnRef.current?.focus();
    };
 
    const updateExerciseSetNotes = ({
@@ -450,6 +472,7 @@ export default function ExerciseSetsTable({ toggleMotivationalSlider }) {
                               exerciseSet.completedExerciseSetOrder ? (
                                  <div className={styles.noteModalWrapper}>
                                     <input
+                                       ref={noteInputRef}
                                        className={`standardInput ${styles.noteInput}`}
                                        type="text"
                                        value={exerciseSet.notes || ""}

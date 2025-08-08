@@ -195,6 +195,17 @@ export default function ExerciseComposition() {
                <FaPlus />
                <span>Set</span>
             </button>
+            <button
+               className={`standardBtn ${styles.addExerciseBtn}`}
+               onClick={handleExerciseIncrementClick}
+            >
+               <span>Exercise</span>
+               {latestExerciseOrder === currentExercise?.exerciseOrder ? (
+                  <FaPlusCircle />
+               ) : (
+                  <FaChevronRight />
+               )}
+            </button>
          </div>
       </div>
    );

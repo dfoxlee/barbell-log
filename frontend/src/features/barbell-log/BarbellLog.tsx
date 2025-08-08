@@ -8,10 +8,12 @@ import ExerciseSetsTable from "./components/ExerciseSetsTable";
 
 import styles from "./BarbellLog.module.css";
 import MotivationSlider from "../shared/MotivationSlider";
+import { motivationalSayings } from "../../enums/constants";
 
 export default function BarbellLog() {
    const params = useParams();
    const [showMotivationSlider, setShowMotivationSlider] = useState(false);
+   const [motivationIndex, setMotivationIndex] = useState(0);
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
    const user = useUserStore((state) => state.user);
@@ -138,6 +140,12 @@ export default function BarbellLog() {
       }
    };
 
+   const nextSaying = () => {
+      setMotivationIndex((prev) =>
+         prev === motivationalSayings.length - 1 ? 0 : prev + 1
+      );
+   };
+
    if (barbellLogLoading) {
       return <div>Loading...</div>;
    }
@@ -149,7 +157,10 @@ export default function BarbellLog() {
    return (
       <div className={styles.container}>
          {showMotivationSlider ? (
-            <MotivationSlider onFadeOutComplete={() => setShowMotivationSlider(false)} />
+            <MotivationSlider
+               onFadeOutComplete={() => setShowMotivationSlider(false)}
+               motivationIndex={motivationIndex}
+            />
          ) : null}
          <h1 className={`pageTitle ${styles.workoutNameTitle}`}>
             {barbellLog?.workoutName}
@@ -202,15 +213,25 @@ export default function BarbellLog() {
             </button>
          </div>
          <ExerciseSetsTable
+            nextSaying={nextSaying}
             toggleMotivationalSlider={toggleMotivationalSlider}
          />
-         <button
-            className={`standardBtn ${styles.addSetBtn}`}
-            onClick={handleAddSetClick}
-         >
-            <FaPlus />
-            <span>Set</span>
-         </button>
+         <div className={styles.exerciseOptionsWrapper}>
+            <button
+               className={`standardBtn ${styles.addSetBtn}`}
+               onClick={handleAddSetClick}
+            >
+               <FaPlus />
+               <span>Set</span>
+            </button>
+            <button
+               className={`standardBtn ${styles.incrementExerciseBtn}`}
+               onClick={handleExerciseIncrementClick}
+            >
+               <span>Exercise</span>
+               <FaChevronRight />
+            </button>
+         </div>
       </div>
    );
 }

@@ -379,3 +379,13 @@ export const exercises = [
    { id: 314, group: "Cardio", name: "Bicycling" },
    { id: 315, group: "Cardio", name: "Sport-Specific Training" },
 ];
+
+export const motivationalSayings = [
+   "Back To Work",
+   "Earn It",
+   "Do The Work",
+   "Tomorrow Starts Now",
+   "Stronger Than Yesterday",
+   "Prove 'em Wrong",
+   "Embrace Discomfort",
+];

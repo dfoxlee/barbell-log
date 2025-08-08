@@ -48,6 +48,10 @@
    font-size: 0.875rem;
 }
 
-.addSetBtn {
-  margin: 20px auto 0;
+.exerciseOptionsWrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 30px;
+   margin-top: 30px;
 }

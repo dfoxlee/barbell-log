@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./MotivationSlider.module.css";
+import { motivationalSayings } from "../../enums/constants";
 
-export default function MotivationSlider({ onFadeOutComplete }) {
+export default function MotivationSlider({
+   onFadeOutComplete,
+   motivationIndex,
+}) {
    const [isFadingOut, setIsFadingOut] = useState(false);
 
    useEffect(() => {
@@ -24,8 +28,9 @@ export default function MotivationSlider({ onFadeOutComplete }) {
          className={`${styles.container} ${isFadingOut ? styles.fadeOut : ""}`}
       >
          <div className={styles.lightWeightTitleWrapper}>
-            <h2 className={styles.lightWeightTitle}>Light</h2>
-            <h2 className={styles.lightWeightTitle}>Weight</h2>
+            <h2 className={`${styles.lightWeightTitle}`}>
+               {motivationalSayings[motivationIndex]}
+            </h2>
          </div>
       </div>
    );
