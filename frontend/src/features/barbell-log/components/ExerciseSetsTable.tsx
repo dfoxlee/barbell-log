@@ -6,11 +6,9 @@ import TimedInput from "./TimedInput";
 import WeightInput from "./WeightInput";
 import { useBarbellLogStore } from "../../../stores/barbellLogStore";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTimerStore } from "../../../stores/timerStore";
 
-export default function ExerciseSetsTable({
-   toggleMotivationalSlider,
-   nextSaying,
-}) {
+export default function ExerciseSetsTable({ toggleMotivationText }) {
    const [showExerciseSetNote, setShowExerciseSetNote] = useState<
       number | null
    >(null);
@@ -32,6 +30,11 @@ export default function ExerciseSetsTable({
       [currentExercise]
    );
    const noteInputRef = useRef<HTMLInputElement>(null);
+   const startTimer = useTimerStore((state) => state.startTimer);
+   const resetTimer = useTimerStore((state) => state.resetTimer);
+   const updateTimerMessage = useTimerStore(
+      (state) => state.updateTimerMessage
+   );
 
    useEffect(() => {
       if (showExerciseSetNote !== null) {
@@ -293,34 +296,42 @@ export default function ExerciseSetsTable({
             completedExercises: updatedCompletedExercises,
          };
 
+         // check if completed set order is the last set and if the current exercise is the last exercise
          if (
             completedSetOrder ===
                currentExercise?.completedExerciseSets[
                   currentExercise?.completedExerciseSets.length - 1
                ].completedExerciseSetOrder &&
-            currentExercise.completedExerciseOrder !==
+            currentExercise.completedExerciseOrder ===
                barbellLog.completedExercises[
                   barbellLog.completedExercises.length - 1
                ].completedExerciseOrder
          ) {
-            updatedBarbellLog.currentExerciseOrder =
-               updatedBarbellLog.currentExerciseOrder + 1;
+            resetTimer();
+            updateTimerMessage("Workout complete");
 
-            nextSaying();
-            toggleMotivationalSlider();
+            toggleMotivationText();
 
             window.scrollTo(0, 0);
+            // check if the completedSetOrder is the last set in the exercise
          } else if (
             completedSetOrder ===
             currentExercise?.completedExerciseSets[
                currentExercise?.completedExerciseSets.length - 1
             ].completedExerciseSetOrder
          ) {
-            nextSaying();
-            
-            toggleMotivationalSlider();
+            updatedBarbellLog.currentExerciseOrder =
+               updatedBarbellLog.currentExerciseOrder + 1;
+
+            toggleMotivationText();
+
+            resetTimer();
+            startTimer("Start exercise time");
 
             window.scrollTo(0, 0);
+         } else {
+            resetTimer();
+            startTimer("Start set time");
          }
 
          updateBarbellLog(updatedBarbellLog);
@@ -376,7 +387,9 @@ export default function ExerciseSetsTable({
             <tr>
                <th className={`subText ${styles.tableHeader}`}>set</th>
                <th className={`subText ${styles.tableHeader}`}>details</th>
-               <th className={`subText ${styles.tableHeader}`}>complete</th>
+               <th className={`subText ${styles.tableHeader}`}>
+                  notes / complete
+               </th>
             </tr>
          </thead>
          <tbody>

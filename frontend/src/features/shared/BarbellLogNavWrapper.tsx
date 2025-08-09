@@ -4,6 +4,7 @@ import toastify from "../../utils/toastify";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
 import { fetchBarbellLogComposition } from "../../services/barbellLogServices";
+import { useTimerStore } from "../../stores/timerStore";
 
 export default function BarbellLogNavWrapper() {
    const navigate = useNavigate();
@@ -11,6 +12,10 @@ export default function BarbellLogNavWrapper() {
    const completedWorkoutId = params["completed-workout-id"];
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const user = useUserStore((state) => state.user);
+   const resetTimer = useTimerStore((state) => state.resetTimer);
+   const updateTimerMessage = useTimerStore(
+      (state) => state.updateTimerMessage
+   );
 
    const handleCompleteClick = async () => {
       try {
@@ -33,6 +38,9 @@ export default function BarbellLogNavWrapper() {
    };
 
    const handleCancelClick = () => {
+      resetTimer();
+      updateTimerMessage("");
+
       navigate(-1);
    };
 

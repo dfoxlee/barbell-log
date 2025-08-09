@@ -388,4 +388,5 @@ export const motivationalSayings = [
    "Stronger Than Yesterday",
    "Prove 'em Wrong",
    "Embrace Discomfort",
+   "Light Weight",
 ];
