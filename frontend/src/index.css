@@ -134,6 +134,7 @@ button {
 .sectionTitle,
 .titleInput,
 .standardInput,
+.regularText,
 .wholeValueInput,
 .decimalValueInput {
    text-align: center;

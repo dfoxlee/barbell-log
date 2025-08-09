@@ -4,15 +4,28 @@ const {
    updateWeightUnitPreference,
    updateDistanceUnitPreference,
 } = require("../services/users.services");
+const { createToken } = require("../utils/authUtils");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
+const { htmlContent, transporter } = require("../utils/emailUtils");
 
 const signUpUser = async ({ email, password }) => {
-   const user = await insertUser({ email, password });
+   const verificationToken = createToken(email);
 
-   return user;
+   const mailOptions = {
+      from: "barbelllog@gmail.com",
+      to: email,
+      html: htmlContent(verificationToken),
+   };
+
+   await insertUser({ email, password, verificationToken });
+
+   transporter.sendMail(mailOptions);
+
+   return;
 };
 
 const loginUser = async ({ email, password }) => {
-   const user = await validateUser({ email, password });
+   await validateUser({ email, password });
 
    return user;
 };

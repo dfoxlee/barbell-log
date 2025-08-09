@@ -13,12 +13,12 @@ export default function ReorderExercise({
    exercise: ExerciseType;
    id: number;
 }) {
-   const totalWeight = useMemo(() => {
-      return exercise.exerciseSets.reduce(
-         (acc, curr) => parseFloat(acc) + parseFloat(curr.weight),
-         0
-      );
-   }, [exercise.exerciseSets]);
+   // const totalWeight = useMemo(() => {
+   //    return exercise.exerciseSets.reduce(
+   //       (acc, curr) => parseFloat(acc) + parseFloat(curr.weight),
+   //       0
+   //    );
+   // }, [exercise.exerciseSets]);
    const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
 
@@ -52,14 +52,14 @@ export default function ReorderExercise({
          key={exercise.exerciseOrder}
          style={style}
       >
-         <button
+         {/* <button
             className={styles.reorderBtn}
             ref={setNodeRef}
             {...attributes}
             {...listeners}
          >
             <FaGripVertical />
-         </button>
+         </button> */}
          <div className={styles.contentWrapper}>
             <input
                className={styles.exerciseNameInput}
@@ -71,7 +71,7 @@ export default function ReorderExercise({
             <h4 className={styles.setCount}>
                Total Sets: {exercise.exerciseSets.length}
             </h4>
-            <h4 className={styles.weightCount}>{totalWeight} lbs</h4>
+            {/* <h4 className={styles.weightCount}>{totalWeight} lbs</h4> */}
          </div>
          <button
             className={styles.deleteBtn}

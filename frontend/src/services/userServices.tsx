@@ -23,7 +23,7 @@ export const fetchSignUp = async ({
 
    const signUpResponse = await signUpRequest.json();
 
-   return signUpResponse.user;
+   return signUpResponse;
 };
 
 export const fetchLogin = async ({

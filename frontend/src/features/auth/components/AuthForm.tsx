@@ -1,24 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toastify from "../../../utils/toastify";
+import { useUserStore } from "../../../stores/userStore";
+import { fetchLogin, fetchSignUp } from "../../../services/userServices";
 
 import styles from "./AuthForm.module.css";
-import { useUserStore } from "../../../stores/userStore";
-import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
 
 export default function AuthForm({ authTitle }: { authTitle: string }) {
    const [emailInput, setEmailInput] = useState("");
    const [passwordInput, setPasswordInput] = useState("");
    const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
-   // const { user, login, signUp, authError } = useUserStore();
-   const user = useUserStore((state) => state.user);
-   const login = useUserStore((state) => state.login);
-   const signUp = useUserStore((state) => state.signUp);
-   const authError = useUserStore((state) => state.authError);
-   const authLoading = useUserStore((state) => state.authLoading);
-   const workoutComposition = useWorkoutCompositionStore(
-      (state) => state.workoutComposition
-   );
+   const [isLoading, setIsLoading] = useState(false);
+   const setUser = useUserStore((state) => state.setUser);
    const navigate = useNavigate();
 
    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,20 +54,48 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          }
       }
 
-      if (authError) {
+      try {
+         if (authTitle === "Sign Up") {
+            setIsLoading(true);
+
+            const signUpRequest = await fetchSignUp({
+               email: emailInput,
+               password: passwordInput,
+            });
+
+            if (signUpRequest.error) {
+               throw new Error(signUpRequest.message);
+            }
+
+            navigate("/sign-up-received");
+         } else {
+            setIsLoading(true);
+
+            const user = await fetchLogin({
+               email: emailInput,
+               password: passwordInput,
+            });
+
+            if (user.error) {
+               console.log(user);
+               throw new Error(user.message);
+            }
+
+            setUser(user);
+
+            navigate("/home");
+         }
+      } catch (error: any) {
+         console.log(typeof error === typeof Error ? error.message : error);
+
          return toastify({
-            message: authError,
+            message:
+               "Something went wrong during the sign in process. Please try again later.",
             type: "error",
          });
+      } finally {
+         setIsLoading(false);
       }
-
-      if (authTitle === "Sign Up") {
-         await signUp({ email: emailInput, password: passwordInput });
-      } else {
-         await login({ email: emailInput, password: passwordInput });
-      }
-
-      navigate("/home");
    };
 
    return (
@@ -152,8 +173,12 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
                </>
             )}
          </p>
-         <button className={`standardBtn ${styles.submitBtn}`} type="submit">
-            {authLoading ? "loading..." : authTitle}
+         <button
+            className={`standardBtn ${styles.submitBtn}`}
+            type="submit"
+            disabled={isLoading}
+         >
+            {isLoading ? "loading..." : authTitle}
          </button>
       </form>
    );

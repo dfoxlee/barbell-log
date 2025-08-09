@@ -22,7 +22,7 @@ async function comparePassword(plainPassword, hashedPassword) {
 
 // Function to create a JWT token
 function createToken(payload) {
-   const token = jwt.sign(payload.userId, jwtSecret);
+   const token = jwt.sign(payload, jwtSecret);
    return token;
 }
 

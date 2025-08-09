@@ -9,12 +9,14 @@ import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import WorkoutHistory from "./features/workout-history/WorkoutHistory";
 import Measurements from "./features/measurements/Measurements";
+import SignUpReceived from "./features/SignUpReceived/SignUpReceived";
 
 function App() {
    return (
       <Routes>
          <Route path="/" element={<Landing />} />
          <Route path="/auth/:auth-type?" element={<Auth />} />
+         <Route path="/sign-up-received" element={<SignUpReceived />} />
          <Route path="/home" element={<Layout />}>
             <Route index element={<Home />} />
             <Route

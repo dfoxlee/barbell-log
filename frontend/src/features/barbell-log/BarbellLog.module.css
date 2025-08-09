@@ -63,27 +63,10 @@
    font-size: 32px !important;
 }
 
-.timerWrapper {
-   margin-top: 15px;
-}
-
 .exerciseOptionsWrapper {
    display: flex;
    align-items: center;
    justify-content: center;
    gap: 30px;
    margin-top: 30px;
-}
-
-.timerWrapper {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   gap: 10px;
-   width: 100%;
-}
-
-.pausePlayBtn,
-.resetBtn {
-   color: var(--primary);
 }

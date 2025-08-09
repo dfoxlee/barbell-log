@@ -1,20 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-   FaChevronLeft,
-   FaChevronRight,
-   FaPause,
-   FaPlay,
-   FaPlus,
-   FaUndo,
-} from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
 import Seperator from "../shared/Seperator";
 import ExerciseSetsTable from "./components/ExerciseSetsTable";
 import { motivationalSayings } from "../../enums/constants";
-import { useTimerStore } from "../../stores/timerStore";
-import { formatTimer } from "./utils/formatTimer";
+import WorkoutTimer from "./components/WorkoutTimer";
 
 import styles from "./BarbellLog.module.css";
 
@@ -34,12 +26,6 @@ export default function BarbellLog() {
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
    );
-   const timer = useTimerStore((state) => state.timer);
-   const timerMessage = useTimerStore((state) => state.timerMessage);
-   const startTimer = useTimerStore((state) => state.startTimer);
-   const stopTimer = useTimerStore((state) => state.stopTimer);
-   const isTimerRunning = useTimerStore((state) => state.isTimerRunning);
-   const resetTimer = useTimerStore((state) => state.resetTimer);
 
    const exerciseNames = useMemo(
       () =>
@@ -57,10 +43,6 @@ export default function BarbellLog() {
          ),
       [barbellLog]
    );
-
-   useEffect(() => {
-      startTimer("Start workout time");
-   }, []);
 
    useEffect(() => {
       if (!barbellLogLoading && !barbellLogError && user?.token && workoutId) {
@@ -158,15 +140,10 @@ export default function BarbellLog() {
       }
    };
 
-   const handleTimerControlBtnClick = () => {
-      if (isTimerRunning) {
-         stopTimer();
-      } else {
-         startTimer(timerMessage);
-      }
-   };
-
    const toggleMotivationText = () => {
+      if (showMotivationText) {
+         return;
+      }
       setMotivationIndex((prev) => {
          if (prev === motivationalSayings.length - 1) {
             return 0;
@@ -179,13 +156,6 @@ export default function BarbellLog() {
       setTimeout(() => {
          setShowMotivationText(false);
       }, 1500);
-   };
-
-   const handleResetBtnClick = () => {
-      resetTimer();
-      if (isTimerRunning) {
-         startTimer(timerMessage);
-      }
    };
 
    if (barbellLogLoading) {
@@ -214,10 +184,12 @@ export default function BarbellLog() {
                <div className={styles.exerciseNavContent}>
                   <h3
                      className={`sectionTitle ${styles.exerciseNavText} ${
-                        showMotivationText ? styles.motivationText : ""
+                        showMotivationText && !completedWorkoutId
+                           ? styles.motivationText
+                           : ""
                      }`}
                   >
-                     {showMotivationText
+                     {showMotivationText && !completedWorkoutId
                         ? motivationalSayings[motivationIndex]
                         : `Exercise: ${barbellLog?.currentExerciseOrder} / ${barbellLog?.completedExercises.length}`}
                   </h3>
@@ -251,21 +223,7 @@ export default function BarbellLog() {
                   <FaChevronRight />
                </button>
             </div>
-            <div className={styles.timerWrapper}>
-               {`${timerMessage}: ${formatTimer(timer)}`}
-               <button
-                  className={`standardIconBtn ${styles.pausePlayBtn}`}
-                  onClick={handleTimerControlBtnClick}
-               >
-                  {isTimerRunning ? <FaPause /> : <FaPlay />}
-               </button>
-               <button
-                  className={`standardIconBtn ${styles.resetBtn}`}
-                  onClick={handleResetBtnClick}
-               >
-                  <FaUndo />
-               </button>
-            </div>
+            {!completedWorkoutId ? <WorkoutTimer /> : null}
          </div>
          <ExerciseSetsTable toggleMotivationText={toggleMotivationText} />
          <div className={styles.exerciseOptionsWrapper}>

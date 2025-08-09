@@ -12,6 +12,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
    const [showExerciseSetNote, setShowExerciseSetNote] = useState<
       number | null
    >(null);
+
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
@@ -29,7 +30,6 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
       () => currentExercise?.completedExerciseSets,
       [currentExercise]
    );
-   const noteInputRef = useRef<HTMLInputElement>(null);
    const startTimer = useTimerStore((state) => state.startTimer);
    const resetTimer = useTimerStore((state) => state.resetTimer);
    const updateTimerMessage = useTimerStore(
@@ -37,10 +37,6 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
    );
 
    useEffect(() => {
-      if (showExerciseSetNote !== null) {
-         noteInputRef.current?.focus();
-      }
-
       const handleClickOutside = (event: MouseEvent) => {
          if (showExerciseSetNote !== null) {
             const openModalRow = document.querySelector(
@@ -54,6 +50,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
       };
 
       document.addEventListener("mousedown", handleClickOutside);
+
       return () => {
          document.removeEventListener("mousedown", handleClickOutside);
       };
@@ -316,9 +313,12 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
             // check if the completedSetOrder is the last set in the exercise
          } else if (
             completedSetOrder ===
-            currentExercise?.completedExerciseSets[
-               currentExercise?.completedExerciseSets.length - 1
-            ].completedExerciseSetOrder
+               currentExercise?.completedExerciseSets[
+                  currentExercise?.completedExerciseSets.length - 1
+               ].completedExerciseSetOrder &&
+            updatedCompletedExerciseSets?.find(
+               (ces) => ces.completedExerciseSetOrder === completedSetOrder
+            )?.isComplete
          ) {
             updatedBarbellLog.currentExerciseOrder =
                updatedBarbellLog.currentExerciseOrder + 1;
@@ -342,8 +342,6 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
       setShowExerciseSetNote((prev) =>
          prev === exerciseSetOrder ? null : exerciseSetOrder
       );
-
-      noteBtnRef.current?.focus();
    };
 
    const updateExerciseSetNotes = ({
@@ -485,7 +483,6 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                               exerciseSet.completedExerciseSetOrder ? (
                                  <div className={styles.noteModalWrapper}>
                                     <input
-                                       ref={noteInputRef}
                                        className={`standardInput ${styles.noteInput}`}
                                        type="text"
                                        value={exerciseSet.notes || ""}

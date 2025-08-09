@@ -30,7 +30,7 @@ export default function ExerciseSetRow({
    const dropDownOptionsRef = useRef(null);
 
    useEffect(() => {
-      const hnadleClickOutside = (event: MouseEvent) => {
+      const handleClickOutside = (event: MouseEvent) => {
          if (
             dropDownOptionsRef.current &&
             !dropDownOptionsRef.current.contains(event.target as Node)
@@ -38,9 +38,9 @@ export default function ExerciseSetRow({
             setOptionsDropDownOpen(false);
          }
       };
-      document.addEventListener("mousedown", hnadleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
       return () => {
-         document.removeEventListener("mousedown", hnadleClickOutside);
+         document.removeEventListener("mousedown", handleClickOutside);
       };
    }, [optionsDropDownOpen]);
 

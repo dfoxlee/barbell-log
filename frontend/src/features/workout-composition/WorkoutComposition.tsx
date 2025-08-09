@@ -68,7 +68,7 @@ export default function WorkoutComposition() {
             className={`standardBtn ${styles.reorderExerciseBtn}`}
             onClick={handleReorderExerciseClick}
          >
-            {isReorderExercise ? `Exercise Details` : `Reorder Exercises`}
+            {isReorderExercise ? `Exercise Details` : `Exercises Overview`}
          </button>
          <Seperator />
          {isReorderExercise ? (

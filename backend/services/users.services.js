@@ -24,7 +24,7 @@ const selectUserById = async (userId) => {
    return results;
 };
 
-const insertUser = async ({ email, password }) => {
+const insertUser = async ({ email, password, verificationToken }) => {
    const [userSearchResults] = await pool.execute(
       `
       SELECT *
@@ -43,55 +43,17 @@ const insertUser = async ({ email, password }) => {
 
    const [insertUserResults] = await pool.execute(
       `
-      INSERT INTO user (email, hash_password, created_date)
-      VALUES (?, ?, ?)
+      INSERT INTO user (email, hash_password, created_date, is_verified, verification_token)
+      VALUES (?, ?, ?, ?, ?)
       `,
-      [email, hashPassword, createdDate]
+      [email, hashPassword, createdDate, false, verificationToken]
    );
 
    if (insertUserResults.affectedRows < 1) {
       throw new Error("Unable to insert user into database.");
    }
 
-   const [newUserSearchResults] = await pool.execute(
-      `
-         SELECT *
-         FROM user
-         WHERE email = ?
-      `,
-      [email]
-   );
-
-   const userId = newUserSearchResults[0]["user_id"];
-
-   const token = createToken({ userId });
-
-   const [insertTokenResults] = await pool.execute(
-      `
-      UPDATE user
-      SET token = ? WHERE user_id = ?
-      `,
-      [token, userId]
-   );
-
-   if (insertTokenResults.affectedRows < 1) {
-      throw new Error("Unable to insert token for new user into database.");
-   }
-
-   const [returnUserSearch] = await pool.execute(
-      `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference
-         FROM user
-         WHERE user_id = ?
-      `,
-      [userId]
-   );
-
-   if (!returnUserSearch.length) {
-      throw new Error("Unable to retrieve created user.");
-   }
-
-   return returnUserSearch[0];
+   return;
 };
 
 const validateUser = async ({ email, password }) => {
@@ -109,6 +71,10 @@ const validateUser = async ({ email, password }) => {
    }
    const user = userSearchResults[0];
 
+   if (!user.isVerified) {
+      throw new Error("User is not verified.");
+   }
+
    const hashPassword = user["hash_password"];
    const passwordMatch = await comparePassword(password, hashPassword);
 
@@ -118,7 +84,7 @@ const validateUser = async ({ email, password }) => {
 
    const userId = user["user_id"];
 
-   const token = createToken({ userId });
+   const token = createToken(userId);
 
    const [insertTokenResults] = await pool.execute(
       `

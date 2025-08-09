@@ -1,6 +1,7 @@
 const {
    getBarbellLog,
-   barbellLogComposition,
+   createBarbellLog,
+   updateBarbellLog,
 } = require("../controllers/barbellLogController");
 
 const barbellLogRouter = require("express").Router();
@@ -37,11 +38,25 @@ barbellLogRouter.get("/:workoutId", async (req, res, next) => {
    }
 });
 
-barbellLogRouter.post("/composition", async (req, res, next) => {
+barbellLogRouter.post("/create", async (req, res, next) => {
    const barbellLog = req.body;
 
    try {
-      await barbellLogComposition({ barbellLog });
+      await createBarbellLog({ barbellLog });
+
+      return res
+         .status(201)
+         .json({ message: "Barbell log created successfully." });
+   } catch (error) {
+      next(error);
+   }
+});
+
+barbellLogRouter.post("/update", async (req, res, next) => {
+   const updatedBarbellLog = req.body;
+
+   try {
+      await updateBarbellLog({ updatedBarbellLog });
 
       return res
          .status(201)
