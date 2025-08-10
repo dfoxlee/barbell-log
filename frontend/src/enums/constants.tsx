@@ -383,10 +383,11 @@ export const exercises = [
 export const motivationalSayings = [
    "Back To Work",
    "Earn It",
-   "Do The Work",
+   "Do Work",
    "Tomorrow Starts Now",
    "Stronger Than Yesterday",
-   "Prove 'em Wrong",
    "Embrace Discomfort",
    "Light Weight",
+   "One More",
+   "Move Mass"
 ];

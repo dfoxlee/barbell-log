@@ -4,255 +4,100 @@ const transporter = nodemailer.createTransport({
    service: "gmail",
    auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
+      pass: process.env.EMAIL_PASSWORD,
    },
 });
 
 const htmlContent = (verificationToken) => `
-   <!DOCTYPE html>
-   <html>
+  <!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+   <html xmlns="http://www.w3.org/1999/xhtml">
+
    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Welcome to Barbell Log</title>
+      <style type="text/css">
+         /* Client-specific styles */
+         body {
+            width: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            line-height: 100%;
+            background-color: #f6f6f6;
+            /* Fallback for clients that don't support body style */
+         }
 
-   <meta charset="utf-8">
-   <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <title>Email Confirmation</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <style type="text/css">
-   /**
-      * Google webfonts. Recommended to include the .woff version for cross-client compatibility.
-      */
-   @media screen {
-      @font-face {
-         font-family: 'Source Sans Pro';
-         font-style: normal;
-         font-weight: 400;
-         src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
-      }
-      @font-face {
-         font-family: 'Source Sans Pro';
-         font-style: normal;
-         font-weight: 700;
-         src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff) format('woff');
-      }
-   }
-   /**
-      * Avoid browser level font resizing.
-      * 1. Windows Mobile
-      * 2. iOS / OSX
-      */
-   body,
-   table,
-   td,
-   a {
-      -ms-text-size-adjust: 100%; /* 1 */
-      -webkit-text-size-adjust: 100%; /* 2 */
-   }
-   /**
-      * Remove extra space added to tables and cells in Outlook.
-      */
-   table,
-   td {
-      mso-table-rspace: 0pt;
-      mso-table-lspace: 0pt;
-   }
-   /**
-      * Better fluid images in Internet Explorer.
-      */
-   img {
-      -ms-interpolation-mode: bicubic;
-   }
-   /**
-      * Remove blue links for iOS devices.
-      */
-   a[x-apple-data-detectors] {
-      font-family: inherit !important;
-      font-size: inherit !important;
-      font-weight: inherit !important;
-      line-height: inherit !important;
-      color: inherit !important;
-      text-decoration: none !important;
-   }
-   /**
-      * Fix centering issues in Android 4.4.
-      */
-   div[style*="margin: 16px 0;"] {
-      margin: 0 !important;
-   }
-   body {
-      width: 100% !important;
-      height: 100% !important;
-      padding: 0 !important;
-      margin: 0 !important;
-   }
-   /**
-      * Collapse table borders to avoid space between cells.
-      */
-   table {
-      border-collapse: collapse !important;
-   }
-   a {
-      color: #1a82e2;
-   }
-   img {
-      height: auto;
-      line-height: 100%;
-      text-decoration: none;
-      border: 0;
-      outline: none;
-   }
-   </style>
+         /* Basic reset */
+         table {
+            border-spacing: 0;
+            border-collapse: collapse;
+         }
 
+         td {
+            padding: 0;
+         }
+
+         img {
+            border: 0;
+            -ms-interpolation-mode: bicubic;
+         }
+      </style>
    </head>
-   <body style="background-color: #e9ecef;">
 
-   <!-- start preheader -->
-   <div class="preheader" style="display: none; max-width: 0; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #fff; opacity: 0;">
-      A preheader is the short summary text that follows the subject line when an email is viewed in the inbox.
-   </div>
-   <!-- end preheader -->
-
-   <!-- start body -->
-   <table border="0" cellpadding="0" cellspacing="0" width="100%">
-
-      <!-- start logo -->
-      <tr>
-         <td align="center" bgcolor="#e9ecef">
-         <!--[if (gte mso 9)|(IE)]>
-         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-         <tr>
-         <td align="center" valign="top" width="600">
-         <![endif]-->
-         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+   <body style="width:100%;margin:0;padding:0;background-color:#f6f6f6;">
+      <center>
+         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
             <tr>
-               <td align="center" valign="top" style="padding: 36px 24px;">
-               <a href="https://barbell-log.com" target="_blank" style="display: inline-block;">
-                  Barbell Log
-               </a>
+               <td align="center" style="padding: 20px 0;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="600"
+                     style="border-collapse: collapse; background-color: #121212;">
+                     <tr>
+                        <td align="center"
+                           style="padding: 40px 0 30px 0; font-family: Arial, sans-serif; font-size: 24px;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 640 640"
+                              style="fill: #3ace87;"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                              <path
+                                 d="M96 176C96 149.5 117.5 128 144 128C170.5 128 192 149.5 192 176L192 288L448 288L448 176C448 149.5 469.5 128 496 128C522.5 128 544 149.5 544 176L544 192L560 192C586.5 192 608 213.5 608 240L608 288C625.7 288 640 302.3 640 320C640 337.7 625.7 352 608 352L608 400C608 426.5 586.5 448 560 448L544 448L544 464C544 490.5 522.5 512 496 512C469.5 512 448 490.5 448 464L448 352L192 352L192 464C192 490.5 170.5 512 144 512C117.5 512 96 490.5 96 464L96 448L80 448C53.5 448 32 426.5 32 400L32 352C14.3 352 0 337.7 0 320C0 302.3 14.3 288 32 288L32 240C32 213.5 53.5 192 80 192L96 192L96 176z" />
+                           </svg>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td
+                           style="padding: 20px 30px; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333;">
+                           <h1 style="text-align: center; font-size: 32px; color: #3ace87;">Barbell Log</h1>
+                           <p style="color: #898989;">You are receiving this message because you signed up for Barbell Log,
+                              a simple straight forward approach to workout tracking.</p>
+                           <p style="color: #898989;">Click the link below to verify your account and start logging today!
+                           </p>
+                           <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; display: flex; justify-content: center;">
+                              <tr>
+                                 <td align="center" style="border-radius: 5px; text-align: center;" bgcolor="#007bff">
+                                    <a href="https://barbell-log.com/verify/${verificationToken}" target="_blank"
+                                       style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #121212; text-decoration: none; border-radius: 5px; padding: 12px 24px; background-color: #3ace87; display: inline-block;">
+                                       Verify
+                                    </a>
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td align="center"
+                           style="padding: 30px 0 40px 0; font-family: Arial, sans-serif; font-size: 12px; color: #999999;">
+                           <p>&copy; Barbell Log. All Rights Reserved.</p>
+                        </td>
+                     </tr>
+                  </table>
                </td>
             </tr>
          </table>
-         <!--[if (gte mso 9)|(IE)]>
-         </td>
-         </tr>
-         </table>
-         <![endif]-->
-         </td>
-      </tr>
-      <!-- end logo -->
-
-      <!-- start hero -->
-      <tr>
-         <td align="center" bgcolor="#e9ecef">
-         <!--[if (gte mso 9)|(IE)]>
-         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-         <tr>
-         <td align="center" valign="top" width="600">
-         <![endif]-->
-         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-            <tr>
-               <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;">
-               <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Confirm Your Email Address</h1>
-               </td>
-            </tr>
-         </table>
-         <!--[if (gte mso 9)|(IE)]>
-         </td>
-         </tr>
-         </table>
-         <![endif]-->
-         </td>
-      </tr>
-      <!-- end hero -->
-
-      <!-- start copy block -->
-      <tr>
-         <td align="center" bgcolor="#e9ecef">
-         <!--[if (gte mso 9)|(IE)]>
-         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-         <tr>
-         <td align="center" valign="top" width="600">
-         <![endif]-->
-         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-
-            <!-- start copy -->
-            <tr>
-               <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-               <p style="margin: 0;">Tap the button below to confirm your email address.</p>
-               </td>
-            </tr>
-            <!-- end copy -->
-
-            <!-- start button -->
-            <tr>
-               <td align="left" bgcolor="#ffffff">
-               <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                  <tr>
-                     <td align="center" bgcolor="#ffffff" style="padding: 12px;">
-                     <table border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                           <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                           <a href="https://barbell-log.com/verify/${verificationToken}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Verify Email</a>
-                           </td>
-                        </tr>
-                     </table>
-                     </td>
-                  </tr>
-               </table>
-               </td>
-            </tr>
-            <!-- end button -->
-
-            <!-- start copy -->
-            <tr>
-               <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-               <p style="margin: 0;">Cheers,<br> Barbell Log</p>
-               </td>
-            </tr>
-            <!-- end copy -->
-
-         </table>
-         <!--[if (gte mso 9)|(IE)]>
-         </td>
-         </tr>
-         </table>
-         <![endif]-->
-         </td>
-      </tr>
-      <!-- end copy block -->
-
-      <!-- start footer -->
-      <tr>
-         <td align="center" bgcolor="#e9ecef" style="padding: 24px;">
-         <!--[if (gte mso 9)|(IE)]>
-         <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-         <tr>
-         <td align="center" valign="top" width="600">
-         <![endif]-->
-         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-
-            <!-- start permission -->
-            <tr>
-               <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-               <p style="margin: 0;">You are receiving this email because your information was used to sign up for an account.</p>
-               </td>
-            </tr>
-            <!-- end permission -->
-
-         </table>
-         <!--[if (gte mso 9)|(IE)]>
-         </td>
-         </tr>
-         </table>
-         <![endif]-->
-         </td>
-      </tr>
-      <!-- end footer -->
-
-   </table>
-   <!-- end body -->
-
+      </center>
    </body>
-   </html>
+
+</html>
 `;
 
 module.exports = { transporter, htmlContent };

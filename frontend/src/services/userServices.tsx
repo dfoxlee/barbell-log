@@ -100,3 +100,18 @@ export const fetchUpdateDistanceUnitPreference = async ({
 
    return weightUnitResponse;
 };
+
+export const fetchValidateEmailToken = async ({ verificationToken }) => {
+   const verificationRequest = await fetch(
+      `${baseUrl}/users/${verificationToken}`
+   );
+   console.log(verificationRequest);
+   if (!verificationRequest.ok) {
+      throw new Error("Something went wrong.");
+   }
+
+   const verificationResponse = await verificationRequest.json();
+   console.log(verificationResponse);
+
+   return verificationResponse;
+};

@@ -102,7 +102,7 @@ export const fetchUpdateBarbellLog = async ({
    });
 
    if (!req.ok) {
-      throw new Error("Something went wrong getting barbell log composition.");
+      throw new Error("Something went wrong getting barbell log update.");
    }
 
    const res = await req.json();

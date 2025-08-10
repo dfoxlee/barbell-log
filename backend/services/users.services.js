@@ -7,7 +7,7 @@ const {
    comparePassword,
 } = require("../utils/authUtils");
 
-const selectUserByEmail = async (email) => {
+const selectUserByEmail = async ({ email }) => {
    const [results] = await pool.execute("SELECT * FROM user WHERE email = ?", [
       email,
    ]);
@@ -54,64 +54,6 @@ const insertUser = async ({ email, password, verificationToken }) => {
    }
 
    return;
-};
-
-const validateUser = async ({ email, password }) => {
-   const [userSearchResults] = await pool.execute(
-      `
-         SELECT *
-         FROM user
-         WHERE email = ?
-      `,
-      [email]
-   );
-
-   if (!userSearchResults.length) {
-      throw new Error("User doesn't exists");
-   }
-   const user = userSearchResults[0];
-
-   if (!user.isVerified) {
-      throw new Error("User is not verified.");
-   }
-
-   const hashPassword = user["hash_password"];
-   const passwordMatch = await comparePassword(password, hashPassword);
-
-   if (!passwordMatch) {
-      throw new Error("Password does not match.");
-   }
-
-   const userId = user["user_id"];
-
-   const token = createToken(userId);
-
-   const [insertTokenResults] = await pool.execute(
-      `
-      UPDATE user
-      SET token = ? WHERE user_id = ?
-      `,
-      [token, userId]
-   );
-
-   if (insertTokenResults.affectedRows < 1) {
-      throw new Error("Unable to insert token for new user into database.");
-   }
-
-   const [returnUserSearch] = await pool.execute(
-      `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference, distance_unit_preference as distanceUnitPreference
-         FROM user
-         WHERE user_id = ?
-      `,
-      [userId]
-   );
-
-   if (!returnUserSearch.length) {
-      throw new Error("Unable to find a user.");
-   }
-
-   return returnUserSearch[0];
 };
 
 const updateUserToken = async ({ userId, token }) => {
@@ -176,13 +118,29 @@ const updateDistanceUnitPreference = async ({
    }
 };
 
+const validateVerificationToken = async ({ verificationToken }) => {
+   const [validationResults] = await pool.execute(
+      `
+         UPDATE user
+         SET is_verified = 1 WHERE verification_token = ?
+      `,
+      [verificationToken]
+   );
+
+   if (!validationResults.affectedRows) {
+      throw new Error("Unable to update user.");
+   }
+
+   return;
+};
+
 module.exports = {
    insertUser,
-   validateUser,
    selectUserByEmail,
    selectUserById,
    updateUserToken,
    deleteUser,
    updateWeightUnitPreference,
    updateDistanceUnitPreference,
+   validateVerificationToken,
 };
