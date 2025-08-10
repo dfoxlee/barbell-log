@@ -64,10 +64,6 @@ const updateWorkout = async ({ workoutId, workoutName }) => {
       [workoutName, workoutId]
    );
 
-   if (!updateWorkoutResults.affectedRows) {
-      throw new Error("Unable to update workout.");
-   }
-
    return;
 };
 
@@ -79,10 +75,6 @@ const deleteWorkout = async ({ workoutId }) => {
       `,
       [workoutId]
    );
-
-   if (!deleteWorkoutResult.affectedRows) {
-      throw new Error("Unable to update workout.");
-   }
 
    return;
 };

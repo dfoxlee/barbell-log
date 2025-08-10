@@ -210,10 +210,6 @@ const updateExerciseSet = async ({
       ]
    );
 
-   if (!updateExerciseSetResults.affectedRows) {
-      throw new Error("Unable to update exercise set.");
-   }
-
    return;
 };
 
@@ -238,10 +234,6 @@ const deleteExerciseSet = async ({ exerciseSetId, exerciseId }) => {
    }
 
    const [deleteExerciseSetResults] = await pool.execute(query, values);
-
-   if (!deleteExerciseSetResults.affectedRows) {
-      throw new Error("Unable to delete exercise set");
-   }
 
    return;
 };

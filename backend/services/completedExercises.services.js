@@ -82,10 +82,6 @@ const updateCompletedExercise = async ({
       [completedExerciseOrder, completedExerciseId]
    );
 
-   if (!updateCompletedExerciseResults.affectedRows) {
-      throw new Error("Unable to update completed exercise.");
-   }
-
    return;
 };
 
@@ -123,10 +119,6 @@ const deleteCompletedExercise = async ({
    }
 
    const [deleteCompletedExerciseResults] = await pool.execute(query, values);
-
-   if (!deleteCompletedExerciseResults.affectedRows) {
-      throw new Error("Unable to delete completed exercise.");
-   }
 
    return;
 };
