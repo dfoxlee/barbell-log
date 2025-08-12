@@ -60,4 +60,4 @@ Licensed under the MIT License.
 
 ## 8. Future Enhancements
 
-- Minimum password length validation
+- Set up measurement functionality

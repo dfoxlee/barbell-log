@@ -167,7 +167,7 @@ export default function Landing() {
                </p>
             </div>
          </div>
-         <div className={styles.programPlanOptions}>
+         {/* <div className={styles.programPlanOptions}>
             <div className={styles.titleWrapper}>
                <h3 className={styles.plansTitle}>Workout Plans</h3>
                <Seperator />
@@ -204,7 +204,7 @@ export default function Landing() {
                   <button className={`standardBtn`}>Try Gold</button>
                </div>
             </div>
-         </div>
+         </div> */}
       </div>
    );
 }

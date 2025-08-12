@@ -14,12 +14,8 @@ const {
    selectCompletedWorkout,
    insertCompletedWorkout,
 } = require("../services/completedWorkouts.services");
-const {
-   selectExercises,
-} = require("../services/exercises.services");
-const {
-   selectExerciseSets,
-} = require("../services/exerciseSets.services");
+const { selectExercises } = require("../services/exercises.services");
+const { selectExerciseSets } = require("../services/exerciseSets.services");
 const { selectWorkouts } = require("../services/workouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
@@ -172,31 +168,31 @@ const updateBarbellLog = async ({ updatedBarbellLog }) => {
       });
 
       for (var completedExerciseSet of completedExercise.completedExerciseSets) {
-         if (
-            currentExerciseSetIds.includes(
-               completedExerciseSet.completedExerciseSetId
-            )
-         ) {
-            // existing exercise set
+         const completedExerciseSetId =
+            completedExerciseSet.completedExerciseSetId;
+
+         if (!completedExerciseSetId) {
+            // create completedExerciseSet
+            await insertCompletedExerciseSet({
+               ...completedExerciseSet,
+            });
+         } else {
+            // update completed exercise
             await updateCompletedExerciseSet({
                ...completedExerciseSet,
             });
 
-            currentExerciseSetIds.filter(
-               (id) => id !== completedExerciseSet.completedExerciseSetId
+            const existingIndex = currentExerciseSetIds.indexOf(
+               completedExerciseSetId
             );
-         } else {
-            // create exercise set
-            await insertCompletedExerciseSet({
-               completedExerciseId: completedExercise.completedExerciseId,
-               ...completedExerciseSet,
-            });
-         }
 
-         for (var deleteSetId of currentExerciseSetIds) {
-            await deleteCompletedExerciseSet({
-               completedExerciseSetId: deleteSetId,
-            });
+            currentExerciseSetIds.splice(existingIndex, 1);
+         }
+      }
+
+      if (currentExerciseSetIds.length) {
+         for (var completedExerciseSetId of currentExerciseSetIds) {
+            await deleteCompletedExerciseSet({ completedExerciseSetId });
          }
       }
    }

@@ -6,6 +6,7 @@ const {
    updateUserWorkout,
    deleteUserWorkout,
 } = require("../controllers/workoutsController");
+const pool = require("../db/dbConfig");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 workoutsRouter.get("/", async (req, res, next) => {
@@ -34,15 +35,28 @@ workoutsRouter.get("/:workoutId", async (req, res, next) => {
 });
 
 workoutsRouter.post("/create", async (req, res, next) => {
+   const connection = await pool.getConnection();
+
    try {
+      await connection.beginTransaction();
+
       const userId = req.user.user_id;
       const { workoutComposition } = req.body;
 
       await addUserWorkout({ userId, workoutComposition });
 
+      await connection.commit();
+
       return res.status(201).json({ message: "Workout created successfully" });
    } catch (error) {
+      await connection.rollback();
+      debugConsoleLog("rollback");
+
       return next(error);
+   } finally {
+      if (connection) {
+         connection.release();
+      }
    }
 });
 
@@ -50,15 +64,27 @@ workoutsRouter.put("/update", async (req, res, next) => {
    const userId = req.user.user_id;
    const { workoutComposition } = req.body;
 
+   const connection = await pool.getConnection();
+
    try {
+      await connection.beginTransaction();
+
       await updateUserWorkout({
          userId,
          workoutComposition,
       });
 
+      await connection.commit();
+
       return res.status(200).json({ message: "Workout updated successfully" });
    } catch (error) {
+      await connection.rollback();
+
       return next(error);
+   } finally {
+      if (connection) {
+         connection.rollback();
+      }
    }
 });
 

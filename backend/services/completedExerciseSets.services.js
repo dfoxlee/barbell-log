@@ -148,18 +148,6 @@ const updateCompletedExerciseSet = async ({
    notes,
    isComplete,
 }) => {
-   console.log(completedExerciseSetId,
-   completedExerciseSetOrder,
-   completedReps,
-   completedWeight,
-   completedWeightUnit,
-   completedDistance,
-   completedDistanceUnit,
-   completedHr,
-   completedMin,
-   completedSec,
-   notes,
-   isComplete,)
    const [updateCompletedExerciseSetResults] = await pool.execute(
       `
          UPDATE completed_exercise_set

@@ -42,12 +42,14 @@ export default function Home() {
          <h1 className={`pageTitle`}>Barbell Log</h1>
          <Seperator />
          <div className={styles.createWorkoutLinkWrapper}>
-            <Link
-               className={`standardLink ${styles.createWorkoutLink}`}
-               to="/home/workout-composition"
-            >
-               Create Workout
-            </Link>
+            {workouts.length <= 10 ? (
+               <Link
+                  className={`standardLink ${styles.createWorkoutLink}`}
+                  to="/home/workout-composition"
+               >
+                  Create Workout
+               </Link>
+            ) : null}
          </div>
          {workouts.length ? <Workouts /> : null}
       </div>
