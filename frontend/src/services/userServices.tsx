@@ -43,8 +43,18 @@ export const fetchLogin = async ({
          password: password,
       }),
    });
-
    const loginResponse = await loginRequest.json();
+
+   if (!loginRequest.ok) {
+      if (loginResponse) {
+         return loginResponse;
+      } else {
+         return {
+            error: true,
+            message: "Something went wrong logging in user.",
+         };
+      }
+   }
 
    return loginResponse.user;
 };

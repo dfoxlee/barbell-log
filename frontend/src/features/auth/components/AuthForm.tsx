@@ -89,8 +89,7 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          console.log(typeof error === typeof Error ? error.message : error);
 
          return toastify({
-            message:
-               "Something went wrong during the sign in process. Please try again later.",
+            message: error.message,
             type: "error",
          });
       } finally {

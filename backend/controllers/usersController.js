@@ -36,15 +36,21 @@ const loginUser = async ({ email, password }) => {
       throw new Error("Unable to find user.");
    }
 
-   const doPasswordsMatch = await comparePassword(password, user.hash_password);
+   if (!user.isVerified) {
+      throw new Error(
+         "Please check your email to verify your account before you login."
+      );
+   }
+
+   const doPasswordsMatch = await comparePassword(password, user.hashPassword);
 
    if (!doPasswordsMatch) {
       throw new Error("Password does not match.");
    }
 
-   const token = createToken(user.user_id);
+   const token = createToken(user.userId);
 
-   await updateUserToken({ userId: user.user_id, token });
+   await updateUserToken({ userId: user.userId, token });
 
    const returnUser = {
       token,

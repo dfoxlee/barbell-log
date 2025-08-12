@@ -8,9 +8,30 @@ const {
 } = require("../utils/authUtils");
 
 const selectUserByEmail = async ({ email }) => {
-   const [results] = await pool.execute("SELECT * FROM user WHERE email = ?", [
-      email,
-   ]);
+   const [results] = await pool.execute(
+      `SELECT user_id as userId, 
+         email as email, 
+         hash_password as hashPassword, 
+         token, 
+         weight_unit_preference as weightUnitPreference, 
+         distance_unit_preference distanceUnitPreference, 
+         user_weight as userWeight, 
+         user_weight_unit as userWeightUnit, 
+         user_height as userHeight,
+         user_height_unit as userHeightUnit,
+         user_body_fat_percentage as userBodyFatPercentage,
+         user_waist_circumference as userWaistCircumference,
+         user_neck_circumference as userNeckCircumference,
+         user_bicep_circumference as user_bicep_circumference,
+         user_chest_circumference as userChestCircumference,
+         user_thigh_circumference as userThighCircumference,
+         user_calf_circumference as userCalfCircumference,
+         user_body_measurement_unit as userBodyMeasurementUnit,
+         user_forearm_circumference as userForearmCircumference,
+         is_verified as isVerified
+      FROM user WHERE email = ?`,
+      [email]
+   );
 
    return results;
 };
