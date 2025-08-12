@@ -6,12 +6,13 @@ import TimedInput from "./TimedInput";
 import WeightInput from "./WeightInput";
 import { useBarbellLogStore } from "../../../stores/barbellLogStore";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTimerStore } from "../../../stores/timerStore";
 
-export default function ExerciseSetsTable() {
-   const [showExerciseSetNotes, setShowExerciseSetNotes] = useState<number[]>(
-      []
-   );
-   const noteModalRef = useRef<HTMLDivElement>(null);
+export default function ExerciseSetsTable({ toggleMotivationText }) {
+   const [showExerciseSetNote, setShowExerciseSetNote] = useState<
+      number | null
+   >(null);
+
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
@@ -29,21 +30,31 @@ export default function ExerciseSetsTable() {
       () => currentExercise?.completedExerciseSets,
       [currentExercise]
    );
+   const startTimer = useTimerStore((state) => state.startTimer);
+   const resetTimer = useTimerStore((state) => state.resetTimer);
+   const updateTimerMessage = useTimerStore(
+      (state) => state.updateTimerMessage
+   );
 
    useEffect(() => {
-      const hnadleClickOutside = (event: MouseEvent) => {
-         if (
-            noteModalRef.current &&
-            !noteModalRef.current.contains(event.target as Node)
-         ) {
-            setShowExerciseSetNotes([]);
+      const handleClickOutside = (event: MouseEvent) => {
+         if (showExerciseSetNote !== null) {
+            const openModalRow = document.querySelector(
+               `div[data-set-order='${showExerciseSetNote}']`
+            );
+
+            if (openModalRow && !openModalRow.contains(event.target as Node)) {
+               setShowExerciseSetNote(null);
+            }
          }
       };
-      document.addEventListener("mousedown", hnadleClickOutside);
+
+      document.addEventListener("mousedown", handleClickOutside);
+
       return () => {
-         document.removeEventListener("mousedown", hnadleClickOutside);
+         document.removeEventListener("mousedown", handleClickOutside);
       };
-   }, [showExerciseSetNotes]);
+   }, [showExerciseSetNote]);
 
    const updateReps = ({
       completedExerciseSetOrder,
@@ -277,20 +288,60 @@ export default function ExerciseSetsTable() {
                   : exercise
          );
 
-         updateBarbellLog({
+         const updatedBarbellLog = {
             ...barbellLog,
             completedExercises: updatedCompletedExercises,
-         });
+         };
+
+         // check if completed set order is the last set and if the current exercise is the last exercise
+         if (
+            completedSetOrder ===
+               currentExercise?.completedExerciseSets[
+                  currentExercise?.completedExerciseSets.length - 1
+               ].completedExerciseSetOrder &&
+            currentExercise.completedExerciseOrder ===
+               barbellLog.completedExercises[
+                  barbellLog.completedExercises.length - 1
+               ].completedExerciseOrder
+         ) {
+            resetTimer();
+            updateTimerMessage("Workout complete");
+
+            toggleMotivationText();
+
+            window.scrollTo(0, 0);
+            // check if the completedSetOrder is the last set in the exercise
+         } else if (
+            completedSetOrder ===
+               currentExercise?.completedExerciseSets[
+                  currentExercise?.completedExerciseSets.length - 1
+               ].completedExerciseSetOrder &&
+            updatedCompletedExerciseSets?.find(
+               (ces) => ces.completedExerciseSetOrder === completedSetOrder
+            )?.isComplete
+         ) {
+            updatedBarbellLog.currentExerciseOrder =
+               updatedBarbellLog.currentExerciseOrder + 1;
+
+            toggleMotivationText();
+
+            resetTimer();
+            startTimer("Start exercise time");
+
+            window.scrollTo(0, 0);
+         } else {
+            resetTimer();
+            startTimer("Start set time");
+         }
+
+         updateBarbellLog(updatedBarbellLog);
       }
    };
 
    const updateShowExerciseSetNotes = (exerciseSetOrder: number) => {
-      setShowExerciseSetNotes((prev) => {
-         if (prev.includes(exerciseSetOrder)) {
-            return prev.filter((order) => order !== exerciseSetOrder);
-         }
-         return [...prev, exerciseSetOrder];
-      });
+      setShowExerciseSetNote((prev) =>
+         prev === exerciseSetOrder ? null : exerciseSetOrder
+      );
    };
 
    const updateExerciseSetNotes = ({
@@ -334,7 +385,9 @@ export default function ExerciseSetsTable() {
             <tr>
                <th className={`subText ${styles.tableHeader}`}>set</th>
                <th className={`subText ${styles.tableHeader}`}>details</th>
-               <th className={`subText ${styles.tableHeader}`}>complete</th>
+               <th className={`subText ${styles.tableHeader}`}>
+                  notes / complete
+               </th>
             </tr>
          </thead>
          <tbody>
@@ -406,7 +459,12 @@ export default function ExerciseSetsTable() {
                      </td>
                      <td className={styles.tableData}>
                         <div className={styles.exerciseSetOptionsWrapper}>
-                           <div className={styles.noteWrapper}>
+                           <div
+                              className={styles.noteWrapper}
+                              data-set-order={
+                                 exerciseSet.completedExerciseSetOrder
+                              }
+                           >
                               <button
                                  className={`standardIconBtn ${
                                     exerciseSet.notes
@@ -421,13 +479,9 @@ export default function ExerciseSetsTable() {
                               >
                                  <FaStickyNote />
                               </button>
-                              {showExerciseSetNotes.includes(
-                                 exerciseSet.completedExerciseSetOrder
-                              ) ? (
-                                 <div
-                                    className={styles.noteModalWrapper}
-                                    ref={noteModalRef}
-                                 >
+                              {showExerciseSetNote ===
+                              exerciseSet.completedExerciseSetOrder ? (
+                                 <div className={styles.noteModalWrapper}>
                                     <input
                                        className={`standardInput ${styles.noteInput}`}
                                        type="text"

@@ -1,18 +1,21 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
 import Seperator from "../shared/Seperator";
 import ExerciseSetsTable from "./components/ExerciseSetsTable";
+import { motivationalSayings } from "../../enums/constants";
+import WorkoutTimer from "./components/WorkoutTimer";
 
 import styles from "./BarbellLog.module.css";
 
 export default function BarbellLog() {
    const params = useParams();
+   const [showMotivationText, setShowMotivationText] = useState(false);
+   const [motivationIndex, setMotivationIndex] = useState(0);
    const workoutId = params["workout-id"];
    const completedWorkoutId = params["completed-workout-id"];
-
    const user = useUserStore((state) => state.user);
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const getBarbellLog = useBarbellLogStore((state) => state.getBarbellLog);
@@ -137,6 +140,24 @@ export default function BarbellLog() {
       }
    };
 
+   const toggleMotivationText = () => {
+      if (showMotivationText) {
+         return;
+      }
+      setMotivationIndex((prev) => {
+         if (prev === motivationalSayings.length - 1) {
+            return 0;
+         }
+
+         return prev + 1;
+      });
+
+      setShowMotivationText(true);
+      setTimeout(() => {
+         setShowMotivationText(false);
+      }, 1500);
+   };
+
    if (barbellLogLoading) {
       return <div>Loading...</div>;
    }
@@ -147,60 +168,84 @@ export default function BarbellLog() {
             {barbellLog?.workoutName}
          </h1>
          <Seperator />
-         <div className={styles.exerciseNavWrapper}>
-            <button
-               className={`standardIconBtn ${
-                  barbellLog?.currentExerciseOrder === 1
-                     ? styles.exerciseNavBtnDisabled
-                     : styles.exerciseNavBtn
-               }`}
-               disabled={barbellLog?.currentExerciseOrder === 1}
-               onClick={handleExerciseDecrementClick}
-            >
-               <FaChevronLeft />
-            </button>
-            <div className={styles.exerciseNavContent}>
-               <p
-                  className={`sectionTitle`}
-               >{`Exercise: ${barbellLog?.currentExerciseOrder} / ${barbellLog?.completedExercises.length}`}</p>
-               <select
-                  className={styles.currentExerciseNavSelect}
-                  name="current-exercise"
-                  id="current-exercise"
-                  value={currentExercise?.exerciseName}
-                  onChange={handleExerciseSelectChange}
+         <div className={styles.exerciseNavTimerWrapper}>
+            <div className={styles.exerciseNavWrapper}>
+               <button
+                  className={`standardIconBtn ${
+                     barbellLog?.currentExerciseOrder === 1
+                        ? styles.exerciseNavBtnDisabled
+                        : styles.exerciseNavBtn
+                  }`}
+                  disabled={barbellLog?.currentExerciseOrder === 1}
+                  onClick={handleExerciseDecrementClick}
                >
-                  {exerciseNames?.map((name) => (
-                     <option key={name}>{name}</option>
-                  ))}
-               </select>
+                  <FaChevronLeft />
+               </button>
+               <div className={styles.exerciseNavContent}>
+                  <h3
+                     className={`sectionTitle ${styles.exerciseNavText} ${
+                        showMotivationText && !completedWorkoutId
+                           ? styles.motivationText
+                           : ""
+                     }`}
+                  >
+                     {showMotivationText && !completedWorkoutId
+                        ? motivationalSayings[motivationIndex]
+                        : `Exercise: ${barbellLog?.currentExerciseOrder} / ${barbellLog?.completedExercises.length}`}
+                  </h3>
+                  <select
+                     className={styles.currentExerciseNavSelect}
+                     name="current-exercise"
+                     id="current-exercise"
+                     value={currentExercise?.exerciseName}
+                     onChange={handleExerciseSelectChange}
+                  >
+                     {exerciseNames?.map((name) => (
+                        <option key={name}>{name}</option>
+                     ))}
+                  </select>
+               </div>
+               <button
+                  className={`standardIconBtn ${
+                     barbellLog != null &&
+                     barbellLog?.currentExerciseOrder <
+                        barbellLog?.completedExercises.length
+                        ? styles.exerciseNavBtn
+                        : styles.exerciseNavBtnDisabled
+                  }`}
+                  disabled={
+                     barbellLog !== null &&
+                     barbellLog?.currentExerciseOrder >=
+                        barbellLog?.completedExercises.length
+                  }
+                  onClick={handleExerciseIncrementClick}
+               >
+                  <FaChevronRight />
+               </button>
             </div>
-            <button
-               className={`standardIconBtn ${
-                  barbellLog != null &&
-                  barbellLog?.currentExerciseOrder <
-                     barbellLog?.completedExercises.length
-                     ? styles.exerciseNavBtn
-                     : styles.exerciseNavBtnDisabled
-               }`}
-               disabled={
-                  barbellLog !== null &&
-                  barbellLog?.currentExerciseOrder >=
-                     barbellLog?.completedExercises.length
-               }
-               onClick={handleExerciseIncrementClick}
-            >
-               <FaChevronRight />
-            </button>
+            {!completedWorkoutId ? <WorkoutTimer /> : null}
          </div>
-         <ExerciseSetsTable />
-         <button
-            className={`standardBtn ${styles.addSetBtn}`}
-            onClick={handleAddSetClick}
-         >
-            <FaPlus />
-            <span>Set</span>
-         </button>
+         <ExerciseSetsTable toggleMotivationText={toggleMotivationText} />
+         <div className={styles.exerciseOptionsWrapper}>
+            <button
+               className={`standardBtn ${styles.addSetBtn}`}
+               onClick={handleAddSetClick}
+            >
+               <FaPlus />
+               <span>Set</span>
+            </button>
+            {barbellLog != null &&
+            barbellLog?.currentExerciseOrder <
+               barbellLog?.completedExercises.length ? (
+               <button
+                  className={`standardBtn ${styles.incrementExerciseBtn}`}
+                  onClick={handleExerciseIncrementClick}
+               >
+                  <span>Exercise</span>
+                  <FaChevronRight />
+               </button>
+            ) : null}
+         </div>
       </div>
    );
 }

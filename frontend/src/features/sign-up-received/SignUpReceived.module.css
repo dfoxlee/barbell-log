@@ -1,0 +1,28 @@
+.container {
+   width: 90vw;
+   max-width: 800px;
+   margin: 0 auto;
+}
+
+.envelopeIcon {
+   margin: 30px auto 0;
+   font-size: 200px;
+   color: var(--primary);
+}
+
+.subText {
+   margin-top: 10px;
+   max-width: 400px;
+   margin: 0 auto;
+}
+
+.linkWrapper {
+   display: flex;
+   justify-content: center;
+   margin-top: 50px;
+}
+
+.subTitle {
+   margin-top: 50px;
+   color: var(--primary);
+}

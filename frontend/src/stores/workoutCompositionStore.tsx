@@ -68,6 +68,7 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
       workoutCompositionError: null,
       currentExerciseViewOrder: 1,
       currentExerciseSetViewOrder: 1,
+
       getWorkoutComposition: async ({
          token,
          workoutId,
@@ -103,6 +104,7 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             });
          }
       },
+
       updateUnits: ({
          weightUnit,
          distanceUnit,
@@ -130,9 +132,11 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             };
          });
       },
+
       updateWorkoutComposition: (updatedWorkoutComposition: WorkoutType) => {
          return set({ workoutComposition: updatedWorkoutComposition });
       },
+
       updateExercise: (updatedExercise: ExerciseType) => {
          set(({ workoutComposition }) => {
             const updatedExercises = [...workoutComposition.exercises];
@@ -160,6 +164,7 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             };
          });
       },
+
       incrementExerciseViewOrder: () => {
          set(({ workoutComposition, currentExerciseViewOrder }) => {
             if (
@@ -216,21 +221,22 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             };
          });
       },
+
       decrementExerciseViewOrder: () => {
-         set(({ workoutComposition, currentExerciseViewOrder }) => {
+         set(({ currentExerciseViewOrder }) => {
             if (currentExerciseViewOrder === 1) {
                return {
-                  currentExerciseViewOrder: 1,
-                  workoutComposition,
+                  currentExerciseViewOrder,
                };
             }
 
             return {
                currentExerciseViewOrder: currentExerciseViewOrder - 1,
-               workoutComposition,
+               currentExerciseSetViewOrder: 1,
             };
          });
       },
+
       updateCurrentExerciseSetViewOrder: (
          updatedCurrentExerciseSetViewOrder: number
       ) => {
@@ -238,6 +244,7 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             currentExerciseSetViewOrder: updatedCurrentExerciseSetViewOrder,
          }));
       },
+
       updateCurrentExerciseViewOrder: (
          updatedCurrentExerciseViewOrder: number
       ) => {
@@ -245,6 +252,7 @@ export const useWorkoutCompositionStore = create<WorkoutCompositionStoreProps>(
             currentExerciseViewOrder: updatedCurrentExerciseViewOrder,
          }));
       },
+
       resetWorkoutComposition: () =>
          set({
             currentExerciseViewOrder: 1,

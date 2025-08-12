@@ -170,10 +170,6 @@ const updateCompletedExerciseSet = async ({
       ]
    );
 
-   if (!updateCompletedExerciseSetResults.affectedRows) {
-      throw new Error("Unable to update completed exercise set.");
-   }
-
    return;
 };
 
@@ -225,10 +221,6 @@ const deleteCompletedExerciseSet = async ({
       query,
       values
    );
-
-   if (!deleteCompletedExerciseSetResults.affectedRows) {
-      throw new Error("Unable to delete completed exercise set.");
-   }
 
    return;
 };

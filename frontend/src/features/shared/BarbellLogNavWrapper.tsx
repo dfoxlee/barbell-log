@@ -3,22 +3,38 @@ import styles from "./Navbar.module.css";
 import toastify from "../../utils/toastify";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
-import { fetchBarbellLogComposition } from "../../services/barbellLogServices";
+import {
+   fetchCreateBarbellLog,
+   fetchUpdateBarbellLog,
+} from "../../services/barbellLogServices";
+import { useTimerStore } from "../../stores/timerStore";
+import { useState } from "react";
 
 export default function BarbellLogNavWrapper() {
    const navigate = useNavigate();
    const params = useParams();
    const completedWorkoutId = params["completed-workout-id"];
+   const [isLoading, setIsLoading] = useState(false);
    const barbellLog = useBarbellLogStore((state) => state.barbellLog);
    const user = useUserStore((state) => state.user);
+   const resetTimer = useTimerStore((state) => state.resetTimer);
+   const updateTimerMessage = useTimerStore(
+      (state) => state.updateTimerMessage
+   );
 
    const handleCompleteClick = async () => {
       try {
          if (barbellLog && user?.token) {
-            await fetchBarbellLogComposition({
-               token: user?.token,
-               barbellLog,
-            });
+            setIsLoading(true);
+
+            if (completedWorkoutId) {
+               await fetchUpdateBarbellLog({ token: user?.token, barbellLog });
+            } else {
+               await fetchCreateBarbellLog({
+                  token: user?.token,
+                  barbellLog,
+               });
+            }
          }
 
          return navigate(-1);
@@ -29,10 +45,15 @@ export default function BarbellLogNavWrapper() {
          });
 
          return console.log(error);
+      } finally {
+         setIsLoading(false);
       }
    };
 
    const handleCancelClick = () => {
+      resetTimer();
+      updateTimerMessage("");
+
       navigate(-1);
    };
 
@@ -41,8 +62,16 @@ export default function BarbellLogNavWrapper() {
          <button className={styles.cancelBtn} onClick={handleCancelClick}>
             Cancel
          </button>
-         <button className={styles.saveBtn} onClick={handleCompleteClick}>
-            {completedWorkoutId ? "Update" : "Complete"}
+         <button
+            className={styles.saveBtn}
+            onClick={handleCompleteClick}
+            disabled={isLoading}
+         >
+            {isLoading
+               ? "Loading..."
+               : completedWorkoutId
+               ? "Update"
+               : "Complete"}
          </button>
       </nav>
    );

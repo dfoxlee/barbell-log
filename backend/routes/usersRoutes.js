@@ -5,6 +5,8 @@ const {
    updateUnitPreferences,
 } = require("../controllers/usersController");
 const authMiddleware = require("../middleware/authMiddleware");
+const { validateVerificationToken } = require("../services/users.services");
+const { validateToken } = require("../utils/authUtils");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 usersRouter.post("/sign-up", async (req, res, next) => {
@@ -64,5 +66,28 @@ usersRouter.post(
       }
    }
 );
+
+usersRouter.get("/:verificationToken", async (req, res, next) => {
+   const verificationToken = req.params["verificationToken"];
+   
+   if (!verificationToken) {
+      return res
+      .status(400)
+      .json({ error: true, message: "Verification token not provided." });
+   }
+   
+   try {
+      await validateVerificationToken({ verificationToken });
+
+      return res
+         .status(200)
+         .json({ error: false, message: "Verification token validated." });
+   } catch (error) {
+      return res.status(500).json({
+         error: true,
+         message: "Something went wrong validating token.",
+      });
+   }
+});
 
 module.exports = usersRouter;

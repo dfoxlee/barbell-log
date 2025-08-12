@@ -8,19 +8,14 @@ const {
    updateCompletedExerciseSet,
    insertCompletedExerciseSet,
    selectCompletedExerciseSetIds,
+   deleteCompletedExerciseSet,
 } = require("../services/completedExerciseSets.services");
 const {
    selectCompletedWorkout,
    insertCompletedWorkout,
 } = require("../services/completedWorkouts.services");
-const {
-   selectExercises,
-   selectExerciseIds,
-} = require("../services/exercises.services");
-const {
-   selectExerciseSets,
-   updateExerciseSet,
-} = require("../services/exerciseSets.services");
+const { selectExercises } = require("../services/exercises.services");
+const { selectExerciseSets } = require("../services/exerciseSets.services");
 const { selectWorkouts } = require("../services/workouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
@@ -117,187 +112,94 @@ const getBarbellLog = async ({ workoutId, completedWorkoutId }) => {
    }
 };
 
-const barbellLogComposition = async ({ barbellLog }) => {
-   const completedWorkoutId = barbellLog.completedWorkoutId;
+const createBarbellLog = async ({ barbellLog }) => {
+   const { workoutId, completedExercises } = barbellLog;
 
-   if (completedWorkoutId) {
-      await Promise.all(
-         barbellLog.completedExercises.map(async (completedExercise) => {
-            await updateCompletedExercise({
-               completedExerciseId: completedExercise.completedExerciseId,
-               completedExerciseOrder: completedExercise.completedExerciseOrder,
+   const completedDate = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+   await insertCompletedWorkout({ workoutId, completedDate });
+
+   const newCompletedWorkouts = await selectCompletedWorkout({
+      workoutId,
+      completedDate,
+   });
+
+   const newCompletedWorkoutId = newCompletedWorkouts[0].completedWorkoutId;
+
+   for (var completedExercise of completedExercises) {
+      await insertCompletedExercise({
+         completedWorkoutId: newCompletedWorkoutId,
+         completedExerciseOrder: completedExercise.completedExerciseOrder,
+         exerciseId: completedExercise.exerciseId,
+      });
+
+      const newCompletedExercises = await selectCompletedExercises({
+         completedWorkoutId: newCompletedWorkoutId,
+         completedExerciseOrder: completedExercise.completedExerciseOrder,
+      });
+
+      const newCompletedExerciseId =
+         newCompletedExercises[0].completedExerciseId;
+
+      for (var completedExerciseSet of completedExercise.completedExerciseSets) {
+         await insertCompletedExerciseSet({
+            completedExerciseId: newCompletedExerciseId,
+            ...completedExerciseSet,
+         });
+      }
+   }
+
+   return;
+};
+
+const updateBarbellLog = async ({ updatedBarbellLog }) => {
+   const { completedExercises } = updatedBarbellLog;
+
+   for (var completedExercise of completedExercises) {
+      await updateCompletedExercise({
+         completedExerciseId: completedExercise.completedExerciseId,
+         completedExerciseOrder: completedExercise.completedExerciseOrder,
+      });
+
+      const currentExerciseSetIds = await selectCompletedExerciseSetIds({
+         completedExerciseId: completedExercise.completedExerciseId,
+      });
+
+      for (var completedExerciseSet of completedExercise.completedExerciseSets) {
+         const completedExerciseSetId =
+            completedExerciseSet.completedExerciseSetId;
+
+         if (!completedExerciseSetId) {
+            // create completedExerciseSet
+            await insertCompletedExerciseSet({
+               ...completedExerciseSet,
+            });
+         } else {
+            // update completed exercise
+            await updateCompletedExerciseSet({
+               ...completedExerciseSet,
             });
 
-            const currentExerciseSetIds = await selectCompletedExerciseSetIds({
-               completedExerciseId: completedExercise.completedExerciseId,
-            });
-
-            const currentExerciseSets = await selectExerciseSets({
-               exerciseId: completedExercise.exerciseId,
-            });
-
-            await Promise.all(
-               completedExercise.completedExerciseSets.map(
-                  async (completedExerciseSet) => {
-                     if (
-                        completedExerciseSet.completedExerciseSetId &&
-                        currentExerciseSetIds.includes(
-                           completedExerciseSet.completedExerciseSetId
-                        )
-                     ) {
-                        await updateCompletedExerciseSet({
-                           completedExerciseSetId:
-                              completedExerciseSet.completedExerciseSetId,
-                           completedExerciseSetOrder:
-                              completedExerciseSet.completedExerciseSetOrder,
-                           completedReps: completedExerciseSet.completedReps,
-                           completedWeight:
-                              completedExerciseSet.completedWeight,
-                           completedWeightUnit:
-                              completedExerciseSet.completedWeightUnit,
-                           completedDistance:
-                              completedExerciseSet.completedDistance,
-                           completedDistanceUnit:
-                              completedExerciseSet.completedDistanceUnit,
-                           completedHr: completedExerciseSet.completedHr,
-                           completedMin: completedExerciseSet.completedMin,
-                           completedSec: completedExerciseSet.completedSec,
-                           notes: completedExerciseSet.notes,
-                           isComplete: completedExerciseSet.isComplete,
-                        });
-
-                        const currentExerciseSet = currentExerciseSets.find(
-                           (exerciseSet) =>
-                              exerciseSet.exerciseSetId ===
-                              completedExerciseSet.exerciseSetId
-                        );
-                        debugConsoleLog(currentExerciseSet);
-
-                        await updateExerciseSet({
-                           ...currentExerciseSet,
-                           reps: completedExerciseSet.completedReps,
-                           weight: completedExerciseSet.completedWeight,
-                           distance: completedExerciseSet.completedDistance,
-                           hr: completedExerciseSet.completedHr,
-                           min: completedExerciseSet.completedMin,
-                           sec: completedExerciseSet.completedSec,
-                        });
-                     } else {
-                        await insertCompletedExerciseSet({
-                           completedExerciseId:
-                              completedExerciseSet.completedExerciseId,
-                           exerciseSetId: completedExerciseSet.exerciseSetId,
-                           completedExerciseSetOrder:
-                              completedExerciseSet.completedExerciseSetOrder,
-                           completedReps: completedExerciseSet.completedReps,
-                           completedWeight:
-                              completedExerciseSet.completedWeight,
-                           completedWeightUnit:
-                              completedExerciseSet.completedWeightUnit,
-                           completedDistance:
-                              completedExerciseSet.completedDistance,
-                           completedDistanceUnit:
-                              completedExerciseSet.completedDistanceUnit,
-                           completedHr: completedExerciseSet.completedHr,
-                           completedMin: completedExerciseSet.completedMin,
-                           completedSec: completedExerciseSet.completedSec,
-                           notes: completedExerciseSet.notes,
-                           isComplete: completedExerciseSet.isComplete,
-                        });
-
-                        const currentExerciseSet = currentExerciseSets.find(
-                           (exerciseSet) =>
-                              exerciseSet.exerciseSetId ===
-                              completedExerciseSet.exerciseSetId
-                        );
-                        debugConsoleLog(currentExerciseSet);
-
-                        await updateExerciseSet({
-                           ...currentExerciseSet,
-                           reps: completedExerciseSet.completedReps,
-                           weight: completedExerciseSet.completedWeight,
-                           distance: completedExerciseSet.completedDistance,
-                           hr: completedExerciseSet.completedHr,
-                           min: completedExerciseSet.completedMin,
-                           sec: completedExerciseSet.completedSec,
-                        });
-                     }
-                  }
-               )
+            const existingIndex = currentExerciseSetIds.indexOf(
+               completedExerciseSetId
             );
-         })
-      );
-   } else {
-      const completedDate = new Date()
-         .toISOString()
-         .slice(0, 19)
-         .replace("T", " ");
 
-      await insertCompletedWorkout({
-         workoutId: barbellLog.workoutId,
-         completedDate,
-      });
+            currentExerciseSetIds.splice(existingIndex, 1);
+         }
+      }
 
-      const newCompletedWorkout = await selectCompletedWorkout({
-         workoutId: barbellLog.workoutId,
-         completedDate,
-      });
-
-      barbellLog.completedExercises.forEach(async (completedExercise) => {
-         await insertCompletedExercise({
-            completedWorkoutId: newCompletedWorkout[0].completedWorkoutId,
-            exerciseId: completedExercise.exerciseId,
-            completedExerciseOrder: completedExercise.completedExerciseOrder,
-         });
-
-         const newCompletedExercise = await selectCompletedExercises({
-            completedWorkoutId: newCompletedWorkout[0].completedWorkoutId,
-            completedExerciseOrder: completedExercise.completedExerciseOrder,
-         });
-
-         completedExercise.completedExerciseSets.forEach(
-            async (completedExerciseSet) => {
-               await insertCompletedExerciseSet({
-                  completedExerciseId:
-                     newCompletedExercise[0].completedExerciseId,
-                  exerciseSetId: completedExerciseSet.exerciseSetId,
-                  completedExerciseSetOrder:
-                     completedExerciseSet.completedExerciseSetOrder,
-                  completedReps: completedExerciseSet.completedReps,
-                  completedWeight: completedExerciseSet.completedWeight,
-                  completedWeightUnit: completedExerciseSet.completedWeightUnit,
-                  completedDistance: completedExerciseSet.completedDistance,
-                  completedDistanceUnit:
-                     completedExerciseSet.completedDistanceUnit,
-                  completedHr: completedExerciseSet.completedHr,
-                  completedMin: completedExerciseSet.completedMin,
-                  completedSec: completedExerciseSet.completedSec,
-                  notes: completedExerciseSet.notes,
-                  isComplete: completedExerciseSet.isComplete,
-               });
-
-               const currentExerciseSets = await selectExerciseSets({
-                  exerciseSetId: completedExerciseSet.exerciseSetId,
-               });
-
-               const currentExerciseSet = currentExerciseSets[0];
-
-               await updateExerciseSet({
-                  ...currentExerciseSet,
-                  reps: completedExerciseSet.completedReps,
-                  weight: completedExerciseSet.completedWeight,
-                  distance: completedExerciseSet.completedDistance,
-                  hr: completedExerciseSet.completedHr,
-                  min: completedExerciseSet.completedMin,
-                  sec: completedExerciseSet.completedSec,
-               });
-            }
-         );
-      });
+      if (currentExerciseSetIds.length) {
+         for (var completedExerciseSetId of currentExerciseSetIds) {
+            await deleteCompletedExerciseSet({ completedExerciseSetId });
+         }
+      }
    }
 };
 
 module.exports = {
    getBarbellLog,
-   barbellLogComposition,
+   createBarbellLog,
+   updateBarbellLog,
 };

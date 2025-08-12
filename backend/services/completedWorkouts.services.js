@@ -106,10 +106,6 @@ const deleteCompletedWorkouts = async ({ completedWorkoutId, workoutId }) => {
 
    const [deleteCompletedWorkoutResults] = await pool.execute(query, values);
 
-   if (!deleteCompletedWorkoutResults.affectedRows) {
-      throw new Error("Unable to delete completed workout.");
-   }
-
    return;
 };
 

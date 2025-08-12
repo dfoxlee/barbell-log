@@ -59,3 +59,8 @@ Licensed under the MIT License.
 ## 7. Suport & Contact
 
 ## 8. Future Enhancements
+<<<<<<< HEAD
+=======
+
+- Set up measurement functionality
+>>>>>>> timer-implementation

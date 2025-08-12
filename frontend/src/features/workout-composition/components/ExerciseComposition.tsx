@@ -195,6 +195,31 @@ export default function ExerciseComposition() {
                <FaPlus />
                <span>Set</span>
             </button>
+            <div className={styles.exerciseNavBtnsWrapper}>
+               <button
+                  className={`standardBtn ${styles.addExerciseBtn} ${
+                     currentExerciseViewOrder === 1
+                        ? styles.disabledAddExerciseBtn
+                        : ""
+                  }`}
+                  onClick={handleExerciseDecrementClick}
+                  disabled={currentExerciseViewOrder === 1 ? true : false}
+               >
+                  <FaChevronLeft />
+                  <span>Exercise</span>
+               </button>
+               <button
+                  className={`standardBtn ${styles.addExerciseBtn}`}
+                  onClick={handleExerciseIncrementClick}
+               >
+                  <span>Exercise</span>
+                  {latestExerciseOrder === currentExercise?.exerciseOrder ? (
+                     <FaPlusCircle />
+                  ) : (
+                     <FaChevronRight />
+                  )}
+               </button>
+            </div>
          </div>
       </div>
    );

@@ -6,7 +6,10 @@
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
-  "keywords": ["workout", "tracker"],
+  "keywords": [
+    "workout",
+    "tracker"
+  ],
   "author": "David FoxLee",
   "license": "MIT",
   "description": "Backend application for tracking workouts",
@@ -18,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.14.1",
+    "nodemailer": "^7.0.5",
     "winston": "^3.17.0"
   },
   "devDependencies": {

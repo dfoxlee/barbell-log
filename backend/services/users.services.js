@@ -7,7 +7,7 @@ const {
    comparePassword,
 } = require("../utils/authUtils");
 
-const selectUserByEmail = async (email) => {
+const selectUserByEmail = async ({ email }) => {
    const [results] = await pool.execute("SELECT * FROM user WHERE email = ?", [
       email,
    ]);
@@ -24,7 +24,7 @@ const selectUserById = async (userId) => {
    return results;
 };
 
-const insertUser = async ({ email, password }) => {
+const insertUser = async ({ email, password, verificationToken }) => {
    const [userSearchResults] = await pool.execute(
       `
       SELECT *
@@ -43,109 +43,17 @@ const insertUser = async ({ email, password }) => {
 
    const [insertUserResults] = await pool.execute(
       `
-      INSERT INTO user (email, hash_password, created_date)
-      VALUES (?, ?, ?)
+      INSERT INTO user (email, hash_password, created_date, is_verified, verification_token)
+      VALUES (?, ?, ?, ?, ?)
       `,
-      [email, hashPassword, createdDate]
+      [email, hashPassword, createdDate, false, verificationToken]
    );
 
    if (insertUserResults.affectedRows < 1) {
       throw new Error("Unable to insert user into database.");
    }
 
-   const [newUserSearchResults] = await pool.execute(
-      `
-         SELECT *
-         FROM user
-         WHERE email = ?
-      `,
-      [email]
-   );
-
-   const userId = newUserSearchResults[0]["user_id"];
-
-   const token = createToken({ userId });
-
-   const [insertTokenResults] = await pool.execute(
-      `
-      UPDATE user
-      SET token = ? WHERE user_id = ?
-      `,
-      [token, userId]
-   );
-
-   if (insertTokenResults.affectedRows < 1) {
-      throw new Error("Unable to insert token for new user into database.");
-   }
-
-   const [returnUserSearch] = await pool.execute(
-      `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference
-         FROM user
-         WHERE user_id = ?
-      `,
-      [userId]
-   );
-
-   if (!returnUserSearch.length) {
-      throw new Error("Unable to retrieve created user.");
-   }
-
-   return returnUserSearch[0];
-};
-
-const validateUser = async ({ email, password }) => {
-   const [userSearchResults] = await pool.execute(
-      `
-         SELECT *
-         FROM user
-         WHERE email = ?
-      `,
-      [email]
-   );
-
-   if (!userSearchResults.length) {
-      throw new Error("User doesn't exists");
-   }
-   const user = userSearchResults[0];
-
-   const hashPassword = user["hash_password"];
-   const passwordMatch = await comparePassword(password, hashPassword);
-
-   if (!passwordMatch) {
-      throw new Error("Password does not match.");
-   }
-
-   const userId = user["user_id"];
-
-   const token = createToken({ userId });
-
-   const [insertTokenResults] = await pool.execute(
-      `
-      UPDATE user
-      SET token = ? WHERE user_id = ?
-      `,
-      [token, userId]
-   );
-
-   if (insertTokenResults.affectedRows < 1) {
-      throw new Error("Unable to insert token for new user into database.");
-   }
-
-   const [returnUserSearch] = await pool.execute(
-      `
-         SELECT token, created_date as createdDate, weight_unit_preference as weightUnitPreference, distance_unit_preference as distanceUnitPreference
-         FROM user
-         WHERE user_id = ?
-      `,
-      [userId]
-   );
-
-   if (!returnUserSearch.length) {
-      throw new Error("Unable to find a user.");
-   }
-
-   return returnUserSearch[0];
+   return;
 };
 
 const updateUserToken = async ({ userId, token }) => {
@@ -210,13 +118,29 @@ const updateDistanceUnitPreference = async ({
    }
 };
 
+const validateVerificationToken = async ({ verificationToken }) => {
+   const [validationResults] = await pool.execute(
+      `
+         UPDATE user
+         SET is_verified = 1 WHERE verification_token = ?
+      `,
+      [verificationToken]
+   );
+
+   if (!validationResults.affectedRows) {
+      throw new Error("Unable to update user.");
+   }
+
+   return;
+};
+
 module.exports = {
    insertUser,
-   validateUser,
    selectUserByEmail,
    selectUserById,
    updateUserToken,
    deleteUser,
    updateWeightUnitPreference,
    updateDistanceUnitPreference,
+   validateVerificationToken,
 };
