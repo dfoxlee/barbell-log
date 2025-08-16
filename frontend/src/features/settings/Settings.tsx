@@ -104,6 +104,7 @@ export default function Settings() {
                   value={user?.distanceUnitPreference}
                   onChange={handleDistanceUnitPreferenceChange}
                >
+                  <option value="">unit...</option>
                   {distanceUnits.map((unit) => (
                      <option key={unit.id} value={unit.label}>
                         {unit.label}

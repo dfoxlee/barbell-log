@@ -33,9 +33,6 @@ export default function Home() {
       }
    }, [user?.token, workoutsError]);
 
-   if (workoutsLoading) {
-      return <Loading />;
-   }
 
    return (
       <div className={styles.container}>

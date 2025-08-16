@@ -32,11 +32,11 @@ export default function HomeNavWrapper() {
          </Link>
          <Link
             className={
-               currentPath === "measurements"
+               currentPath === "metrics"
                   ? `${styles.homeLink} ${styles.activeHomeLink}`
                   : styles.homeLink
             }
-            to="/home/measurements"
+            to="/home/metrics"
          >
             <FaWeight />
          </Link>

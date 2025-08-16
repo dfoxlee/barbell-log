@@ -8,7 +8,7 @@ import BarbellLog from "./features/barbell-log/BarbellLog";
 import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import WorkoutHistory from "./features/workout-history/WorkoutHistory";
-import Measurements from "./features/measurements/Measurements";
+import Metrics from "./features/measurements/Metrics";
 import SignUpReceived from "./features/sign-up-received/SignUpReceived";
 import VerifiedEmail from "./features/verified-email/VerifiedEmail";
 
@@ -32,7 +32,7 @@ function App() {
                path="barbell-log/:workout-id/:completed-workout-id?"
                element={<BarbellLog />}
             />
-            <Route path="measurements" element={<Measurements />} />
+            <Route path="metrics" element={<Metrics />} />
             <Route path="workout-history" element={<WorkoutHistory />} />
             <Route path="settings" element={<Settings />} />
          </Route>
