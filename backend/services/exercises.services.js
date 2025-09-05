@@ -41,6 +41,7 @@ const selectExercises = async ({ workoutId, exerciseName, exerciseOrder }) => {
          SELECT exercise_id AS exerciseId, workout_id AS workoutId, exercise_order AS exerciseOrder, exercise_name AS exerciseName
          FROM exercise
          WHERE workout_id = ?
+         ORDER BY exerciseOrder;
       `;
 
       values.push(workoutId);

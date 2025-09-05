@@ -1,34 +1,35 @@
 export interface CompletedWorkoutType {
    completedWorkoutId?: string;
-   workoutId: string;
-   workoutName?: string;
    completedDate?: Date | string;
+   completedWorkoutName: string;
    completedExercises: CompletedExerciseType[];
+   currentExerciseOrder: number;
 }
 
 export interface CompletedExerciseType {
    completedExerciseId?: string;
-   exerciseId: string;
-   exerciseName?: string;
    completedExerciseOrder: number;
+   completedExerciseName: string;
    completedExerciseSets: CompletedExerciseSetType[];
 }
 
 export interface CompletedExerciseSetType {
-   completedExerciseSetId: string;
-   hasReps: boolean;
-   isWarmup: boolean;
-   isTimed: boolean;
-   isDistance: boolean;
-   isBodyweight: boolean;
-   exerciseSetId: string;
-   completedExerciseSetOrder: number;
+   completedExerciseSetId?: string;
    completedReps: number;
    completedWeight: number;
+   notes: string;
+   isComplete: boolean;
+   completedDistance: number;
    completedHr: number;
    completedMin: number;
    completedSec: number;
-   completedDistance: number;
-   notes: string;
-   isComplete: boolean;
+   completedExerciseSetOrder: number;
+   completedWeightUnit: string;
+   completedDistanceUnit: string;
+   hadReps: boolean;
+   wasBodyweight: boolean;
+   wasTimed: boolean;
+   wasDistance: boolean;
+   wasWarmup: boolean;
+   updateExerciseSetId: string;
 }

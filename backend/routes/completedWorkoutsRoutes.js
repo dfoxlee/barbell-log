@@ -2,8 +2,9 @@ const {
    createCompletedWorkout,
    getCompletedWorkout,
    getCompletedWorkouts,
-   updateCompletedWorkout,
+   fetchUpdateCompletedWorkout,
    deleteCompletedWorkout,
+   getNewCompletedWorkout,
 } = require("../controllers/completedWorkoutsController");
 const {
    selectCompletedWorkout,
@@ -20,12 +21,11 @@ completedWorkoutRouter.get("/", async (req, res, next) => {
          userId,
       });
 
-      const totalWorkouts = completedWorkouts.length;
+      const totalWorkouts = completedWorkouts ? completedWorkouts.length : 0;
 
-      const paginatedWorkouts = completedWorkouts.slice(
-         Number(skip),
-         Number(skip) + Number(take)
-      );
+      const paginatedWorkouts = completedWorkouts
+         ? completedWorkouts.slice(Number(skip), Number(skip) + Number(take))
+         : [];
 
       return res
          .status(201)
@@ -35,17 +35,13 @@ completedWorkoutRouter.get("/", async (req, res, next) => {
    }
 });
 
-completedWorkoutRouter.get("/weekly-breakdown", async (req, res, next) => {
+completedWorkoutRouter.get("/new/:workoutId", async (req, res, next) => {
+   const { workoutId } = req.params;
+
    try {
-      const userId = req.user.user_id;
+      const completedWorkout = await getNewCompletedWorkout({ workoutId });
 
-      const weeklyWorkouts = await getCompletedWorkouts({
-         userId,
-         page: 0,
-         take: 5,
-      });
-
-      return res.status(201).json(weeklyWorkouts);
+      return res.status(200).json({ completedWorkout });
    } catch (error) {
       next(error);
    }
@@ -68,9 +64,9 @@ completedWorkoutRouter.get("/:completedWorkoutId", async (req, res, next) => {
 completedWorkoutRouter.post("/create", async (req, res, next) => {
    try {
       const userId = req.user.user_id;
-      const { workout } = req.body;
+      const { completedWorkout } = req.body;
 
-      await createCompletedWorkout({ userId, workout });
+      await createCompletedWorkout({ userId, completedWorkout });
 
       return res
          .status(201)
@@ -84,9 +80,7 @@ completedWorkoutRouter.put("/update", async (req, res, next) => {
    try {
       const { completedWorkout } = req.body;
 
-      ``;
-
-      const updatedWorkout = await updateCompletedWorkout({
+      const updatedWorkout = await fetchUpdateCompletedWorkout({
          completedWorkout,
       });
 
@@ -102,6 +96,7 @@ completedWorkoutRouter.put("/update", async (req, res, next) => {
 completedWorkoutRouter.delete("/", async (req, res, next) => {
    try {
       const completedWorkoutId = req.body.completedWorkoutId;
+
       await deleteCompletedWorkout({ completedWorkoutId });
 
       return res.status(200).json({

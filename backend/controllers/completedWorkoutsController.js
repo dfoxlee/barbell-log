@@ -2,17 +2,29 @@ const pool = require("../db/dbConfig");
 const {
    selectCompletedExercises,
    deleteCompletedExercise,
+   insertCompletedExercise,
+   updateCompletedExercise,
 } = require("../services/completedExercises.services");
 const {
    selectCompletedExerciseSets,
    deleteCompletedExerciseSet,
+   insertCompletedExerciseSet,
+   updateCompletedExerciseSet,
 } = require("../services/completedExerciseSets.services");
 const {
    selectCompletedWorkout,
+   insertCompletedWorkout,
+   updateCompletedWorkout,
 } = require("../services/completedWorkouts.services");
 const {
    deleteCompletedWorkouts,
 } = require("../services/completedWorkouts.services");
+const { selectExercises } = require("../services/exercises.services");
+const {
+   selectExerciseSets,
+   updateExerciseSet,
+} = require("../services/exerciseSets.services");
+const { selectWorkouts } = require("../services/workouts.services");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const getCompletedWorkout = async ({ completedWorkoutId }) => {
@@ -53,306 +65,202 @@ const getCompletedWorkouts = async ({ userId, page = 0, take = 10 } = {}) => {
    return completedWorkouts;
 };
 
-const createCompletedWorkout = async ({ workout }) => {
-   const createdDate = new Date();
-   const workoutId = workout.workoutId;
+const getNewCompletedWorkout = async ({ workoutId }) => {
+   const workouts = await selectWorkouts({ workoutId });
+   const exercises = await selectExercises({ workoutId });
+   const exercisesWithSets = await Promise.all(
+      exercises.map(async (exercise) => {
+         const exerciseSets = await selectExerciseSets({
+            exerciseId: exercise.exerciseId,
+         });
 
-   const [insertWorkoutResults] = await pool.execute(
-      `
-            INSERT INTO completed_workout (workout_id, completed_date) 
-            VALUES (?, ?)
-         `,
-      [workoutId, createdDate]
-   );
-
-   if (!insertWorkoutResults.affectedRows) {
-      throw new Error("Unable to insert workout into database.");
-   }
-
-   const [selectNewWorkoutResults] = await pool.execute(
-      `
-            SELECT *
-            FROM completed_workout
-            WHERE workout_id = ?
-            ORDER BY completed_date DESC
-         `,
-      [workoutId]
-   );
-
-   const newWorkoutId = selectNewWorkoutResults[0].completed_workout_id;
-
-   await Promise.all(
-      workout.completedExercises.map(async (exercise) => {
-         const [insertExerciseResults] = await pool.execute(
-            `
-               INSERT INTO completed_exercise (completed_workout_id, exercise_id, completed_exercise_order)
-               VALUES (?, ?, ?)
-            `,
-            [newWorkoutId, exercise.exerciseId, exercise.completedExerciseOrder]
-         );
-
-         if (!insertExerciseResults.affectedRows) {
-            throw new Error("Unable to insert exercise into database.");
-         }
-
-         const [selectNewExerciseResults] = await pool.execute(
-            `
-               SELECT *
-               FROM completed_exercise
-               WHERE exercise_id = ?
-                  AND completed_workout_id = ?
-            `,
-            [exercise.exerciseId, newWorkoutId]
-         );
-
-         const newExerciseId =
-            selectNewExerciseResults[0].completed_exercise_id;
-
-         await Promise.all(
-            exercise.completedSets.map(async (set) => {
-               const [insertExerciseSetResults] = await pool.execute(
-                  `
-                  INSERT INTO completed_exercise_set (
-                     completed_exercise_id, 
-                     exercise_set_id, 
-                     completed_reps,
-                     completed_weight,
-                     notes,
-                     is_complete 
-                  )
-                  VALUES (
-                     ?, ?, ?, ?, ?, ?
-                  )
-               `,
-                  [
-                     newExerciseId,
-                     set.exerciseSetId,
-                     set.completedReps,
-                     set.completedWeight,
-                     set.notes,
-                     set.isComplete,
-                  ]
-               );
-
-               if (!insertExerciseSetResults.affectedRows) {
-                  throw new Error("Unable to insert set into database.");
-               }
-            })
-         );
+         return {
+            ...exercise,
+            exerciseSets,
+         };
       })
    );
+
+   const completedExercises = exercisesWithSets.map((exercise) => {
+      const completedExerciseSets = exercise.exerciseSets.map(
+         (exerciseSet) => ({
+            completedReps: exerciseSet.reps,
+            completedWeight: exerciseSet.weight,
+            notes: "",
+            isComplete: false,
+            completedDistance: exerciseSet.distance,
+            completedHr: exerciseSet.hr,
+            completedMin: exerciseSet.min,
+            completedSec: exerciseSet.sec,
+            completedExerciseSetOrder: exerciseSet.exerciseSetOrder,
+            completedWeightUnit: exerciseSet.weightUnit,
+            completedDistanceUnit: exerciseSet.distanceUnit,
+            hadReps: exerciseSet.hasReps,
+            wasBodyweight: exerciseSet.isBodyweight,
+            wasTimed: exerciseSet.isTimed,
+            wasDistance: exerciseSet.isDistance,
+            wasWarmup: exerciseSet.isWarmup,
+            updateExerciseSetId: exerciseSet.exerciseSetId,
+         })
+      );
+
+      return {
+         completedExerciseOrder: exercise.exerciseOrder,
+         completedExerciseName: exercise.exerciseName,
+         completedExerciseSets,
+      };
+   });
+
+   return {
+      completedWorkoutName: workouts[0].workoutName,
+      completedExercises,
+   };
 };
 
-const updateCompletedWorkout = async ({ completedWorkout }) => {
-   // Update completed_workout date if provided
-   if (completedWorkout.completedDate) {
-      const completedDate = new Date(completedWorkout.completedDate);
-      const [updateWorkoutResults] = await pool.execute(
-         `
-            UPDATE completed_workout
-            SET completed_date = ?
-            WHERE completed_workout_id = ?
-         `,
-         [completedDate, completedWorkout.completedWorkoutId]
-      );
-      if (!updateWorkoutResults.affectedRows) {
-         throw new Error("Unable to update completed workout date.");
+const createCompletedWorkout = async ({ userId, completedWorkout }) => {
+   const completedDate = new Date();
+
+   if (!completedWorkout) {
+      throw new Error("No workout provided.");
+   }
+
+   await insertCompletedWorkout({
+      completedWorkout,
+      completedDate,
+      userId,
+   });
+
+   const newCompletedWorkoutSearch = await selectCompletedWorkout({
+      completedDate,
+      userId,
+   });
+
+   const newCompletedWorkoutId =
+      newCompletedWorkoutSearch[0].completedWorkoutId;
+
+   for (var completedExercise of completedWorkout.completedExercises) {
+      await insertCompletedExercise({
+         ...completedExercise,
+         completedWorkoutId: newCompletedWorkoutId,
+      });
+
+      const newCompletedExerciseSearch = await selectCompletedExercises({
+         completedExerciseOrder: completedExercise.completedExerciseOrder,
+         completedWorkoutId: newCompletedWorkoutId,
+      });
+
+      const newCompletedExerciseId =
+         newCompletedExerciseSearch[0].completedExerciseId;
+
+      for (var completedExerciseSet of completedExercise.completedExerciseSets) {
+         await insertCompletedExerciseSet({
+            ...completedExerciseSet,
+            completedExerciseId: newCompletedExerciseId,
+         });
+      }
+
+      const latestCompletedSet = completedExercise.completedExerciseSets
+         .sort(
+            (a, b) => b.completedExerciseSetOrder - a.completedExerciseSetOrder
+         )
+         .find((completedExerciseSet) => completedExerciseSet.isComplete);
+      if (latestCompletedSet) {
+         const updateExerciseSets = await selectExerciseSets({
+            exerciseSetId: latestCompletedSet.updateExerciseSetId,
+         });
+
+         if (updateExerciseSets.length) {
+            await updateExerciseSet({
+               ...updateExerciseSets[0],
+               reps: completedExerciseSet.completedReps,
+               weight: completedExerciseSet.completedWeight,
+               weightUnit: completedExerciseSet.completedWeightUnit,
+               hr: completedExerciseSet.completedHr,
+               min: completedExerciseSet.completedMin,
+               sec: completedExerciseSet.completedSec,
+               distance: completedExerciseSet.completedDistance,
+               distanceUnit: completedExerciseSet.completedDistanceUnit,
+            });
+         }
       }
    }
 
-   const completedWorkoutId = completedWorkout.completedWorkoutId;
+   return;
+};
 
-   // Get existing completed_exercise ids for this completed workout
-   const [existingExercises] = await pool.execute(
-      `
-         SELECT completed_exercise_id
-         FROM completed_exercise
-         WHERE completed_workout_id = ?
-      `,
-      [completedWorkoutId]
-   );
-   let existingExerciseIds = existingExercises.map(
-      (e) => e.completed_exercise_id
-   );
+const fetchUpdateCompletedWorkout = async ({ completedWorkout }) => {
+   await updateCompletedWorkout(completedWorkout);
 
-   for (const exercise of completedWorkout.completedExercises) {
-      if (exercise.completedExerciseId) {
-         // Update completed_exercise order if changed
-         const [updateExerciseResults] = await pool.execute(
-            `
-               UPDATE completed_exercise
-               SET completed_exercise_order = ?
-               WHERE completed_exercise_id = ?
-            `,
-            [exercise.completedExerciseOrder, exercise.completedExerciseId]
-         );
-         if (!updateExerciseResults.affectedRows) {
-            throw new Error("Unable to update completed exercise.");
-         }
+   const currentCompletedExercises = await selectCompletedExercises({
+      completedWorkoutId: completedWorkout.completedWorkoutId,
+   });
 
-         // Get existing set ids for this completed exercise
-         const [existingSets] = await pool.execute(
-            `
-               SELECT completed_exercise_set_id
-               FROM completed_exercise_set
-               WHERE completed_exercise_id = ?
-            `,
-            [exercise.completedExerciseId]
-         );
-         let existingSetIds = existingSets.map(
-            (s) => s.completed_exercise_set_id
-         );
+   for (var completedExercise of completedWorkout.completedExercises) {
+      const currentCompletedExerciseIndex = currentCompletedExercises.findIndex(
+         (currentCompletedExercise) =>
+            currentCompletedExercise.completedExerciseId ===
+            completedExercise.completedExerciseId
+      );
 
-         for (const set of exercise.completedSets) {
-            if (set.completedExerciseSetId) {
-               // Update set
-               const [updateSetResults] = await pool.execute(
-                  `
-                     UPDATE completed_exercise_set
-                     SET completed_reps = ?, completed_weight = ?, notes = ?, is_complete = ?
-                     WHERE completed_exercise_set_id = ?
-                  `,
-                  [
-                     set.completedReps,
-                     set.completedWeight,
-                     set.notes,
-                     set.isCompleted,
-                     set.completedExerciseSetId,
-                  ]
-               );
-               if (!updateSetResults.affectedRows) {
-                  throw new Error("Unable to update completed exercise set.");
-               }
-               // Remove from deletion list
-               const idx = existingSetIds.indexOf(set.completedExerciseSetId);
-               if (idx > -1) existingSetIds.splice(idx, 1);
-            } else {
-               // Insert new set
-               const [insertSetResults] = await pool.execute(
-                  `
-                     INSERT INTO completed_exercise_set (
-                        completed_exercise_id, 
-                        exercise_set_id, 
-                        completed_reps,
-                        completed_weight,
-                        notes,
-                        is_complete
-                     )
-                     VALUES (?, ?, ?, ?, ?, ?)
-                  `,
-                  [
-                     exercise.completedExerciseId,
-                     set.exerciseSetId,
-                     set.completedReps,
-                     set.completedWeight,
-                     set.notes,
-                     set.isComplete,
-                  ]
-               );
-               if (!insertSetResults.affectedRows) {
-                  throw new Error(
-                     "Unable to insert new completed exercise set."
-                  );
-               }
-            }
-         }
+      if (currentCompletedExerciseIndex < 0) {
+         await insertCompletedExercise(completedExercise);
 
-         // Delete removed sets
-         for (const setIdToDelete of existingSetIds) {
-            const [deleteSetResults] = await pool.execute(
-               `
-                  DELETE FROM completed_exercise_set
-                  WHERE completed_exercise_set_id = ?
-               `,
-               [setIdToDelete]
-            );
-            // No need to throw if already deleted
-         }
+         const newCompletedExercises = await selectCompletedExercises({
+            completedWorkoutId: completedWorkout.completedWorkoutId,
+         });
 
-         // Remove from deletion list
-         const idx = existingExerciseIds.indexOf(exercise.completedExerciseId);
-         if (idx > -1) existingExerciseIds.splice(idx, 1);
-      } else {
-         // Insert new completed_exercise
-         const [insertExerciseResults] = await pool.execute(
-            `
-               INSERT INTO completed_exercise (completed_workout_id, exercise_id, completed_exercise_order)
-               VALUES (?, ?, ?)
-            `,
-            [
-               completedWorkoutId,
-               exercise.exerciseId,
-               exercise.completedExerciseOrder,
-            ]
-         );
-         if (!insertExerciseResults.affectedRows) {
-            throw new Error("Unable to insert new completed exercise.");
-         }
-         // Get new completed_exercise_id
-         const [newExerciseResults] = await pool.execute(
-            `
-               SELECT completed_exercise_id
-               FROM completed_exercise
-               WHERE completed_workout_id = ? AND exercise_id = ? AND completed_exercise_order = ?
-               ORDER BY completed_exercise_id DESC
-               LIMIT 1
-            `,
-            [
-               completedWorkoutId,
-               exercise.exerciseId,
-               exercise.completedExerciseOrder,
-            ]
-         );
          const newCompletedExerciseId =
-            newExerciseResults[0].completed_exercise_id;
+            newCompletedExercises[0].completedExerciseId;
 
-         // Insert sets for new exercise
-         for (const set of exercise.sets) {
-            const [insertSetResults] = await pool.execute(
-               `
-                  INSERT INTO completed_exercise_set (
-                     completed_exercise_id, 
-                     exercise_set_id, 
-                     completed_reps,
-                     completed_weight,
-                     notes,
-                     is_complete
-                  )
-                  VALUES (?, ?, ?, ?, ?, ?)
-               `,
-               [
-                  newCompletedExerciseId,
-                  set.exerciseSetId,
-                  set.completedReps,
-                  set.completedWeight,
-                  set.notes,
-                  set.isComplete,
-               ]
-            );
-            if (!insertSetResults.affectedRows) {
-               throw new Error(
-                  "Unable to insert set for new completed exercise."
+         for (var completedExerciseSet of completedExercise.completedExerciseSet) {
+            await insertCompletedExerciseSet({
+               ...completedExerciseSet,
+               completedExerciseId: newCompletedExerciseId,
+            });
+         }
+      } else {
+         await updateCompletedExercise(completedExercise);
+
+         const currentCompletedExerciseSets = await selectCompletedExerciseSets(
+            { completedExerciseId: completedExercise.completedExerciseId }
+         );
+
+         for (var completedExerciseSet of completedExercise.completedExerciseSets) {
+            const currentCompletedExerciseSetIndex =
+               currentCompletedExerciseSets.findIndex(
+                  (currentCompletedExerciseSet) =>
+                     currentCompletedExerciseSet.completedExerciseSetId ===
+                     completedExerciseSet.completedExerciseSetId
+               );
+
+            if (currentCompletedExerciseSetIndex < 0) {
+               await insertCompletedExerciseSet({
+                  ...completedExerciseSet,
+                  completedExercise: completedExercise.completedExerciseId,
+               });
+            } else {
+               await updateCompletedExerciseSet(completedExerciseSet);
+
+               currentCompletedExerciseSets.splice(
+                  currentCompletedExerciseSetIndex,
+                  1
                );
             }
          }
+
+         for (var deleteCompletedExerciseSet of currentCompletedExerciseSets) {
+            await deleteCompletedExerciseSet(
+               deleteCompletedExerciseSet.completedExerciseSet
+            );
+         }
+
+         currentCompletedExercises.splice(currentCompletedExerciseIndex, 1);
       }
    }
 
-   // Delete removed completed_exercises and their sets
-   for (const exerciseIdToDelete of existingExerciseIds) {
-      await pool.execute(
-         `
-            DELETE FROM completed_exercise_set
-            WHERE completed_exercise_id = ?
-         `,
-         [exerciseIdToDelete]
-      );
-      await pool.execute(
-         `
-            DELETE FROM completed_exercise
-            WHERE completed_exercise_id = ?
-         `,
-         [exerciseIdToDelete]
+   for (var deleteCompletedExercise of currentCompletedExercises) {
+      await deleteCompletedExercise(
+         deleteCompletedExercise.completedExerciseId
       );
    }
 };
@@ -364,23 +272,20 @@ const deleteCompletedWorkout = async ({ completedWorkoutId }) => {
 
    await Promise.all(
       completedExercises.map(async (exercise) => {
-         await deleteCompletedExerciseSet({
-            completedExerciseId: exercise.completedExerciseId,
-         });
+         await deleteCompletedExerciseSet(exercise.completedExerciseId);
 
-         await deleteCompletedExercise({
-            completedExerciseId: exercise.completedExerciseId,
-         });
+         await deleteCompletedExercise(exercise.completedExerciseId);
       })
    );
 
-   await deleteCompletedWorkouts({ completedWorkoutId });
+   await deleteCompletedWorkouts(completedWorkoutId);
 };
 
 module.exports = {
-   createCompletedWorkout,
-   getCompletedWorkouts,
    getCompletedWorkout,
-   updateCompletedWorkout,
+   getCompletedWorkouts,
+   getNewCompletedWorkout,
+   createCompletedWorkout,
+   fetchUpdateCompletedWorkout,
    deleteCompletedWorkout,
 };

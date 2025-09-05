@@ -31,7 +31,9 @@ export default function BarbellLog() {
       () =>
          barbellLog?.completedExercises
             .sort((a, b) => a.completedExerciseOrder - b.completedExerciseOrder)
-            .map((completedExercise) => completedExercise.exerciseName),
+            .map(
+               (completedExercise) => completedExercise.completedExerciseName
+            ),
       [barbellLog]
    );
    const currentExercise = useMemo(
@@ -61,7 +63,7 @@ export default function BarbellLog() {
    const handleExerciseSelectChange = (event) => {
       const switchToExercise = barbellLog?.completedExercises.find(
          (completedExercise) =>
-            completedExercise.exerciseName === event.target.value
+            completedExercise.completedExerciseName === event.target.value
       );
 
       if (switchToExercise && barbellLog) {
@@ -165,7 +167,7 @@ export default function BarbellLog() {
    return (
       <div className={styles.container}>
          <h1 className={`pageTitle ${styles.workoutNameTitle}`}>
-            {barbellLog?.workoutName}
+            {barbellLog?.completedWorkoutName}
          </h1>
          <Seperator />
          <div className={styles.exerciseNavTimerWrapper}>
@@ -197,7 +199,7 @@ export default function BarbellLog() {
                      className={styles.currentExerciseNavSelect}
                      name="current-exercise"
                      id="current-exercise"
-                     value={currentExercise?.exerciseName}
+                     value={currentExercise?.completedExerciseName}
                      onChange={handleExerciseSelectChange}
                   >
                      {exerciseNames?.map((name) => (

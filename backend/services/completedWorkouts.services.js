@@ -1,8 +1,8 @@
 const pool = require("../db/dbConfig");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const selectCompletedWorkout = async ({
    completedWorkoutId,
-   workoutId,
    completedDate,
    userId,
 }) => {
@@ -11,49 +11,40 @@ const selectCompletedWorkout = async ({
 
    if (completedWorkoutId) {
       query = `
-      SELECT cw.completed_workout_id AS completedWorkoutId,
-                cw.workout_id AS workoutId,
-                w.workout_name AS workoutName,
-                cw.completed_date AS completedDate
-             FROM completed_workout cw
-             INNER JOIN workout w ON w.workout_id = cw.workout_id
-             WHERE cw.completed_workout_id = ?;
+      SELECT completed_workout_id AS completedWorkoutId,
+      completed_workout_name AS completedWorkoutName,
+      completed_date AS completedDate
+      FROM completed_workout
+      WHERE completed_workout_id = ?
+      ORDER BY completed_date DESC;
       `;
 
       values.push(completedWorkoutId);
-   } else if (workoutId && completedDate) {
+   } else if (userId && completedDate) {
+      const formattedDate = completedDate
+         .toISOString()
+         .slice(0, 19)
+         .replace("T", " ");
+
       query = `
-         SELECT cw.completed_workout_id AS completedWorkoutId,
-            cw.workout_id AS workoutId,
-            w.workout_name AS workoutName,
-            cw.completed_date AS completedDate
-         FROM completed_workout cw
-         INNER JOIN workout w ON w.workout_id = cw.workout_id
-         WHERE cw.workout_id = ?
-            AND cw.completed_date = ?;
+         SELECT completed_workout_id AS completedWorkoutId,
+            completed_workout_name AS completedWorkoutName,
+            completed_date AS completedDate
+         FROM completed_workout
+         WHERE user_id = ?
+            AND completed_date = ?
+         ORDER BY completed_date DESC;
       `;
-      values.push(workoutId, completedDate);
-   } else if (workoutId) {
-      query = `
-         SELECT cw.completed_workout_id AS completedWorkoutId,
-            cw.workout_id AS workoutId,
-            w.workout_name AS workoutName,
-            cw.completed_date AS completedDate
-         FROM completed_workout cw
-         INNER JOIN workout w ON w.workout_id = cw.workout_id
-         WHERE cw.workout_id = ?;
-      `;
-      values.push(workoutId);
+
+      values.push(userId, formattedDate);
    } else if (userId) {
       query = `
-         SELECT cw.completed_workout_id AS completedWorkoutId,
-                cw.workout_id AS workoutId,
-                w.workout_name AS workoutName,
-                cw.completed_date AS completedDate
-         FROM completed_workout cw
-         INNER JOIN workout w ON w.workout_id = cw.workout_id
-         WHERE w.user_id = ?
-         ORDER BY cw.completed_date DESC
+         SELECT completed_workout_id AS completedWorkoutId,
+         completed_workout_name AS completedWorkoutName,
+         completed_date AS completedDate
+         FROM completed_workout
+         WHERE user_id = ?
+         ORDER BY completed_date DESC;
       `;
 
       values.push(userId);
@@ -66,13 +57,22 @@ const selectCompletedWorkout = async ({
    return selectCompletedWorkoutResults;
 };
 
-const insertCompletedWorkout = async ({ workoutId, completedDate }) => {
+const insertCompletedWorkout = async ({
+   userId,
+   completedDate,
+   completedWorkout,
+}) => {
+   const formattedDate = completedDate
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+
    const [insertCompletedWorkoutResults] = await pool.execute(
       `
-         INSERT INTO completed_workout (workout_id, completed_date)
-         VALUES (?, ?);
+         INSERT INTO completed_workout (user_id, completed_date, completed_workout_name)
+         VALUES (?, ?, ?);
       `,
-      [workoutId, completedDate]
+      [userId, formattedDate, completedWorkout.completedWorkoutName]
    );
 
    if (!insertCompletedWorkoutResults.affectedRows) {
@@ -82,29 +82,26 @@ const insertCompletedWorkout = async ({ workoutId, completedDate }) => {
    return insertCompletedWorkoutResults.insertId;
 };
 
-const deleteCompletedWorkouts = async ({ completedWorkoutId, workoutId }) => {
-   let query = ``;
-   let values = [];
+const updateCompletedWorkout = async (completedWorkout) => {
+   await query.execute(
+      `
+         UPDATE completed_workout
+         SET completed_workout_name = ?
+      `,
+      [completedWorkout.completedWorkoutName]
+   );
 
-   if (completedWorkoutId) {
-      query = `
+   return;
+};
+
+const deleteCompletedWorkouts = async (completedWorkoutId) => {
+   await pool.execute(
+      `
          DELETE FROM completed_workout
-         WHERE completed_workout_id = ?;
-      `;
-
-      values.push(completedWorkoutId);
-   } else if (workoutId) {
-      query = `
-         DELETE FROM completed_workout
-         WHERE workout_id = ?;
-      `;
-
-      values.push(workoutId);
-   } else {
-      return;
-   }
-
-   const [deleteCompletedWorkoutResults] = await pool.execute(query, values);
+         WHERE completed_workout_id = ?
+      `,
+      [completedWorkoutId]
+   );
 
    return;
 };
@@ -112,5 +109,6 @@ const deleteCompletedWorkouts = async ({ completedWorkoutId, workoutId }) => {
 module.exports = {
    selectCompletedWorkout,
    insertCompletedWorkout,
+   updateCompletedWorkout,
    deleteCompletedWorkouts,
 };

@@ -1,9 +1,12 @@
 import { create } from "zustand";
-import type { BarbellLogType } from "../types/barbellLogTypes";
-import { fetchGetBarbellLog } from "../services/barbellLogServices";
+import {
+   fetchGetCompletedWorkout,
+   fetchGetNewCompletedWorkout,
+} from "../services/completedWorkoutServices";
+import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
 
 export interface BarbellLogStoreType {
-   barbellLog: BarbellLogType | null;
+   barbellLog: CompletedWorkoutType | null;
    barbellLogLoading: boolean;
    barbellLogError: string | null;
    getBarbellLog: ({
@@ -15,13 +18,14 @@ export interface BarbellLogStoreType {
       workoutId: string;
       completedWorkoutId?: string;
    }) => Promise<void>;
-   updateBarbellLog: (updatedBarbellLog: BarbellLogType) => void;
+   updateBarbellLog: (updatedBarbellLog: CompletedWorkoutType) => void;
 }
 
 export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
    barbellLog: null,
    barbellLogLoading: false,
    barbellLogError: null,
+
    getBarbellLog: async ({
       token,
       workoutId,
@@ -34,30 +38,48 @@ export const useBarbellLogStore = create<BarbellLogStoreType>((set) => ({
       set({ barbellLogLoading: true, barbellLogError: null });
 
       try {
-         const barbellLog = await fetchGetBarbellLog({
-            token,
-            workoutId,
-            completedWorkoutId,
-         });
+         if (completedWorkoutId) {
+            const request = await fetchGetCompletedWorkout({
+               token,
+               completedWorkoutId,
+            });
 
-         set({
-            barbellLog: {
-               ...barbellLog,
-               currentExerciseOrder: 1,
-            },
-         });
-      } catch (error: any) {
-         set({
-            barbellLogError:
-               typeof error === typeof Error
-                  ? error.message
-                  : "Something went wrong getting completed workout.",
-         });
+            set({
+               barbellLog: {
+                  ...request.completedWorkout,
+                  currentExerciseOrder: 1,
+               },
+            });
+         } else {
+            const request = await fetchGetNewCompletedWorkout({
+               token,
+               workoutId,
+            });
+
+            set({
+               barbellLog: {
+                  ...request.completedWorkout,
+                  currentExerciseOrder: 1,
+               },
+            });
+         }
+      } catch (error: unknown) {
+         if (error instanceof Error) {
+            set({
+               barbellLogError: error.message,
+            });
+         } else {
+            set({
+               barbellLogError:
+                  "Something went wrong getting completed workout.",
+            });
+         }
       } finally {
          set({ barbellLogLoading: false });
       }
    },
-   updateBarbellLog: (updatedBarbellLog: BarbellLogType) => {
+
+   updateBarbellLog: (updatedBarbellLog: CompletedWorkoutType) => {
       set({ barbellLog: updatedBarbellLog });
    },
 }));

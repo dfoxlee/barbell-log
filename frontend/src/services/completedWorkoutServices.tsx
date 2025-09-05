@@ -1,4 +1,4 @@
-import type { BarbellLogType } from "../types/barbellLogTypes";
+import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
 
 const baseUrl =
    import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
@@ -6,10 +6,10 @@ const baseUrl =
       : import.meta.env.VITE_DEVELOPMENT_URL;
 
 export const fetchCreateCompletedWorkout = async ({
-   workout,
+   completedWorkout,
    token,
 }: {
-   workout: BarbellLogType;
+   completedWorkout: CompletedWorkoutType;
    token: string;
 }) => {
    const req = await fetch(`${baseUrl}/completed-workouts/create`, {
@@ -18,12 +18,42 @@ export const fetchCreateCompletedWorkout = async ({
          "Content-Type": "application/json",
          Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ workout }),
+      body: JSON.stringify({ completedWorkout }),
    });
 
    const res = await req.json();
 
    return res;
+};
+
+export const fetchGetNewCompletedWorkout = async ({
+   workoutId,
+   token,
+}: {
+   workoutId: string;
+   token: string;
+}) => {
+   console.log("workoutId, token", workoutId, token);
+   const request = await fetch(
+      `${baseUrl}/completed-workouts/new/${workoutId}`,
+      {
+         method: "GET",
+         headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+         },
+      }
+   );
+
+   console.log(request);
+   if (!request.ok) {
+      throw new Error("Something went wrong getting new completed workout.");
+   }
+
+   const body = await request.json();
+   console.log(body);
+
+   return body;
 };
 
 export const fetchGetCompletedWorkout = async ({
@@ -97,7 +127,7 @@ export const fetchUpdateCompletedWorkout = async ({
    completedWorkout,
 }: {
    token: string;
-   completedWorkout: BarbellLogType;
+   completedWorkout: CompletedWorkoutType;
 }) => {
    const req = await fetch(`${baseUrl}/completed-workouts/update`, {
       method: "PUT",

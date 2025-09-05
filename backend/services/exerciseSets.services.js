@@ -62,7 +62,7 @@ const selectExerciseSets = async ({ exerciseId, exerciseSetId }) => {
          exercise_set_order AS exerciseSetOrder
       FROM exercise_set
       WHERE exercise_set_id = ?
-      ORDER BY exerciseSetOrder
+      ORDER BY exercise_set_order;
       `;
 
       values.push(exerciseSetId);

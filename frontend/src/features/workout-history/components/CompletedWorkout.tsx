@@ -34,7 +34,7 @@ export default function CompletedWorkout({
       <div className={styles.container}>
          <div className={styles.contentWrapper}>
             <h3 className={styles.workoutName}>
-               {completedWorkout.workoutName}
+               {completedWorkout.completedWorkoutName}
             </h3>
             <p className={styles.completedDate}>
                {new Date(completedWorkout.completedDate).toLocaleDateString()}

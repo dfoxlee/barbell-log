@@ -8,7 +8,7 @@ import BarbellLog from "./features/barbell-log/BarbellLog";
 import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import WorkoutHistory from "./features/workout-history/WorkoutHistory";
-import Metrics from "./features/measurements/Metrics";
+import Metrics from "./features/metrics/Metrics";
 import SignUpReceived from "./features/sign-up-received/SignUpReceived";
 import VerifiedEmail from "./features/verified-email/VerifiedEmail";
 

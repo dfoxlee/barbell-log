@@ -396,7 +396,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                   <tr key={exerciseSet.completedExerciseSetOrder}>
                      <td className={styles.tableData}>
                         <div className={styles.setNumberWrapper}>
-                           {exerciseSet.isWarmup ? (
+                           {exerciseSet.wasWarmup ? (
                               <span className={styles.warmupIcon}>W</span>
                            ) : null}
                            <span>{exerciseSet.completedExerciseSetOrder}</span>
@@ -404,7 +404,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                      </td>
                      <td className={styles.tableData}>
                         <div className={styles.repsWeightInputWrapper}>
-                           {exerciseSet.hasReps ? (
+                           {exerciseSet.hadReps ? (
                               <>
                                  <RepsInput
                                     completedExerciseSetOrder={
@@ -417,7 +417,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                                  <span>X</span>
                               </>
                            ) : null}
-                           {exerciseSet.isBodyweight ? (
+                           {exerciseSet.wasBodyweight ? (
                               "BW"
                            ) : (
                               <WeightInput
@@ -431,7 +431,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                               />
                            )}
                         </div>
-                        {exerciseSet.isTimed ? (
+                        {exerciseSet.wasTimed ? (
                            <TimedInput
                               completedExerciseSetOrder={
                                  exerciseSet.completedExerciseSetOrder
@@ -445,7 +445,7 @@ export default function ExerciseSetsTable({ toggleMotivationText }) {
                               isComplete={exerciseSet.isComplete}
                            />
                         ) : null}
-                        {exerciseSet.isDistance ? (
+                        {exerciseSet.wasDistance ? (
                            <DistanceInput
                               completedExerciseSetOrder={
                                  exerciseSet.completedExerciseSetOrder

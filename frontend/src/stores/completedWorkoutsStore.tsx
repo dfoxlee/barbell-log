@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
-import { fetchGetCompletedWorkouts } from "../services/completedWorkoutServices";
+import {
+   fetchCreateCompletedWorkout,
+   fetchGetCompletedWorkouts,
+   fetchGetNewCompletedWorkout,
+} from "../services/completedWorkoutServices";
 
 export interface CompletedWorkoutsStoreType {
    completedWorkouts: CompletedWorkoutType[] | null;
@@ -9,14 +13,25 @@ export interface CompletedWorkoutsStoreType {
       take: number;
       skip: number;
    };
+   completedWorkout: CompletedWorkoutType | null;
    completedWorkoutsLoading: boolean;
    completedWorkoutsError: string | null;
+
    getCompletedWorkouts: ({ token }: { token: string }) => Promise<void>;
+
    updateCompletedWorkoutsDataState: (newState: {
       take: number;
       skip: number;
       token: string;
    }) => void;
+
+   getNewCompletedWorkout: ({
+      workoutId,
+      token,
+   }: {
+      workoutId: string;
+      token: string;
+   }) => Promise<void>;
 }
 
 export const useCompletedWorkoutsStore = create<CompletedWorkoutsStoreType>(
@@ -27,8 +42,10 @@ export const useCompletedWorkoutsStore = create<CompletedWorkoutsStoreType>(
          take: 10,
          skip: 0,
       },
+      completedWorkout: null,
       completedWorkoutsLoading: false,
       completedWorkoutsError: null,
+
       getCompletedWorkouts: async ({ token }: { token: string }) => {
          set({
             completedWorkoutsLoading: true,
@@ -61,6 +78,7 @@ export const useCompletedWorkoutsStore = create<CompletedWorkoutsStoreType>(
             });
          }
       },
+
       updateCompletedWorkoutsDataState: ({
          token,
          skip,
@@ -78,6 +96,51 @@ export const useCompletedWorkoutsStore = create<CompletedWorkoutsStoreType>(
          });
 
          get().getCompletedWorkouts({ token });
+      },
+
+      getNewCompletedWorkout: async ({ workoutId, token }) => {
+         try {
+            set({
+               completedWorkoutsLoading: false,
+               completedWorkoutsError: null,
+            });
+
+            const req = await fetchGetNewCompletedWorkout({ workoutId, token });
+
+            set({ completedWorkout: req.completedWorkout });
+         } catch (error: unknown) {
+            set({
+               completedWorkoutsError:
+                  error instanceof Error
+                     ? error.message
+                     : "Something went wrong getting new completed workout.",
+            });
+         } finally {
+            set({ completedWorkoutsLoading: false });
+         }
+      },
+
+      createCompletedWorkout: async ({ completedWorkout, token }) => {
+         try {
+            set({
+               completedWorkoutsLoading: true,
+               completedWorkoutsError: null,
+            });
+
+            await fetchCreateCompletedWorkout({
+               completedWorkout,
+               token,
+            });
+         } catch (error: unknown) {
+            set({
+               completedWorkoutsError:
+                  error instanceof Error
+                     ? error.message
+                     : "Something went wrong getting new completed workout.",
+            });
+         } finally {
+            set({ completedWorkoutsLoading: false });
+         }
       },
    })
 );

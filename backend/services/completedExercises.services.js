@@ -1,8 +1,8 @@
 const pool = require("../db/dbConfig");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const selectCompletedExercises = async ({
    completedWorkoutId,
-   exerciseId,
    completedExerciseOrder,
 }) => {
    let query = ``;
@@ -10,37 +10,22 @@ const selectCompletedExercises = async ({
 
    if (completedWorkoutId && completedExerciseOrder) {
       query = `
-      SELECT ce.completed_exercise_id AS completedExerciseId, 
-      ce.exercise_id AS exerciseId, 
-      ce.completed_exercise_order AS completedExerciseOrder,
-      e.exercise_name AS exerciseName
-      FROM completed_exercise ce
-      INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
-      WHERE completed_workout_id = ? AND ce.completed_exercise_order = ?
+         SELECT completed_exercise_id AS completedExerciseId,
+            completed_exercise_order AS completedExerciseOrder,
+            completed_exercise_name AS completedExerciseName
+         FROM completed_exercise
+         WHERE completed_workout_id = ?
+            AND completed_exercise_order = ?;
       `;
 
       values.push(completedWorkoutId, completedExerciseOrder);
-   } else if (completedWorkoutId && exerciseId) {
-      query = `
-      SELECT ce.completed_exercise_id AS completedExerciseId, 
-      ce.exercise_id AS exerciseId, 
-      ce.completed_exercise_order AS completedExerciseOrder,
-      e.exercise_name AS exerciseName
-      FROM completed_exercise ce
-      INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
-      WHERE completed_workout_id = ? AND e.exercise_id = ?
-      `;
-
-      values.push(completedWorkoutId, exerciseId);
    } else if (completedWorkoutId) {
       query = `
-      SELECT ce.completed_exercise_id AS completedExerciseId, 
-      ce.exercise_id AS exerciseId, 
-      ce.completed_exercise_order AS completedExerciseOrder,
-      e.exercise_name AS exerciseName
-      FROM completed_exercise ce
-      INNER JOIN exercise e ON e.exercise_id = ce.exercise_id
-      WHERE ce.completed_workout_id = ?
+         SELECT completed_exercise_id AS completedExerciseId,
+            completed_exercise_order AS completedExerciseOrder,
+            completed_exercise_name AS completedExerciseName
+         FROM completed_exercise
+         WHERE completed_workout_id = ?;
       `;
 
       values.push(completedWorkoutId);
@@ -53,73 +38,56 @@ const selectCompletedExercises = async ({
    return selectCompletedExerciseResults;
 };
 
-const insertCompletedExercise = async ({
-   completedWorkoutId,
-   exerciseId,
-   completedExerciseOrder,
-}) => {
+const insertCompletedExercise = async (completedExercise) => {
    const [insertCompletedExerciseResults] = await pool.execute(
       `
-         INSERT INTO completed_exercise (completed_workout_id, exercise_id, completed_exercise_order)
+         INSERT INTO completed_exercise (
+            completed_workout_id,
+            completed_exercise_order,
+            completed_exercise_name
+         )
          VALUES (?, ?, ?)
       `,
-      [completedWorkoutId, exerciseId, completedExerciseOrder]
+      [
+         completedExercise.completedWorkoutId,
+         completedExercise.completedExerciseOrder,
+         completedExercise.completedExerciseName,
+      ]
    );
 
-   return insertCompletedExerciseResults.insertId;
+   if (!insertCompletedExerciseResults.affectedRows) {
+      throw new Error("Unable to create new completed exercise.");
+   }
+
+   return;
 };
 
-const updateCompletedExercise = async ({
-   completedExerciseId,
-   completedExerciseOrder,
-}) => {
-   const [updateCompletedExerciseResults] = await pool.execute(
+const updateCompletedExercise = async (completedExercise) => {
+   await pool.execute(
       `
          UPDATE completed_exercise
-         SET completed_exercise_order = ?
+         SET completed_exercise_order = ?,
+            completed_exercise_name = ?,
          WHERE completed_exercise_id = ?
       `,
-      [completedExerciseOrder, completedExerciseId]
+      [
+         completedExercise.completedExerciseOrder,
+         completedExercise.completedExerciseName,
+         completedExercise.completedExerciseId,
+      ]
    );
 
    return;
 };
 
-const deleteCompletedExercise = async ({
-   completedWorkoutId,
-   completedExerciseId,
-   exerciseId,
-}) => {
-   let query = ``;
-   let values = [];
-
-   if (completedWorkoutId) {
-      query = `
-         DELETE FROM completed_exercise
-         WHERE completed_workout_id = ?
-      `;
-
-      values = [completedWorkoutId, completedExerciseId];
-   } else if (completedExerciseId) {
-      query = `
+const deleteCompletedExercise = async (completedExerciseId) => {
+   await pool.execute(
+      `
          DELETE FROM completed_exercise
          WHERE completed_exercise_id = ?
-      `;
-
-      values = [completedExerciseId];
-   } else if (exerciseId) {
-      query = `
-         DELETE FROM completed_exercise
-         WHERE exercise_id = ?
-      `;
-
-      values = [exerciseId];
-   } else {
-      return;
-   }
-
-   const [deleteCompletedExerciseResults] = await pool.execute(query, values);
-
+      `,
+      [completedExerciseId]
+   );
    return;
 };
 

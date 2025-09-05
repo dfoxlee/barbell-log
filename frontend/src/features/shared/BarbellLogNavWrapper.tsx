@@ -3,12 +3,12 @@ import styles from "./Navbar.module.css";
 import toastify from "../../utils/toastify";
 import { useBarbellLogStore } from "../../stores/barbellLogStore";
 import { useUserStore } from "../../stores/userStore";
-import {
-   fetchCreateBarbellLog,
-   fetchUpdateBarbellLog,
-} from "../../services/barbellLogServices";
 import { useTimerStore } from "../../stores/timerStore";
 import { useState } from "react";
+import {
+   fetchCreateCompletedWorkout,
+   fetchUpdateCompletedWorkout,
+} from "../../services/completedWorkoutServices";
 
 export default function BarbellLogNavWrapper() {
    const navigate = useNavigate();
@@ -28,11 +28,14 @@ export default function BarbellLogNavWrapper() {
             setIsLoading(true);
 
             if (completedWorkoutId) {
-               await fetchUpdateBarbellLog({ token: user?.token, barbellLog });
-            } else {
-               await fetchCreateBarbellLog({
+               await fetchUpdateCompletedWorkout({
                   token: user?.token,
-                  barbellLog,
+                  completedWorkout: barbellLog,
+               });
+            } else {
+               await fetchCreateCompletedWorkout({
+                  token: user?.token,
+                  completedWorkout: barbellLog,
                });
             }
          }

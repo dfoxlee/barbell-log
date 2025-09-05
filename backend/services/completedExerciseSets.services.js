@@ -19,69 +19,35 @@ const selectCompletedExerciseSetIds = async ({ completedExerciseId }) => {
    );
 };
 
-const selectCompletedExerciseSets = async ({
-   completedExerciseId,
-   exerciseId,
-}) => {
+const selectCompletedExerciseSets = async ({ completedExerciseId }) => {
    let query = ``;
    let values = [];
 
    if (completedExerciseId) {
       query = `
-      SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
-            ces.completed_exercise_id AS completedExerciseId, 
-            ces.exercise_set_id AS exerciseSetId, 
-            ces.completed_exercise_set_order AS completedExerciseSetOrder,
-            es.has_reps AS hasReps,
-            es.is_bodyweight AS isBodyweight,
-            es.is_timed AS isTimed,
-            es.is_distance AS isDistance,
-            es.is_warmup AS isWarmup,
-            ces.completed_reps AS completedReps, 
-            ces.completed_weight AS completedWeight, 
-            ces.completed_weight_unit AS completedWeightUnit,
-            ces.completed_distance AS completedDistance, 
-            ces.completed_distance_unit AS completedDistanceUnit,
-            ces.completed_hr AS completedHr, 
-            ces.completed_min AS completedMin, 
-            ces.completed_sec AS completedSec, 
-            ces.notes, 
-            ces.is_complete AS isComplete
-         FROM completed_exercise_set ces
-         INNER JOIN exercise_set es ON ces.exercise_set_id = es.exercise_set_id
-         WHERE ces.completed_exercise_id = ?
-         ORDER BY ces.completed_exercise_set_order
+      SELECT completed_exercise_set_id as completedExerciseSetId,
+         completed_exercise_id as completedExerciseId,
+         completed_reps as completedReps,
+         completed_weight as completedWeight,
+         notes,
+         is_complete as isComplete,
+         completed_distance as completedDistance,
+         completed_hr as completedHr,
+         completed_min as completdMin,
+         completed_sec as completedSec,
+         completed_exercise_set_order as completedExerciseSetOrder,
+         completed_weight_unit as completedWeightUnit,
+         completed_distance_unit as completedDistanceUnit,
+         had_reps as hadReps,
+         was_bodyweight as wasBodyweight,
+         was_timed as wasTimed,
+         was_distance as wasDistance,
+         was_warmup as wasWarmup
+      FROM completed_exercise_set
+      WHERE completed_exercise_id = ?
       `;
 
       values = [completedExerciseId];
-   } else if (exerciseId) {
-      query = `
-         SELECT ces.completed_exercise_set_id AS completedExerciseSetId, 
-            ces.completed_exercise_id AS completedExerciseId, 
-            ces.exercise_set_id AS exerciseSetId, 
-            ces.completed_exercise_set_order AS completedExerciseSetOrder,
-            es.has_reps AS hasReps,
-            es.is_bodyweight AS isBodyweight,
-            es.is_timed AS isTimed,
-            es.is_distance AS isDistance,
-            es.is_warmup AS isWarmup,
-            ces.completed_reps AS completedReps, 
-            ces.completed_weight AS completedWeight, 
-            ces.completed_weight_unit AS completedWeightUnit,
-            ces.completed_distance AS completedDistance, 
-            ces.completed_distance_unit AS completedDistanceUnit,
-            ces.completed_hr AS completedHr, 
-            ces.completed_min AS completedMin, 
-            ces.completed_sec AS completedSec, 
-            ces.notes, 
-            ces.is_complete AS isComplete
-            FROM completed_exercise_set AS ces
-            INNER JOIN exercise_set es ON ces.exercise_set_id = es.exercise_set_id
-            WHERE es.exercise_id = ?
-            ORDER BY ces.completed_exercise_set_order
-      `;
-
-      values = [exerciseId];
    } else {
       throw new Error("No values match.");
    }
@@ -94,135 +60,116 @@ const selectCompletedExerciseSets = async ({
    return selectCompletedExerciseSetsResults;
 };
 
-const insertCompletedExerciseSet = async ({
-   completedExerciseId,
-   exerciseSetId,
-   completedExerciseSetOrder,
-   completedReps,
-   completedWeight,
-   completedWeightUnit,
-   completedDistance,
-   completedDistanceUnit,
-   completedHr,
-   completedMin,
-   completedSec,
-   notes,
-   isComplete,
-}) => {
+const insertCompletedExerciseSet = async (completedExerciseSet) => {
    const [insertCompletedExerciseSetResults] = await pool.execute(
       `
-         INSERT INTO completed_exercise_set (completed_exercise_id, exercise_set_id, completed_exercise_set_order, completed_reps, completed_weight, completed_weight_unit, completed_distance, completed_distance_unit, completed_hr, completed_min, completed_sec, notes, is_complete)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         INSERT INTO completed_exercise_set (
+            completed_exercise_id,
+            completed_reps,
+            completed_weight,
+            notes,
+            is_complete,
+            completed_distance,
+            completed_hr,
+            completed_min,
+            completed_sec,
+            completed_exercise_set_order,
+            completed_weight_unit,
+            completed_distance_unit,
+            had_reps,
+            was_bodyweight,
+            was_timed,
+            was_distance,
+            was_warmup,
+            update_exercise_set_id
+         )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
-         completedExerciseId,
-         exerciseSetId,
-         completedExerciseSetOrder,
-         completedReps,
-         completedWeight,
-         completedWeightUnit,
-         completedDistance,
-         completedDistanceUnit,
-         completedHr,
-         completedMin,
-         completedSec,
-         notes,
-         isComplete,
+         completedExerciseSet.completedExerciseId,
+         completedExerciseSet.completedReps,
+         completedExerciseSet.completedWeight,
+         completedExerciseSet.notes,
+         completedExerciseSet.isComplete ? 1 : 0,
+         completedExerciseSet.completedDistance,
+         completedExerciseSet.completedHr,
+         completedExerciseSet.completedMin,
+         completedExerciseSet.completedSec,
+         completedExerciseSet.completedExerciseSetOrder,
+         completedExerciseSet.completedWeightUnit,
+         completedExerciseSet.completedDistanceUnit,
+         completedExerciseSet.hadReps,
+         completedExerciseSet.wasBodyweight,
+         completedExerciseSet.wasTimed,
+         completedExerciseSet.wasDistance,
+         completedExerciseSet.wasWarmup,
+         completedExerciseSet.updateExerciseSetId
       ]
    );
 
-   return insertCompletedExerciseSetResults.insertId;
-};
-
-const updateCompletedExerciseSet = async ({
-   completedExerciseSetId,
-   completedExerciseSetOrder,
-   completedReps,
-   completedWeight,
-   completedWeightUnit,
-   completedDistance,
-   completedDistanceUnit,
-   completedHr,
-   completedMin,
-   completedSec,
-   notes,
-   isComplete,
-}) => {
-   const [updateCompletedExerciseSetResults] = await pool.execute(
-      `
-         UPDATE completed_exercise_set
-         SET completed_exercise_set_order = ?, completed_reps = ?, completed_weight = ?, completed_weight_unit = ?, completed_distance = ?, completed_distance_unit = ?, completed_hr = ?, completed_min = ?, completed_sec = ?, notes = ?, is_complete = ?
-         WHERE completed_exercise_set_id = ?
-      `,
-      [
-         completedExerciseSetOrder,
-         completedReps,
-         completedWeight,
-         completedWeightUnit,
-         completedDistance,
-         completedDistanceUnit,
-         completedHr,
-         completedMin,
-         completedSec,
-         notes,
-         isComplete,
-         completedExerciseSetId,
-      ]
-   );
-
-   return;
-};
-
-const deleteCompletedExerciseSet = async ({
-   completedExerciseId,
-   completedExerciseSetId,
-   exerciseSetId,
-   exerciseId,
-}) => {
-   let query = ``;
-   let values = [];
-
-   if (completedExerciseId) {
-      query = `
-         DELETE FROM completed_exercise_set
-         WHERE completed_exercise_id = ?
-      `;
-
-      values = [completedExerciseId];
-   } else if (completedExerciseSetId) {
-      query = `
-         DELETE FROM completed_exercise_set
-         WHERE completed_exercise_set_id = ?
-      `;
-
-      values = [completedExerciseSetId];
-   } else if (exerciseSetId) {
-      query = `
-         DELETE FROM completed_exercise_set
-         WHERE exercise_set_id = ?
-      `;
-
-      values = [exerciseSetId];
-   } else if (exerciseId) {
-      debugConsoleLog(exerciseId);
-      query = `
-         DELETE ces
-         FROM completed_exercise_set AS ces
-         INNER JOIN completed_exercise AS ce ON ce.completed_exercise_id = ces.completed_exercise_id
-         WHERE ce.exercise_id = ?;
-      `;
-
-      values = [exerciseId];
-   } else {
-      return;
+   if (!insertCompletedExerciseSetResults.affectedRows) {
+      throw new Error("Unable to insert completed exercise set.");
    }
 
-   const [deleteCompletedExerciseSetResults] = await pool.execute(
-      query,
-      values
+   return;
+};
+
+const updateCompletedExerciseSet = async (completedExerciseSet) => {
+   await pool.execute(
+      `
+         UPDATE completed_exercise_set
+         SET completed_exercise_id,
+            completed_reps,
+            completed_weight,
+            notes,
+            is_complete,
+            completed_distance,
+            completed_hr,
+            completed_min,
+            completed_sec,
+            completed_exercise_set_order,
+            completed_weight_unit,
+            copmleted_distance,Unit,
+            had_reps,
+            was_bodyweight,
+            was_timed,
+            was_distance,
+            was_warmup
+         WHERE completed_exercise_set_id = ?
+      `,
+      [
+         completedExerciseSet.completedExerciseId,
+         completedExerciseSet.completedReps,
+         completedExerciseSet.completedWeight,
+         completedExerciseSet.notes,
+         completedExerciseSet.isComplete,
+         completedExerciseSet.completedDistance,
+         completedExerciseSet.completedHr,
+         completedExerciseSet.completedMin,
+         completedExerciseSet.completedSec,
+         completedExerciseSet.completedExerciseSetOrder,
+         completedExerciseSet.completedWeightUnit,
+         completedExerciseSet.completedDistanceUnit,
+         completedExerciseSet.hadReps,
+         completedExerciseSet.wasBodyweight,
+         completedExerciseSet.wasTimed,
+         completedExerciseSet.wasDistance,
+         completedExerciseSet.wasWarmup,
+         completedExerciseSet.completedExerciseSetId,
+      ]
    );
 
    return;
+};
+
+const deleteCompletedExerciseSet = async (completedExerciseSetId) => {
+   await pool.execute(
+      `
+         DELETE FROM completed_exercise_set
+         WHERE completed_exercise_set_id = ?
+      `,
+      [completedExerciseSetId]
+   );
 };
 
 module.exports = {
