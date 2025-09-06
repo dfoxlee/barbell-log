@@ -13,6 +13,7 @@ const testRouter = require("./routes/testsRoutes");
 const workoutsRouter = require("./routes/workoutsRoutes");
 const completedWorkoutRouter = require("./routes/completedWorkoutsRoutes");
 const barbelLLogRouter = require("./routes/barbellLogRoutes");
+const metricsRouter = require("./routes/metricsRoutes");
 
 // utils, db, services
 // const { winstonStream, logger } = require("./logger/logger");
@@ -37,6 +38,7 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/workouts", authMiddleware, workoutsRouter);
 app.use("/api/v1/completed-workouts", authMiddleware, completedWorkoutRouter);
 app.use("/api/v1/barbell-log", authMiddleware, barbelLLogRouter);
+app.use("/api/v1/metrics", authMiddleware, metricsRouter);
 
 app.use(errorMiddleware);
 
