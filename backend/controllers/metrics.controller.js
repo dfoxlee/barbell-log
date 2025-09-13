@@ -36,16 +36,26 @@ const addBodyweight = async ({ userId, bodyweight }) => {
 };
 
 const addNutritionMetric = async ({ userId, nutritionMetric }) => {
-   if (!nutritionMetric.nutritionId) {
+   let nutritionId = nutritionMetric.nutritionId;
+
+   if (!nutritionId) {
+      const nutritionSearch = await selectNutritionData({
+         description: nutritionMetric.description,
+      });
+
+      if (nutritionSearch.length) {
+         throw new Error("Nutrition description already exists.");
+      }
+      
       await insertNutrition({ userId, nutritionData: nutritionMetric });
+
+      const nutritionData = await selectNutritionData({
+         userId,
+         description: nutritionMetric.description,
+      });
+   
+      nutritionId = nutritionData[0].nutritionId;
    }
-
-   const nutritionData = await selectNutritionData({
-      userId,
-      description: nutritionMetric.description,
-   });
-
-   const nutritionId = nutritionData[0].nutritionId;
 
    await insertNutritionMetric({ userId, nutritionId });
 

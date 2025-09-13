@@ -50,6 +50,24 @@ const selectNutritionData = async ({
          `;
 
          values = [userId, `%${searchValue}%`, `%${searchValue}%`];
+      } else if (description) {
+         query = `
+         SELECT nutrition_id as nutritionId,
+            description,
+            energy,
+            protein,
+            total_fat as totalFat,
+            sodium,
+            added_sugar as addedSugar,
+            cholesterol,
+            total_sugar as totalSugar,
+            carbohydrates,
+            fiber
+         FROM nutrition
+         WHERE description = ?;
+         `;
+
+         values = [description];
       } else {
          query = `
          SELECT nutrition_id as nutritionId,

@@ -9,6 +9,7 @@ import { motivationalSayings } from "../../enums/constants";
 import WorkoutTimer from "./components/WorkoutTimer";
 
 import styles from "./BarbellLog.module.css";
+import { useCompletedWorkoutsStore } from "../../stores/completedWorkoutsStore";
 
 export default function BarbellLog() {
    const params = useParams();
@@ -25,6 +26,9 @@ export default function BarbellLog() {
    const barbellLogError = useBarbellLogStore((state) => state.barbellLogError);
    const updateBarbellLog = useBarbellLogStore(
       (state) => state.updateBarbellLog
+   );
+   const getCompletedWorkout = useCompletedWorkoutsStore(
+      (state) => state.getCompletedWorkout
    );
 
    const exerciseNames = useMemo(

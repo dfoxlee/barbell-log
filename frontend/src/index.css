@@ -2,13 +2,13 @@
 
 :root {
    /* Core Colors */
-   --primary: #3ace87; /* Example: Blue */
-   --secondary: #121212; /* Example: Gray */
-   --accent: #898989; /* Example: Yellow */
-   --success: #006239; /* Example: Green */
-   --warning: #ffc107; /* Example: Yellow (same as accent in this example) */
-   --error: #cc3300; /* Example: Red */
-   --info: #17a2b8; /* Example: Cyan */
+   --primary: #3ace87;
+   --secondary: #121212;
+   --accent: #898989;
+   --success: #006239; 
+   --warning: #ffc107; 
+   --error: #cc3300; 
+   --info: #17a2b8;
 
    /* Background Colors */
    --background-primary: #f8f9fa; /* Light gray */

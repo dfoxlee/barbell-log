@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { CompletedWorkoutType } from "../types/completedWorkoutTypes";
 import {
    fetchCreateCompletedWorkout,
+   fetchGetCompletedWorkout,
    fetchGetCompletedWorkouts,
    fetchGetNewCompletedWorkout,
 } from "../services/completedWorkoutServices";
@@ -18,6 +19,14 @@ export interface CompletedWorkoutsStoreType {
    completedWorkoutsError: string | null;
 
    getCompletedWorkouts: ({ token }: { token: string }) => Promise<void>;
+
+   getCompletedWorkout: ({
+      token,
+      completedWorkoutId,
+   }: {
+      token: string;
+      completedWorkoutId: string;
+   }) => Promise<void>;
 
    updateCompletedWorkoutsDataState: (newState: {
       take: number;
@@ -71,6 +80,35 @@ export const useCompletedWorkoutsStore = create<CompletedWorkoutsStoreType>(
                   typeof error === typeof Error
                      ? error.message
                      : "Something went wrong getting completed workouts.",
+            });
+         } finally {
+            set({
+               completedWorkoutsLoading: false,
+            });
+         }
+      },
+
+      getCompletedWorkout: async ({ token, completedWorkoutId }) => {
+         set({
+            completedWorkoutsLoading: true,
+            completedWorkoutsError: null,
+         });
+
+         try {
+            const request = await fetchGetCompletedWorkout({
+               token,
+               completedWorkoutId,
+            });
+
+            set({
+               completedWorkout: request.completedWorkout,
+            });
+         } catch (error) {
+            set({
+               completedWorkoutsError:
+                  error instanceof Error
+                     ? error.message
+                     : "Something went wrong getting completed workout.",
             });
          } finally {
             set({

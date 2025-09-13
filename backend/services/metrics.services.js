@@ -6,6 +6,7 @@ const selectBodyweightMetricsByUserId = async (userId) => {
          bodyweight
       FROM metric
       WHERE user_id = ?
+         AND date_recorded >= CURDATE() - INTERVAL 90 DAY
       ORDER BY date_recorded DESC
    `;
 
@@ -18,21 +19,22 @@ const selectBodyweightMetricsByUserId = async (userId) => {
 
 const selectNutritionMetricsByUserId = async (userId) => {
    const query = `
-      SELECT m.date_recorded as dateRecorded,
-         SUM(n.energy) as energy,
-         SUM(n.protein) as protein,
-         SUM(n.total_fat) as totalFat,
-         SUM(n.sodium) as sodium,
-         SUM(n.add_sugar) as addedSugar,
-         SUM(n.cholesterol) as cholesterol,
-         SUM(n.total_sugar) as totalSugar,
-         SUM(n.carbohydrates) as carbohydrates,
-         SUM(n.fiber) as fiber,
+      SELECT
+         DATE(m.date_recorded) AS dateRecorded,
+         SUM(n.energy) AS energy,
+         SUM(n.protein) AS protein,
+         SUM(n.total_fat) AS totalFat,
+         SUM(n.sodium) AS sodium,
+         SUM(n.added_sugar) AS addedSugar,
+         SUM(n.cholesterol) AS cholesterol,
+         SUM(n.total_sugar) AS totalSugar,
+         SUM(n.carbohydrates) AS carbohydrates,
+         SUM(n.fiber) AS fiber
       FROM metric m
       INNER JOIN nutrition n ON m.nutrition_id = n.nutrition_id
       WHERE m.user_id = ?
-      GROUP BY m.date_recorded
-      ORDER BY m.date_recorded DESC;
+      GROUP BY DATE(m.date_recorded)
+      ORDER BY DATE(m.date_recorded) DESC;
    `;
 
    const values = [userId];
@@ -62,7 +64,7 @@ const insertBodyweightMetric = async ({ userId, bodyweight }) => {
 const insertNutritionMetric = async ({ userId, nutritionId }) => {
    const query = `
       INSERT INTO metric (user_id, nutrition_id)
-      VALUES (${userId}, ${nutritionId})
+      VALUES (?, ?);
    `;
 
    const values = [userId, nutritionId];

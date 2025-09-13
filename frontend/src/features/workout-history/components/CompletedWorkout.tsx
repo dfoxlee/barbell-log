@@ -49,7 +49,7 @@ export default function CompletedWorkout({
             </button>
             <Link
                className={styles.navLink}
-               to={`/home/barbell-log/${completedWorkout.workoutId}/${completedWorkout.completedWorkoutId}`}
+               to={`/home/barbell-log/${completedWorkout.completedWorkoutId}`}
             >
                <FaPencilAlt />
             </Link>

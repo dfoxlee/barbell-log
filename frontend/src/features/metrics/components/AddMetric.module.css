@@ -1,0 +1,70 @@
+.bodyweightWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 20px;
+}
+
+.addBodyweightBtn {
+   margin-top: 20px;
+}
+
+.inactiveTypeBtn {
+   color: var(--accent) !important;
+   border-color: var(--accent) !important;
+}
+
+.weightInputWrapper {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   margin-top: 20px;
+}
+
+.foodInputWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 30px;
+}
+
+.customMacroWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 20px;
+}
+
+.foodSearchInputWrapper {
+   position: relative;
+   margin-top: 10px;
+}
+
+.foodSearchDropdown {
+   position: absolute;
+   top: 100%;
+   left: 0;
+   right: 0;
+   background-color: var(--secondary);
+   max-height: 200px;
+   overflow-y: auto;
+   z-index: 10;
+}
+
+.foodSearchDropDown > *:not(:first-child) {
+   margin-top: 10px;
+}
+
+.foodSearchResultBtn {
+   background: none;
+   border-style: none;
+   color: var(--accent);
+   font-size: 14px;
+   text-align: start;
+}
+
+.addFoodBtn {
+   margin-top: 20px;
+}
