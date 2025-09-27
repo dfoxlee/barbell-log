@@ -1,0 +1,7 @@
+.selector {
+   background: none;
+   border: 1px solid var(--primary);
+   border-radius: 5px;
+   color: var(--primary);
+   font-size: 14px;
+}

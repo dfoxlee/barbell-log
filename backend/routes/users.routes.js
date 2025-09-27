@@ -1,0 +1,21 @@
+const authMiddleware = require("../middleware/authMiddleware");
+const UsersController = require("../controller/user.controller");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
+
+const usersRouter = require("express").Router();
+
+usersRouter.post("/sign-up", UsersController.signup);
+
+usersRouter.post("/login", UsersController.login);
+
+usersRouter.post(
+   "/update-unit-preferences",
+   authMiddleware,
+   UsersController.updateUnitPreference
+);
+
+usersRouter.get("/logout", authMiddleware, UsersController.logout);
+
+usersRouter.get("/:confirmationToken", UsersController.confirmEmail);
+
+module.exports = usersRouter;

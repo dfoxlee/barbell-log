@@ -1,20 +1,15 @@
-.container {
-   position: relative;
-   width: 90vw;
-   max-width: 600px;
-   margin: 0 auto;
-   padding-bottom: 180px;
+.workoutControlBtnsWrapper {
+   display: flex;
+   justify-content: space-evenly;
+   align-items: center;
+   gap: 30px;
+   margin: 10px auto;
 }
 
-.workoutNameInput {
-   margin: 50px auto 0;
-   width: 90%;
-}
-
-.reorderExerciseBtn {
-   margin: 15px auto 0;
-}
-
-.addExerciseText {
-   margin-left: 5px;
+.workoutOptionBtnsWrapper {
+   display: flex;
+   justify-content: space-evenly;
+   align-items: center;
+   gap: 30px;
+   margin: 10px auto;
 }

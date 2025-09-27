@@ -9,7 +9,7 @@ import { FaArrowDown, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Seperator from "../shared/Seperator";
 
 import styles from "./Landing.module.css";
-import { useUserStore } from "../../stores/userStore";
+import { useUserStore } from "../../stores/user.store";
 
 const images = [
    {

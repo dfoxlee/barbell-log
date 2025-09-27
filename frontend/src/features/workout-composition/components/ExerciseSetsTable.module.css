@@ -1,0 +1,61 @@
+.container {
+   margin-top: 20px;
+   border-collapse: collapse;
+   width: 100%;
+}
+
+.tableHeader {
+   font-size: 12px;
+   font-weight: 400;
+   border-bottom: 1px solid var(--accent);
+}
+
+.inputsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+}
+
+.inputWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.inputLabel {
+   font-size: 12px;
+}
+
+.optionsTableData {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   position: relative;
+}
+
+.optionsWrapper {
+   position: absolute;
+   top: 80%;
+   right: 50%;
+   z-index: 10;
+   padding: 5px;
+   border-radius: 5px;
+   background-color: var(--accent);
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+}
+
+.inputsTableData > *:not(:first-child) {
+   margin-top: 5px;
+}
+
+.tableData,
+.optionsTableData,
+.inputsTableData {
+   padding: 10px 0;
+   text-align: center;
+}

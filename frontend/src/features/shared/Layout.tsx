@@ -1,22 +1,42 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
 import { useEffect } from "react";
-import { useUserStore } from "../../stores/userStore";
+import { useUserStore } from "../../stores/user.store";
+
+import styles from "./Layout.module.css";
+import { useModalsStore } from "../../stores/modals.store";
+import DeleteConfirmationWindow from "./DeleteConfirmationWindow";
 
 export default function Layout() {
-   const { user } = useUserStore();
+   const token = useUserStore((state) => state.token);
+   const setUser = useUserStore((state) => state.setUser);
+   const deleteConfirmationWindowInfo = useModalsStore(
+      (state) => state.deleteConfirmationWindowInfo
+   );
+
    const navigate = useNavigate();
 
    useEffect(() => {
-      if (!user?.token) {
-         navigate("/auth/login");
+      if (!token) {
+         const localUserString = localStorage.getItem("barbell-log");
+
+         if (!localUserString) {
+            navigate("/auth/login");
+         } else {
+            const localUser = JSON.parse(localUserString);
+
+            if (!localUser.token) {
+               navigate("/auth/login");
+            } else {
+               setUser(localUser);
+            }
+         }
       }
-   }, [user, navigate]);
+   }, []);
 
    return (
-      <>
+      <div className={styles.container}>
+         {deleteConfirmationWindowInfo ? <DeleteConfirmationWindow /> : null}
          <Outlet />
-         <Navbar />
-      </>
+      </div>
    );
 }

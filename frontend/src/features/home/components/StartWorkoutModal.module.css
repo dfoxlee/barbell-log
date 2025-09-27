@@ -1,0 +1,49 @@
+.container {
+   position: absolute;
+   inset: 0;
+   background-color: rgba(0, 0, 0, 0.8);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.wrapper {
+   background-color: var(--secondary);
+   padding: 30px;
+   border-radius: 10px;
+   width: 90vw;
+   max-width: 500px;
+}
+
+.closeBtn {
+   color: var(--primary);
+}
+
+.title {
+   text-align: center;
+   color: var(--primary);
+   font-size: 32px;
+   font-weight: 500;
+}
+
+.optionsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 20px;
+}
+
+.optionWrapper {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.btnsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 15px;
+   margin-top: 20px;
+}

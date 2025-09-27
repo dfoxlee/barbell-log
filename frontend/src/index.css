@@ -229,3 +229,9 @@ button {
 .decimalValueInput {
    width: 100px;
 }
+
+/* new */
+
+.modalTitle {
+   text-align: center;
+}

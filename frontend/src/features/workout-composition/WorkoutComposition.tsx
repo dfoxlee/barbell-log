@@ -1,96 +1,125 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import ExerciseComposition from "./components/ExerciseComposition";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, type ChangeEvent } from "react";
 import Seperator from "../shared/Seperator";
-import ReorderExercise from "./components/ReorderExercise";
-import { useUserStore } from "../../stores/userStore";
-import {
-   verticalListSortingStrategy,
-   SortableContext,
-} from "@dnd-kit/sortable";
-import ReorderExerciseWrapper from "./components/ReorderExerciseWrapper";
-import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
+import ExerciseComposition from "./components/ExerciseComposition";
+import ExercisesOverview from "./components/ExercisesOverview";
+import { useWorkoutStore } from "../../stores/workout.store";
+import type { WorkoutType } from "../../types/workout.types";
+import toastify from "../../utils/toastify";
+import { fetchGetWorkoutTypes } from "../../services/common.services";
+import { useUserStore } from "../../stores/user.store";
+import WorkoutNameInput from "../shared/WorkoutNameInput";
+import StandardBtn from "../shared/StandardBtn";
+import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
 
 import styles from "./WorkoutComposition.module.css";
 
 export default function WorkoutComposition() {
    const params = useParams();
+   const navigate = useNavigate();
    const workoutId = params["workout-id"];
-
-   const [isReorderExercise, setIsReorderExercise] = useState(false);
-   const user = useUserStore((state) => state.user);
-
-   const workoutComposition = useWorkoutCompositionStore(
+   const [showExercisesOverview, setShowExercisesOverview] = useState(false);
+   const workoutComposition = useWorkoutStore(
       (state) => state.workoutComposition
    );
-   const workoutCompositionLoading = useWorkoutCompositionStore(
-      (state) => state.workoutCompositionLoading
+   const setWorkoutComposition = useWorkoutStore(
+      (state) => state.setWorkoutComposition
    );
-   const updateWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.updateWorkoutComposition
-   );
-   const getWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.getWorkoutComposition
-   );
-   const resetWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.resetWorkoutComposition
-   );
+   const workoutTypes = useWorkoutStore((state) => state.workoutTypes);
+   const setWorkoutTypes = useWorkoutStore((state) => state.setWorkoutTypes);
+   const token = useUserStore((state) => state.token);
 
    useEffect(() => {
-      resetWorkoutComposition();
+      const getWorkoutTypes = async () => {
+         try {
+            const workoutTypesRequest = await fetchGetWorkoutTypes({
+               token: token!,
+            });
 
-      if (workoutId && user?.token && !workoutCompositionLoading) {
-         getWorkoutComposition({ token: user.token, workoutId });
+            setWorkoutTypes(workoutTypesRequest.workoutTypes);
+         } catch (error) {
+            console.error(
+               "An error occurred getting bodyweight readings.",
+               error
+            );
+
+            toastify({
+               message:
+                  "An error occurred getting bodyweight readings. Please try again later.",
+               type: "error",
+            });
+         }
+      };
+
+      if (!workoutTypes && token) {
+         getWorkoutTypes();
       }
-   }, [user?.token, workoutId]);
+   }, [token]);
 
-   const handleWorkoutNameInput = (event) => {
-      updateWorkoutComposition({
-         ...workoutComposition,
-         workoutName: event.target.value,
-      });
+   const toggleShowExercisesOverview = () => {
+      setShowExercisesOverview((prev) => !prev);
    };
 
-   const handleReorderExerciseClick = () => {
-      return setIsReorderExercise((prev) => !prev);
+   const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const updatedWorkoutComposition = {
+         ...workoutComposition,
+         workoutName: event.target.value,
+      };
+
+      setWorkoutComposition(updatedWorkoutComposition as WorkoutType);
+   };
+
+   const handleWorkoutTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+      const updatedWorkoutComposition = {
+         ...workoutComposition,
+         workoutType: parseInt(event.target.value),
+      };
+
+      setWorkoutComposition(updatedWorkoutComposition as WorkoutType);
+   };
+
+   const handleCancelClick = () => {
+      navigate("/home");
+   };
+
+   const handleSaveClick = () => {
+      console.log("workout composition saved clicked");
+
+      navigate("/home");
    };
 
    return (
       <div className={styles.container}>
-         <input
-            className={`titleInput ${styles.workoutNameInput}`}
-            type="text"
-            placeholder="workout name..."
-            value={workoutComposition.workoutName}
-            onChange={handleWorkoutNameInput}
-         />
-         <button
-            className={`standardBtn ${styles.reorderExerciseBtn}`}
-            onClick={handleReorderExerciseClick}
-         >
-            {isReorderExercise ? `Exercise Details` : `Exercises Overview`}
-         </button>
-         <Seperator />
-         {isReorderExercise ? (
-            <ReorderExerciseWrapper>
-               <SortableContext
-                  items={workoutComposition.exercises.map(
-                     (exercise) => exercise.exerciseOrder
-                  )}
-                  strategy={verticalListSortingStrategy}
-               >
-                  {workoutComposition.exercises.map((exercise) => (
-                     <ReorderExercise
-                        key={exercise.exerciseOrder}
-                        id={exercise.exerciseOrder}
-                        exercise={exercise}
-                     />
-                  ))}
-               </SortableContext>
-            </ReorderExerciseWrapper>
-         ) : (
-            <ExerciseComposition />
-         )}
+         <div className={styles.workoutControlBtnsWrapper}>
+            <StandardBtn text="Cancel" onClick={handleCancelClick} />
+            <StandardBtn text="Save" onClick={handleSaveClick} />
+         </div>
+         <div className={styles.main}>
+            <WorkoutNameInput
+               value={workoutComposition?.workoutName}
+               onChange={handleWorkoutNameChange}
+            />
+            <div className={styles.workoutOptionBtnsWrapper}>
+               <StandardBtn
+                  text={
+                     showExercisesOverview
+                        ? "Exercise Detail"
+                        : "Exercises Overview"
+                  }
+                  onClick={toggleShowExercisesOverview}
+               />
+               <WorkoutTypeSelector
+                  value={workoutComposition?.workoutType ?? 12}
+                  onChange={handleWorkoutTypeChange}
+               />
+            </div>
+            <Seperator />
+            {showExercisesOverview ? (
+               <ExercisesOverview />
+            ) : (
+               <ExerciseComposition />
+            )}
+         </div>
       </div>
    );
 }

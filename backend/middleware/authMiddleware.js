@@ -1,6 +1,7 @@
-const pool = require("../db/dbConfig");
 const { logger } = require("../logger/logger");
+const UserServices = require("../services/user.services");
 const { validateToken } = require("../utils/authUtils");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 const authMiddleware = async (req, res, next) => {
    try {
@@ -13,7 +14,6 @@ const authMiddleware = async (req, res, next) => {
       }
 
       const token = authHeader.split(" ")[1];
-
       const decoded = validateToken(token);
 
       if (!decoded) {
@@ -24,23 +24,16 @@ const authMiddleware = async (req, res, next) => {
 
       const userId = decoded;
 
-      const [selectResults] = await pool.execute(
-         `
-            SELECT *
-            FROM user
-            WHERE user_id = ?
-         `,
-         [userId]
-      );
+      const user = await UserServices.fetchOneUser({ userId });
 
-      if (!selectResults.length) {
+      if (!user) {
          logger.info(`authMiddleware > Invalid token: ${token}`);
          return res
             .status(401)
             .json({ error: true, message: "Unauthorized: Invalid user." });
       }
 
-      req.user = selectResults[0];
+      req.userId = user.userId;
 
       next();
    } catch (error) {

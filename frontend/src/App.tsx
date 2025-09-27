@@ -4,11 +4,7 @@ import Auth from "./features/auth/Auth";
 import NotFound404 from "./features/not-found-404/NotFound404";
 import Layout from "./features/shared/Layout";
 import Home from "./features/home/Home";
-import BarbellLog from "./features/barbell-log/BarbellLog";
-import Settings from "./features/settings/Settings";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
-import WorkoutHistory from "./features/workout-history/WorkoutHistory";
-import Metrics from "./features/metrics/Metrics";
 import SignUpReceived from "./features/sign-up-received/SignUpReceived";
 import VerifiedEmail from "./features/verified-email/VerifiedEmail";
 
@@ -18,23 +14,16 @@ function App() {
          <Route path="/" element={<Landing />} />
          <Route path="/auth/:auth-type?" element={<Auth />} />
          <Route
-            path="/verify/:verification-token"
+            path="/validate/:validation-token"
             element={<VerifiedEmail />}
          />
          <Route path="/sign-up-received" element={<SignUpReceived />} />
          <Route path="/home" element={<Layout />}>
             <Route index element={<Home />} />
             <Route
-               path="workout-composition/:workout-id?"
+               path="create-workout/:workout-id?"
                element={<WorkoutComposition />}
             />
-            <Route
-               path="barbell-log/:workout-id/:completed-workout-id?"
-               element={<BarbellLog />}
-            />
-            <Route path="metrics" element={<Metrics />} />
-            <Route path="workout-history" element={<WorkoutHistory />} />
-            <Route path="settings" element={<Settings />} />
          </Route>
          <Route path="*" element={<NotFound404 />} />
       </Routes>

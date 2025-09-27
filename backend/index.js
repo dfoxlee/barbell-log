@@ -8,12 +8,10 @@ const errorMiddleware = require("./middleware/errorMiddleware");
 const authMiddleware = require("./middleware/authMiddleware");
 
 //routes
-const usersRouter = require("./routes/usersRoutes");
-const testRouter = require("./routes/testsRoutes");
-const workoutsRouter = require("./routes/workoutsRoutes");
-const completedWorkoutRouter = require("./routes/completedWorkoutsRoutes");
-const barbelLLogRouter = require("./routes/barbellLogRoutes");
-const metricsRouter = require("./routes/metricsRoutes");
+const usersRouter = require("./routes/users.routes");
+const workoutsRouter = require("./routes/workouts.routes");
+const commonRouter = require("./routes/common.routes");
+const readingsRouter = require("./routes/readings.routes");
 
 // utils, db, services
 // const { winstonStream, logger } = require("./logger/logger");
@@ -33,12 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan("combined", { stream: winstonStream }));
 
-app.use("/api/v1/test", testRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/workouts", authMiddleware, workoutsRouter);
-app.use("/api/v1/completed-workouts", authMiddleware, completedWorkoutRouter);
-app.use("/api/v1/barbell-log", authMiddleware, barbelLLogRouter);
-app.use("/api/v1/metrics", authMiddleware, metricsRouter);
+app.use("/api/v1/common", authMiddleware, commonRouter);
+app.use("/api/v1/readings", authMiddleware, readingsRouter);
 
 app.use(errorMiddleware);
 

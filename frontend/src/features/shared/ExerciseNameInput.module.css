@@ -1,0 +1,12 @@
+.input {
+   background: none;
+   border: 1px solid var(--primary);
+   border-radius: 5px;
+   color: white;
+   font-size: 18px;
+   text-align: center;
+   width: 90vw;
+   max-width: 325px;
+   /* margin: 0 auto; */
+   display: block;
+}
