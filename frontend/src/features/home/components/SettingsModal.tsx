@@ -1,14 +1,16 @@
 import { FaTimes } from "react-icons/fa";
 import StandardIconBtn from "../../shared/StandardIconBtn";
-import styles from "./SettingsModal.module.css";
 import WeightUnitSelector from "../../shared/WeightUnitSelector";
-import type { ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import DistanceUnitSelector from "../../shared/DistanceUnitSelector";
 import { useUserStore } from "../../../stores/user.store";
 import toastify from "../../../utils/toastify";
 import { fetchUpdateUnitPreference } from "../../../services/user.services";
 import StandardBtn from "../../shared/StandardBtn";
 import Seperator from "../../shared/Seperator";
+import PasswordChangeInput from "./PasswordChangeInput";
+
+import styles from "./SettingsModal.module.css";
 
 interface SettingsModalPropsType {
    toggleSettingsModalOpen: () => void;
@@ -17,6 +19,10 @@ interface SettingsModalPropsType {
 export default function SettingsModal({
    toggleSettingsModalOpen,
 }: SettingsModalPropsType) {
+   const [prevPassword, setPrevPassword] = useState("");
+   const [newPassword, setNewPassword] = useState("");
+   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
    const weightUnitPreference = useUserStore(
       (state) => state.weightUnitPreference
    );
@@ -36,9 +42,9 @@ export default function SettingsModal({
    ) => {
       try {
          await fetchUpdateUnitPreference({
-            token,
-            weightUnitPreference: event.target.value,
-            distanceUnitPreference,
+            token: token!,
+            weightUnitPreference: parseInt(event.target.value),
+            distanceUnitPreference: distanceUnitPreference!,
          });
 
          setWeightUnitPreference(parseInt(event.target.value));
@@ -61,9 +67,9 @@ export default function SettingsModal({
    ) => {
       try {
          await fetchUpdateUnitPreference({
-            token,
-            weightUnitPreference,
-            distanceUnitPreference: event.target.value,
+            token: token!,
+            weightUnitPreference: weightUnitPreference!,
+            distanceUnitPreference: parseInt(event.target.value),
          });
 
          setDistanceUnitPreference(parseInt(event.target.value));
@@ -81,22 +87,6 @@ export default function SettingsModal({
       }
    };
 
-   const handlePreviousPasswordChange = (
-      event: ChangeEvent<HTMLInputElement>
-   ) => {
-      console.log(event.target.value);
-   };
-
-   const handleNewPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-      console.log(event.target.value);
-   };
-
-   const handleConfirmNewPasswordChange = (
-      event: ChangeEvent<HTMLInputElement>
-   ) => {
-      console.log(event.target.value);
-   };
-
    const handleDeleteAllWorkoutData = () => {
       console.log("delete all data");
    };
@@ -107,6 +97,20 @@ export default function SettingsModal({
 
    const handleSavePasswordClick = () => {
       console.log("savePassword");
+   };
+
+   const handlePrevPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+      setPrevPassword(event.target.value);
+   };
+
+   const handleNewPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+      setNewPassword(event.target.value);
+   };
+
+   const handleConfirmNewPasswordChange = (
+      event: ChangeEvent<HTMLInputElement>
+   ) => {
+      setConfirmNewPassword(event.target.value);
    };
 
    return (
@@ -146,12 +150,9 @@ export default function SettingsModal({
                      >
                         previous password
                      </label>
-                     <input
-                        className={styles.changePasswordInput}
-                        type="password"
-                        id="previous-password"
-                        name="previous-password"
-                        onChange={handlePreviousPasswordChange}
+                     <PasswordChangeInput
+                        value={prevPassword}
+                        onChange={handlePrevPasswordChange}
                      />
                   </div>
                   <div className={styles.changePasswordInputWrapper}>
@@ -161,11 +162,8 @@ export default function SettingsModal({
                      >
                         new password
                      </label>
-                     <input
-                        className={styles.changePasswordInput}
-                        type="password"
-                        id="new-password"
-                        name="new-password"
+                     <PasswordChangeInput
+                        value={newPassword}
                         onChange={handleNewPasswordChange}
                      />
                   </div>
@@ -176,11 +174,8 @@ export default function SettingsModal({
                      >
                         confirm new password
                      </label>
-                     <input
-                        className={styles.changePasswordInput}
-                        type="password"
-                        id="confirm-new-password"
-                        name="confirm-new-password"
+                     <PasswordChangeInput
+                        value={confirmNewPassword}
                         onChange={handleConfirmNewPasswordChange}
                      />
                   </div>

@@ -63,3 +63,15 @@ exports.deleteBodyweightReading = async (req, res, next) => {
       next(error);
    }
 };
+
+exports.deleteAllBodyweightReadings = async (req, res, next) => {
+   try {
+      const { userId } = req;
+
+      await ReadingsServices.deleteAllBodyweightReadings({ userId });
+
+      return res.status(200).json("Bodyweight readings deleted.");
+   } catch (error) {
+      next(error);
+   }
+};

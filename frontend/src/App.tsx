@@ -7,6 +7,7 @@ import Home from "./features/home/Home";
 import WorkoutComposition from "./features/workout-composition/WorkoutComposition";
 import SignUpReceived from "./features/sign-up-received/SignUpReceived";
 import VerifiedEmail from "./features/verified-email/VerifiedEmail";
+import CompletedWorkout from "./features/completed-workout/CompletedWorkout";
 
 function App() {
    return (
@@ -23,6 +24,10 @@ function App() {
             <Route
                path="create-workout/:workout-id?"
                element={<WorkoutComposition />}
+            />
+            <Route
+               path="completed-workout/:workout-id/:completed-workout-id?"
+               element={<CompletedWorkout />}
             />
          </Route>
          <Route path="*" element={<NotFound404 />} />

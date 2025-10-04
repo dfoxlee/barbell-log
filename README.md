@@ -55,12 +55,3 @@ MyEnterpriseApp follows a multi-tier, decoupled architecture to ensure scalabili
 Copyright (c) 2025 David FoxLee. All rights reserved.
 
 Licensed under the MIT License.
-
-## 7. Suport & Contact
-
-## 8. Future Enhancements
-<<<<<<< HEAD
-=======
-
-- Set up measurement functionality
->>>>>>> timer-implementation

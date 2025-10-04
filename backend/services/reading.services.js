@@ -72,3 +72,16 @@ exports.deleteBodyweightReading = async ({ bodyweightReadingId }) => {
 
    return;
 };
+
+exports.deleteAllBodyweightReadings = async ({ userId }) => {
+   const query = `
+      delete from bodyweight_reading
+      where user_id = ?;
+   `;
+
+   const values = [userId];
+
+   await pool.execute(query, values);
+
+   return;
+};

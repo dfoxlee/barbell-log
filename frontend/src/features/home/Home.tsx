@@ -10,11 +10,14 @@ import StandardIconBtn from "../shared/StandardIconBtn";
 import Seperator from "../shared/Seperator";
 
 import styles from "./Home.module.css";
+import NutritionSection from "./components/NutritionSection";
+import NutritionModal from "./components/NutritionModal";
 
 export default function Home() {
    const [startWorkoutModalOpen, setStartWorkoutModalOpen] = useState(false);
    const [bodyweightModalOpen, setBodyweightModalOpen] = useState(false);
    const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+   const [nutritionModalOpen, setNutritionModalOpen] = useState(false);
 
    const toggleStartWorkoutModalOpen = () => {
       setStartWorkoutModalOpen((prev) => !prev);
@@ -26,6 +29,10 @@ export default function Home() {
 
    const toggleSettingsModalOpen = () => {
       setSettingsModalOpen((prev) => !prev);
+   };
+
+   const toggleNutritionModal = () => {
+      setNutritionModalOpen((prev) => !prev);
    };
 
    return (
@@ -46,6 +53,9 @@ export default function Home() {
          {settingsModalOpen ? (
             <SettingsModal toggleSettingsModalOpen={toggleSettingsModalOpen} />
          ) : null}
+         {nutritionModalOpen ? (
+            <NutritionModal toggleNutritionModal={toggleNutritionModal} />
+         ) : null}
          <h1 className={`pageTitle`}>Barbell Log</h1>
          <Seperator />
          <div className={styles.btnsWrapper}>
@@ -61,6 +71,7 @@ export default function Home() {
          <BodyweightSection
             toggleBodyweightModalOpen={toggleBodyweightModalOpen}
          />
+         <NutritionSection toggleNutritionModal={toggleNutritionModal} />
       </div>
    );
 }

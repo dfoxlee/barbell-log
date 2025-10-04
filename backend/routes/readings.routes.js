@@ -12,5 +12,9 @@ readingsRouter.delete(
    "/bodyweight",
    ReadingsController.deleteBodyweightReading
 );
+readingsRouter.delete(
+   "/bodyweight/all",
+   ReadingsController.deleteAllBodyweightReadings
+);
 
 module.exports = readingsRouter;

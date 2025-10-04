@@ -464,16 +464,14 @@ export default function ExerciseSetsGrid({
                         </div>
                      ) : null}
                   </td>
-                  <td className={styles.optionsTableData}>
-                     <ExerciseSetOptions
-                        exerciseSet={exerciseSet}
-                        handleToggleRepsClick={handleToggleRepsClick}
-                        handleToggleTimedClick={handleToggleTimedClick}
-                        handleToggleDistanceClick={handleToggleDistanceClick}
-                        handleDeleteSetClick={handleDeleteSetClick}
-                        showDeleteButton={exerciseSets.length > 1}
-                     />
-                  </td>
+                  <ExerciseSetOptions
+                     exerciseSet={exerciseSet}
+                     handleToggleRepsClick={handleToggleRepsClick}
+                     handleToggleTimedClick={handleToggleTimedClick}
+                     handleToggleDistanceClick={handleToggleDistanceClick}
+                     handleDeleteSetClick={handleDeleteSetClick}
+                     showDeleteButton={exerciseSets.length > 1}
+                  />
                </tr>
             ))}
          </tbody>

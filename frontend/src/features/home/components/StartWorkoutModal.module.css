@@ -47,3 +47,18 @@
    gap: 15px;
    margin-top: 20px;
 }
+
+.selectorWrapper {
+   display: flex;
+   flex-direction: column;
+   margin-top: 20px;
+}
+
+.selector {
+   background: none;
+   border: 1px solid var(--primary);
+   padding: 8px 10px;
+   border-radius: 5px;
+   color: white;
+   margin-top: 5px;
+}

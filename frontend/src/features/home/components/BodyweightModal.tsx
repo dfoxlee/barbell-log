@@ -5,6 +5,7 @@ import WeightUnitSelector from "../../shared/WeightUnitSelector";
 import { useEffect, useState, type ChangeEvent } from "react";
 import {
    fetchAddBodyweightReading,
+   fetchDeleteAllBodyweightReadings,
    fetchDeleteBodyweightReading,
    fetchGetBodyweightReadings,
    fetchUpdateBodyweightReading,
@@ -17,6 +18,7 @@ import { fetchGetWeightUnits } from "../../../services/common.services";
 import Seperator from "../../shared/Seperator";
 
 import styles from "./BodyweightModal.module.css";
+import StandardBtn from "../../shared/StandardBtn";
 
 interface BodyweightModalPropsType {
    toggleBodyweightModalOpen: () => void;
@@ -86,10 +88,8 @@ export default function BodyweightModal({
       }
    }, [bodyweightReadings, weightUnits]);
 
-   const updateBodyweightInput = (event: ChangeEvent<HTMLInputElement>) => {
-      if (parseInt(event.target.value)) {
-         setNewBodyweightInput(parseInt(event.target.value));
-      }
+   const updateBodyweightInput = (updatedBodyweight: number) => {
+      setNewBodyweightInput(updatedBodyweight);
    };
 
    const handleAddBodyweightReading = async () => {
@@ -206,6 +206,22 @@ export default function BodyweightModal({
          });
       }
    };
+
+   const handleDeleteAllBodyweightReadings = async () => {
+      try {
+         await fetchDeleteAllBodyweightReadings({ token });
+
+         getBodyweightReadings();
+      } catch (error) {
+         console.error("An error occurred getting bodyweight readings.", error);
+
+         toastify({
+            message:
+               "An error occurred deleting bodyweight readings. Please try again later.",
+            type: "error",
+         });
+      }
+   };
    console.log(bodyweightReadings);
 
    return (
@@ -234,7 +250,7 @@ export default function BodyweightModal({
                         <td className={styles.tableData}>
                            <WholeValueInput
                               value={bodyweightReading}
-                              onChange={updateBodyweightInput}
+                              onBlur={updateBodyweightInput}
                            />
                         </td>
                         <td className={styles.tableData}>
@@ -261,12 +277,10 @@ export default function BodyweightModal({
                               <td className={styles.tableData}>
                                  <WholeValueInput
                                     value={Math.round(reading.bodyweight)}
-                                    onChange={(
-                                       event: ChangeEvent<HTMLInputElement>
-                                    ) =>
+                                    onBlur={(updatedBodyweight: number) =>
                                        handleBodyweightUpdate({
                                           bodyweightReading: reading,
-                                          updatedBodyweight: event.target.value,
+                                          updatedBodyweight,
                                        })
                                     }
                                  />
@@ -299,6 +313,12 @@ export default function BodyweightModal({
                         ))}
                   </tbody>
                </table>
+            </div>
+            <div className={styles.deleteBodyweightsBtnWrapper}>
+               <StandardBtn
+                  text="Delete All Readings"
+                  onClick={handleDeleteAllBodyweightReadings}
+               />
             </div>
          </div>
       </div>

@@ -7,6 +7,8 @@ interface WorkoutStoreType {
    workoutComposition: WorkoutType | null;
    currentExerciseOrder: number;
    workoutTypes: WorkoutTypeType[] | null;
+   showExercisesOverview: boolean;
+   toggleShowExercisesOverview: () => void;
    setWorkouts: (workouts: WorkoutType[]) => void;
    setWorkoutComposition: (workout: WorkoutType) => void;
    addExercise: () => void;
@@ -14,6 +16,7 @@ interface WorkoutStoreType {
    incrementCurrentExerciseOrder: () => void;
    decrementCurrentExerciseOrder: () => void;
    setCurrentExerciseOrder: (order: number) => void;
+   resetWorkoutComposition: () => void;
 }
 
 export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
@@ -46,6 +49,11 @@ export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
    },
    currentExerciseOrder: 1,
    workoutTypes: null,
+   showExercisesOverview: false,
+   toggleShowExercisesOverview: () =>
+      set(({ showExercisesOverview }) => ({
+         showExercisesOverview: !showExercisesOverview,
+      })),
 
    setWorkouts: (workouts) => set({ workouts }),
 
@@ -109,4 +117,35 @@ export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
 
    setCurrentExerciseOrder: (order: number) =>
       set({ currentExerciseOrder: order }),
+
+   resetWorkoutComposition: () =>
+      set({
+         workoutComposition: {
+            workoutName: "",
+            workoutType: 12,
+            exercises: [
+               {
+                  exerciseOrder: 1,
+                  exerciseName: "",
+                  exerciseSets: [
+                     {
+                        exerciseSetOrder: 1,
+                        hasReps: true,
+                        isTimed: false,
+                        isDistance: false,
+                        reps: 0,
+                        weight: 0,
+                        weightUnit: 1,
+                        hr: 0,
+                        min: 0,
+                        sec: 0,
+                        distance: 0,
+                        distanceUnit: 7,
+                     },
+                  ],
+               },
+            ],
+         },
+         currentExerciseOrder: 1,
+      }),
 }));

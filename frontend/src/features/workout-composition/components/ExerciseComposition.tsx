@@ -246,7 +246,9 @@ export default function ExerciseComposition() {
                      key={exercise.exerciseOrder}
                      value={exercise.exerciseOrder}
                   >
-                     {`Exercise ${exercise.exerciseOrder}`}
+                     {exercise.exerciseName.length
+                        ? exercise.exerciseName
+                        : `Exercise ${exercise.exerciseOrder}`}
                   </option>
                ))}
             </select>

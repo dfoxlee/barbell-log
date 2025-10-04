@@ -26,7 +26,7 @@ exports.createWorkout = async (req, res, next) => {
          createdAt,
          ...workout,
       });
-
+      
       for (var exercise of workout.exercises) {
          const newExerciseId = await ExerciseServices.createExercise({
             workoutId: newWorkoutId,

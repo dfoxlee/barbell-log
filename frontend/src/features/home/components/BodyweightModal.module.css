@@ -39,3 +39,10 @@
    padding: 5px;
    text-align: center;
 }
+
+.deleteBodyweightsBtnWrapper {
+   margin-top: 20px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}

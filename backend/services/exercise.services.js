@@ -3,7 +3,7 @@ const pool = require("../db/dbConfig");
 exports.createExercise = async ({ workoutId, exerciseName, exerciseOrder }) => {
    const query = `
       insert into exercise (workout_id, exercise_name, exercise_order)
-      values (?, ?);
+      values (?, ?, ?   );
    `;
 
    const values = [workoutId, exerciseName, exerciseOrder];
@@ -17,7 +17,7 @@ exports.createExercise = async ({ workoutId, exerciseName, exerciseOrder }) => {
    return results.insertId;
 };
 
-exports.getExercises = async ({ exerciseId }) => {
+exports.getExercises = async ({ exerciseId, workoutId }) => {
    let query = ``;
    let values = [];
 
@@ -31,6 +31,16 @@ exports.getExercises = async ({ exerciseId }) => {
       `;
 
       values = [exerciseId];
+   } else if (workoutId) {
+      query = `
+         select exercise_id as exerciseId,
+            exercise_name as exerciseName,
+            exercise_order as exerciseOrder
+         from exercise
+         where workout_id = ?;
+      `;
+
+      values = [workoutId];
    } else {
       return;
    }

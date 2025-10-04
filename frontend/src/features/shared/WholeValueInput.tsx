@@ -3,7 +3,7 @@ import styles from "./WholeValueInput.module.css";
 
 interface WholeValueInputPropsType {
    value: number;
-   onBlur: (value: number) => void;
+   onBlur: ((value: number) => void) | ((value: number) => Promise<void>);
 }
 
 export default function WholeValueInput({

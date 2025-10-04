@@ -12,6 +12,8 @@ const usersRouter = require("./routes/users.routes");
 const workoutsRouter = require("./routes/workouts.routes");
 const commonRouter = require("./routes/common.routes");
 const readingsRouter = require("./routes/readings.routes");
+const nutritionRouter = require("./routes/nutrition.routes");
+const completedWorkoutRouter = require("./routes/completed-workout.routes");
 
 // utils, db, services
 // const { winstonStream, logger } = require("./logger/logger");
@@ -35,6 +37,8 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/workouts", authMiddleware, workoutsRouter);
 app.use("/api/v1/common", authMiddleware, commonRouter);
 app.use("/api/v1/readings", authMiddleware, readingsRouter);
+app.use("/api/v1/nutrition", authMiddleware, nutritionRouter);
+app.use("/api/v1/completed-workouts", authMiddleware, completedWorkoutRouter);
 
 app.use(errorMiddleware);
 

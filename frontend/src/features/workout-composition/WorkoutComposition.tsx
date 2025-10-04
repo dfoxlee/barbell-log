@@ -11,6 +11,7 @@ import { useUserStore } from "../../stores/user.store";
 import WorkoutNameInput from "../shared/WorkoutNameInput";
 import StandardBtn from "../shared/StandardBtn";
 import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
+import { fetchCreateWorkout } from "../../services/workout.services";
 
 import styles from "./WorkoutComposition.module.css";
 
@@ -18,7 +19,12 @@ export default function WorkoutComposition() {
    const params = useParams();
    const navigate = useNavigate();
    const workoutId = params["workout-id"];
-   const [showExercisesOverview, setShowExercisesOverview] = useState(false);
+   const showExercisesOverview = useWorkoutStore(
+      (state) => state.showExercisesOverview
+   );
+   const toggleShowExercisesOverview = useWorkoutStore(
+      (state) => state.toggleShowExercisesOverview
+   );
    const workoutComposition = useWorkoutStore(
       (state) => state.workoutComposition
    );
@@ -28,6 +34,9 @@ export default function WorkoutComposition() {
    const workoutTypes = useWorkoutStore((state) => state.workoutTypes);
    const setWorkoutTypes = useWorkoutStore((state) => state.setWorkoutTypes);
    const token = useUserStore((state) => state.token);
+   const resetWorkoutComposition = useWorkoutStore(
+      (state) => state.resetWorkoutComposition
+   );
 
    useEffect(() => {
       const getWorkoutTypes = async () => {
@@ -56,10 +65,6 @@ export default function WorkoutComposition() {
       }
    }, [token]);
 
-   const toggleShowExercisesOverview = () => {
-      setShowExercisesOverview((prev) => !prev);
-   };
-
    const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
       const updatedWorkoutComposition = {
          ...workoutComposition,
@@ -82,10 +87,30 @@ export default function WorkoutComposition() {
       navigate("/home");
    };
 
-   const handleSaveClick = () => {
-      console.log("workout composition saved clicked");
+   const handleSaveClick = async () => {
+      try {
+         console.log(workoutComposition);
+         await fetchCreateWorkout({
+            token: token!,
+            workout: workoutComposition!,
+         });
 
-      navigate("/home");
+         toastify({
+            message: "Workout saved successfully.",
+            type: "success",
+         });
+
+         resetWorkoutComposition();
+         navigate("/home");
+      } catch (error) {
+         console.error("An error occurred saving workout.", error);
+
+         return toastify({
+            message:
+               "An error occurred saving workout. Please try again later.",
+            type: "error",
+         });
+      }
    };
 
    return (
@@ -100,6 +125,10 @@ export default function WorkoutComposition() {
                onChange={handleWorkoutNameChange}
             />
             <div className={styles.workoutOptionBtnsWrapper}>
+               <WorkoutTypeSelector
+                  value={workoutComposition?.workoutType ?? 12}
+                  onChange={handleWorkoutTypeChange}
+               />
                <StandardBtn
                   text={
                      showExercisesOverview
@@ -107,10 +136,6 @@ export default function WorkoutComposition() {
                         : "Exercises Overview"
                   }
                   onClick={toggleShowExercisesOverview}
-               />
-               <WorkoutTypeSelector
-                  value={workoutComposition?.workoutType ?? 12}
-                  onChange={handleWorkoutTypeChange}
                />
             </div>
             <Seperator />

@@ -110,3 +110,19 @@ export const fetchDeleteBodyweightReading = async ({
 
    return;
 };
+
+export const fetchDeleteAllBodyweightReadings = async ({ token }) => {
+   const request = await fetch(`${baseUrl}/readings/bodyweight/all`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
+
+   if (!request.ok) {
+      throw new Error("An error occurred while adding a bodyweight reading.");
+   }
+
+   return;
+};
