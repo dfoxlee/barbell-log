@@ -26,6 +26,7 @@ export interface UsdaFoodObject {
 
 export interface NutritionInfo {
    fdcId: number;
+   dateRecorded?: Date | string;
    dataType: string;
    brandName: string;
    servingSize: string;

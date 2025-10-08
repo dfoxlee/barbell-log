@@ -1,0 +1,13 @@
+.container {
+   margin-top: 50px;
+}
+
+.sectionTitle {
+   text-align: center;
+   font-weight: 500;
+}
+
+.workoutWrapper {
+   max-height: 400px;
+   overflow-y: auto;
+}

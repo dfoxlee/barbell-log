@@ -1,3 +1,7 @@
+.container {
+   position: relative;
+}
+
 .input {
    background: none;
    border: 1px solid var(--primary);
@@ -9,4 +13,27 @@
    max-width: 325px;
    /* margin: 0 auto; */
    display: block;
+}
+
+.dropdownWrapper {
+   position: absolute;
+   top: 110%;
+   left: 0;
+   max-height: 300px;
+   display: flex;
+   flex-direction: column;
+   background-color: var(--accent);
+   overflow-y: auto;
+   width: 100%;
+   z-index: 10;
+}
+
+.exerciseNameOptionBtn {
+   background: none;
+   border-style: none;
+   color: var(--secondary);
+}
+
+.dropdownWrapper > *:not(:first-child) {
+   margin-top: 10px;
 }

@@ -6,6 +6,13 @@ interface CompletedWorkoutStoreType {
    currentCompletedExerciseOrder: number;
    currentCompletedExerciseSetOrder: number;
    setCompletedWorkout: (completedWorkout: CompletedWorkoutType) => void;
+   setCurrentCompletedExerciseOrder: (
+      currentCompletedExerciseOrder: number
+   ) => void;
+   setCurrentCompletedExerciseSetOrder: (
+      currentCompletedExerciseSetOrder: number
+   ) => void;
+   resetCompletedWorkout: () => void;
 }
 
 export const useCompletedWorkoutStore = create<CompletedWorkoutStoreType>(
@@ -15,5 +22,20 @@ export const useCompletedWorkoutStore = create<CompletedWorkoutStoreType>(
       currentCompletedExerciseSetOrder: 1,
 
       setCompletedWorkout: (completedWorkout) => set({ completedWorkout }),
+
+      setCurrentCompletedExerciseOrder: (currentCompletedExerciseOrder) =>
+         set({ currentCompletedExerciseOrder }),
+
+      setCurrentCompletedExerciseSetOrder: (currentCompletedExerciseSetOrder) =>
+         set({
+            currentCompletedExerciseSetOrder,
+         }),
+
+      resetCompletedWorkout: () =>
+         set({
+            completedWorkout: null,
+            currentCompletedExerciseOrder: 1,
+            currentCompletedExerciseSetOrder: 1,
+         }),
    })
 );

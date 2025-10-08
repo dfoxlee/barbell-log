@@ -77,7 +77,8 @@ exports.getNutritionReadings = async ({ userId }) => {
          description,
          fdc_id as fdcId
       from nutrition_reading
-      where user_id = ?;
+      where user_id = ?
+      order by date_recorded desc;
    `;
 
    const values = [userId];

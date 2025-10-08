@@ -12,6 +12,7 @@ import Seperator from "../shared/Seperator";
 import styles from "./Home.module.css";
 import NutritionSection from "./components/NutritionSection";
 import NutritionModal from "./components/NutritionModal";
+import WorkoutsSection from "./components/WorkoutsSection";
 
 export default function Home() {
    const [startWorkoutModalOpen, setStartWorkoutModalOpen] = useState(false);
@@ -72,6 +73,7 @@ export default function Home() {
             toggleBodyweightModalOpen={toggleBodyweightModalOpen}
          />
          <NutritionSection toggleNutritionModal={toggleNutritionModal} />
+         <WorkoutsSection />
       </div>
    );
 }

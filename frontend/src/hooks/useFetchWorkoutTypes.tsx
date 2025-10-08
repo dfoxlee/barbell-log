@@ -33,5 +33,5 @@ export const useFetchWorkoutTypes = () => {
       }
    }, [token]);
 
-   return { getWorkoutTypes };
+   return { workoutTypes, getWorkoutTypes };
 };

@@ -95,10 +95,10 @@ export default function ExerciseComposition() {
       });
    };
 
-   const handleExerciseNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+   const handleExerciseNameChange = (value: string) => {
       const updatedExercise = {
          ...currentExercise,
-         exerciseName: event.target.value,
+         exerciseName: value,
       };
 
       const updatedExercises = workoutComposition?.exercises.map((exercise) =>

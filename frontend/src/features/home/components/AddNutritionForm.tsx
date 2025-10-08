@@ -17,6 +17,7 @@ import type {
 } from "../../../types/nutrient.types";
 
 import styles from "./AddNutritionForm.module.css";
+import { useFetchNutritionReadings } from "../../../hooks/useFetchNutritionReadings";
 
 export default function AddNutritionForm({ handleCloseModalClick }) {
    const [searchResults, setSearchResults] = useState<UsdaFoodObject[]>([]);
@@ -40,6 +41,8 @@ export default function AddNutritionForm({ handleCloseModalClick }) {
    const [itemSelected, setItemSelected] = useState(false);
    const [showResults, setShowResults] = useState(false);
    const searchInputRef = useRef<HTMLInputElement>(null);
+   const { getGroupedNutritionReadings, getNutritionReadings } =
+      useFetchNutritionReadings();
 
    const token = useUserStore((state) => state.token);
 
@@ -255,6 +258,8 @@ export default function AddNutritionForm({ handleCloseModalClick }) {
          });
       }
 
+      getGroupedNutritionReadings();
+      getNutritionReadings();
       handleCloseModalClick();
    };
 

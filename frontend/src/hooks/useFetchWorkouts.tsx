@@ -35,5 +35,5 @@ export function useFetchWorkouts() {
       }
    }, [token, workouts]);
 
-   return getWorkouts;
+   return { workouts, getWorkouts };
 }

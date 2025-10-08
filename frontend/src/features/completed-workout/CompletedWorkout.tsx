@@ -12,12 +12,15 @@ import Seperator from "../shared/Seperator";
 import { useTimerStore } from "../../stores/timer.store";
 import Timer from "./components/Timer";
 import CompletedExerciseComposition from "./components/CompletedExerciseNavigation";
-
-import styles from "./CompletedWorkout.module.css";
 import RepsInput from "./components/RepsInput";
 import type { CompletedExerciseSetType } from "../../types/completed-exercise-set.types";
 import { FaTimes } from "react-icons/fa";
 import WeightInput from "./components/WeightInput";
+import TimedInput from "./components/TimedInput";
+import DistanceInput from "./components/DistanceInput";
+import CompletedExerciseSetsTable from "./components/CompletedExerciseSetsTable";
+
+import styles from "./CompletedWorkout.module.css";
 
 export default function CompletedWorkout() {
    const params = useParams();
@@ -36,7 +39,12 @@ export default function CompletedWorkout() {
    const currentCompletedExerciseSetOrder = useCompletedWorkoutStore(
       (state) => state.currentCompletedExerciseSetOrder
    );
+   const resetCompletedWorkout = useCompletedWorkoutStore(
+      (state) => state.resetCompletedWorkout
+   );
    const startTimer = useTimerStore((state) => state.startTimer);
+   const pauseTimer = useTimerStore((state) => state.pauseTimer);
+   const restartTimer = useTimerStore((state) => state.restartTimer);
    const [isLoading, setIsLoading] = useState(false);
    const navigate = useNavigate();
    const currentCompletedExercise = useMemo(
@@ -96,6 +104,9 @@ export default function CompletedWorkout() {
 
    const handleCancelClick = () => {
       console.log("cancel completed workout");
+      pauseTimer();
+      restartTimer();
+      resetCompletedWorkout();
       navigate(-1);
    };
 
@@ -151,16 +162,29 @@ export default function CompletedWorkout() {
          <Seperator />
          <Timer />
          <CompletedExerciseComposition />
-         <div className={styles.repsWeightWrapper}>
-            <RepsInput reps={currentCompletedExerciseSet?.completedReps ?? 0} />
-            <FaTimes />
-            <WeightInput
-               weight={currentCompletedExerciseSet?.completedWeight ?? 0}
-               completedWeightUnit={
-                  currentCompletedExerciseSet?.completedWeightUnit ?? 0
-               }
-            />
+         <div className={styles.inputsWrapper}>
+            <div className={styles.repsWeightWrapper}>
+               {currentCompletedExerciseSet?.hadReps ? (
+                  <>
+                     <RepsInput
+                        reps={currentCompletedExerciseSet?.completedReps ?? 0}
+                     />
+                     <FaTimes />
+                  </>
+               ) : null}
+               <WeightInput
+                  weight={currentCompletedExerciseSet?.completedWeight ?? 0}
+                  completedWeightUnit={
+                     currentCompletedExerciseSet?.completedWeightUnit ?? 0
+                  }
+               />
+            </div>
+            {currentCompletedExerciseSet?.wasTimed ? <TimedInput /> : null}
+            {currentCompletedExerciseSet?.wasDistance ? (
+               <DistanceInput />
+            ) : null}
          </div>
+         <CompletedExerciseSetsTable />
       </div>
    );
 }

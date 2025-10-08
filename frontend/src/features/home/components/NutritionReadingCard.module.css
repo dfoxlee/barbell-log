@@ -1,0 +1,27 @@
+.container {
+   display: flex;
+   align-items: center;
+   border-bottom: 1px solid var(--primary);
+   padding-bottom: 10px;
+}
+
+.nutritionInfoWrapper {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+}
+
+.description {
+   font-size: 14px;
+   font-weight: 500;
+   margin-top: 5px;
+   width: 100%;
+}
+
+
+.nutritionOptions {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   min-width: 80px;
+}

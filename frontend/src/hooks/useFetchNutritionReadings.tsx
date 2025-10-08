@@ -69,5 +69,10 @@ export const useFetchNutritionReadings = () => {
       }
    }, [token]);
 
-   return { getNutritionReadings, getGroupedNutritionReadings };
+   return {
+      nutritionReadings,
+      groupedNutritionReadings,
+      getNutritionReadings,
+      getGroupedNutritionReadings,
+   };
 };

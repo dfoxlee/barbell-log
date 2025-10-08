@@ -49,45 +49,49 @@ export default function ExerciseSetOptions({
 
    return (
       <td className={styles.optionsTableData}>
-         <div className={styles.optionsContainer} ref={optionsWrapperRef}>
-            <StandardIconBtn
-               Icon={FaEllipsisV}
-               onClick={handleToggleOptionsWrapper}
-            />
-            {isOptionsWrapperOpen && (
-               <div className={styles.optionsWrapper}>
-                  <OptionToggleBtn
-                     Icon={exerciseSet.hasReps ? FaToggleOn : FaToggleOff}
-                     text="Reps?"
-                     onClick={() =>
-                        handleToggleRepsClick(exerciseSet.exerciseSetOrder)
-                     }
-                  />
-                  <OptionToggleBtn
-                     Icon={exerciseSet.isTimed ? FaToggleOn : FaToggleOff}
-                     text="Timed?"
-                     onClick={() =>
-                        handleToggleTimedClick(exerciseSet.exerciseSetOrder)
-                     }
-                  />
-                  <OptionToggleBtn
-                     Icon={exerciseSet.isDistance ? FaToggleOn : FaToggleOff}
-                     text="Distance?"
-                     onClick={() =>
-                        handleToggleDistanceClick(exerciseSet.exerciseSetOrder)
-                     }
-                  />
-               </div>
+         <div className={styles.optionsBtnWrapper}>
+            <div className={styles.optionsContainer} ref={optionsWrapperRef}>
+               <StandardIconBtn
+                  Icon={FaEllipsisV}
+                  onClick={handleToggleOptionsWrapper}
+               />
+               {isOptionsWrapperOpen && (
+                  <div className={styles.optionsWrapper}>
+                     <OptionToggleBtn
+                        Icon={exerciseSet.hasReps ? FaToggleOn : FaToggleOff}
+                        text="Reps?"
+                        onClick={() =>
+                           handleToggleRepsClick(exerciseSet.exerciseSetOrder)
+                        }
+                     />
+                     <OptionToggleBtn
+                        Icon={exerciseSet.isTimed ? FaToggleOn : FaToggleOff}
+                        text="Timed?"
+                        onClick={() =>
+                           handleToggleTimedClick(exerciseSet.exerciseSetOrder)
+                        }
+                     />
+                     <OptionToggleBtn
+                        Icon={exerciseSet.isDistance ? FaToggleOn : FaToggleOff}
+                        text="Distance?"
+                        onClick={() =>
+                           handleToggleDistanceClick(
+                              exerciseSet.exerciseSetOrder
+                           )
+                        }
+                     />
+                  </div>
+               )}
+            </div>
+            {showDeleteButton && (
+               <StandardIconBtn
+                  Icon={FaTrash}
+                  onClick={() =>
+                     handleDeleteSetClick(exerciseSet.exerciseSetOrder)
+                  }
+               />
             )}
          </div>
-         {showDeleteButton && (
-            <StandardIconBtn
-               Icon={FaTrash}
-               onClick={() =>
-                  handleDeleteSetClick(exerciseSet.exerciseSetOrder)
-               }
-            />
-         )}
       </td>
    );
 }

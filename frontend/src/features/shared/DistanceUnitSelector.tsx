@@ -5,6 +5,7 @@ import toastify from "../../utils/toastify";
 import { fetchGetDistanceUnits } from "../../services/common.services";
 
 import styles from "./DistanceUnitSelector.module.css";
+import { useFetchDistanceUnits } from "../../hooks/useFetchDistanceUnits";
 
 interface DistanceUnitSelectorPropsType {
    value: number;
@@ -17,34 +18,7 @@ export default function DistanceUnitSelector({
    value,
    onChange,
 }: DistanceUnitSelectorPropsType) {
-   const distanceUnits = useUnitStore((state) => state.distanceUnits);
-   const setDistanceUnits = useUnitStore((state) => state.setDistanceUnits);
-   const token = useUserStore((state) => state.token);
-
-   useEffect(() => {
-      const getDistanceUnits = async () => {
-         try {
-            const distanceUnitsRequest = await fetchGetDistanceUnits({ token });
-
-            setDistanceUnits(distanceUnitsRequest.distanceUnits);
-         } catch (error) {
-            console.error(
-               "An error occurred getting distance units. Please try again later.",
-               error
-            );
-
-            toastify({
-               message:
-                  "An error occurred getting distance units. Please try again later.",
-               type: "error",
-            });
-         }
-      };
-
-      if (!distanceUnits && token) {
-         getDistanceUnits();
-      }
-   }, [token]);
+   const { distanceUnits } = useFetchDistanceUnits();
 
    return (
       <select

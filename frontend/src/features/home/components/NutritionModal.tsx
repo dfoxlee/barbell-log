@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import styles from "./NutritionModal.module.css";
 import AddNutritionForm from "./AddNutritionForm";
-import { useReadingsStore } from "../../../stores/reading.store";
 import { useFetchNutritionReadings } from "../../../hooks/useFetchNutritionReadings";
 import NutritionReadingCard from "./NutritionReadingCard";
 
@@ -19,12 +18,8 @@ export default function NutritionModal({
    const [modalType, setModalType] = useState<"edit" | "add" | "history">(
       "history"
    );
-
-   const nutritionReadings = useReadingsStore(
-      (state) => state.nutritionReadings
-   );
-
-   const { getNutritionReadings } = useFetchNutritionReadings();
+   const { nutritionReadings } = useFetchNutritionReadings();
+   console.log(nutritionReadings);
 
    const handleCloseModalClick = () => {
       setModalType("edit");
@@ -45,13 +40,14 @@ export default function NutritionModal({
          <div className={styles.wrapper}>
             <StandardIconBtn Icon={FaTimes} onClick={handleCloseModalClick} />
             <h3 className={styles.title}>Nutrition</h3>
-            <div>
-               {nutritionReadings?.map((reading) => (
-                  <NutritionReadingCard
-                     key={reading.dateGroup}
-                     nutritionReading={reading}
-                  />
-               ))}
+            <div className={styles.nutritionReadingsWrapper}>
+               {modalType !== "add" &&
+                  nutritionReadings?.map((reading) => (
+                     <NutritionReadingCard
+                        key={reading.brandName}
+                        nutritionReading={reading}
+                     />
+                  ))}
             </div>
             <div className={styles.addNutritionBtnWrapper}>
                <StandardBtn

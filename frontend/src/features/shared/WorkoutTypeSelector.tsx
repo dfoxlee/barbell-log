@@ -6,6 +6,7 @@ import { useWorkoutStore } from "../../stores/workout.store";
 import { useUserStore } from "../../stores/user.store";
 
 import styles from "./WorkoutTypeSelector.module.css";
+import { useFetchWorkoutTypes } from "../../hooks/useFetchWorkoutTypes";
 
 interface WorkoutTypeSelectorPropsType {
    value: number;
@@ -16,36 +17,7 @@ export default function WorkoutTypeSelector({
    value,
    onChange,
 }: WorkoutTypeSelectorPropsType) {
-   const workoutTypes = useWorkoutStore((state) => state.workoutTypes);
-   const setWorkoutTypes = useWorkoutStore((state) => state.setWorkoutTypes);
-   const token = useUserStore((state) => state.token);
-
-   useEffect(() => {
-      const getWorkoutTypes = async () => {
-         try {
-            const workoutTypesRequest = await fetchGetWorkoutTypes({
-               token: token!,
-            });
-
-            setWorkoutTypes(workoutTypesRequest.workoutTypes);
-         } catch (error) {
-            console.error(
-               "An error occurred getting bodyweight readings.",
-               error
-            );
-
-            toastify({
-               message:
-                  "An error occurred getting bodyweight readings. Please try again later.",
-               type: "error",
-            });
-         }
-      };
-
-      if (!workoutTypes && token) {
-         getWorkoutTypes();
-      }
-   }, [token]);
+   const { workoutTypes } = useFetchWorkoutTypes();
 
    return (
       <select

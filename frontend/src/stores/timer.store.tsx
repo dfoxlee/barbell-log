@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 interface TimerStore {
    timer: number;
-   isTimerRunning: boolean;
    timerState: string | null;
    intervalId: ReturnType<typeof setInterval> | null;
 
@@ -15,7 +14,6 @@ interface TimerStore {
 
 export const useTimerStore = create<TimerStore>((set, get) => ({
    timer: 0,
-   isTimerRunning: false,
    timerState: null,
    intervalId: null,
 
@@ -62,10 +60,18 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
    },
 
    restartTimer: () => {
-      const { _tick, intervalId } = get();
+      const { _tick, timerState, intervalId } = get();
 
       if (intervalId !== null) {
          clearInterval(intervalId);
+      }
+
+      if (timerState === "Paused") {
+         return set({
+            timer: 0,
+            intervalId: null,
+            timerState: "Paused",
+         });
       }
 
       const newIntervalId = setInterval(_tick, 1000);

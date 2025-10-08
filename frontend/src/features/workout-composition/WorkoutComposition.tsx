@@ -1,17 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState, type ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import Seperator from "../shared/Seperator";
 import ExerciseComposition from "./components/ExerciseComposition";
 import ExercisesOverview from "./components/ExercisesOverview";
 import { useWorkoutStore } from "../../stores/workout.store";
 import type { WorkoutType } from "../../types/workout.types";
 import toastify from "../../utils/toastify";
-import { fetchGetWorkoutTypes } from "../../services/common.services";
 import { useUserStore } from "../../stores/user.store";
 import WorkoutNameInput from "../shared/WorkoutNameInput";
 import StandardBtn from "../shared/StandardBtn";
 import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
 import { fetchCreateWorkout } from "../../services/workout.services";
+import { useFetchWorkouts } from "../../hooks/useFetchWorkouts";
 
 import styles from "./WorkoutComposition.module.css";
 
@@ -31,39 +31,11 @@ export default function WorkoutComposition() {
    const setWorkoutComposition = useWorkoutStore(
       (state) => state.setWorkoutComposition
    );
-   const workoutTypes = useWorkoutStore((state) => state.workoutTypes);
-   const setWorkoutTypes = useWorkoutStore((state) => state.setWorkoutTypes);
+   const { getWorkouts } = useFetchWorkouts();
    const token = useUserStore((state) => state.token);
    const resetWorkoutComposition = useWorkoutStore(
       (state) => state.resetWorkoutComposition
    );
-
-   useEffect(() => {
-      const getWorkoutTypes = async () => {
-         try {
-            const workoutTypesRequest = await fetchGetWorkoutTypes({
-               token: token!,
-            });
-
-            setWorkoutTypes(workoutTypesRequest.workoutTypes);
-         } catch (error) {
-            console.error(
-               "An error occurred getting bodyweight readings.",
-               error
-            );
-
-            toastify({
-               message:
-                  "An error occurred getting bodyweight readings. Please try again later.",
-               type: "error",
-            });
-         }
-      };
-
-      if (!workoutTypes && token) {
-         getWorkoutTypes();
-      }
-   }, [token]);
 
    const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
       const updatedWorkoutComposition = {
@@ -84,12 +56,12 @@ export default function WorkoutComposition() {
    };
 
    const handleCancelClick = () => {
+      resetWorkoutComposition();
       navigate("/home");
    };
 
    const handleSaveClick = async () => {
       try {
-         console.log(workoutComposition);
          await fetchCreateWorkout({
             token: token!,
             workout: workoutComposition!,
@@ -100,6 +72,7 @@ export default function WorkoutComposition() {
             type: "success",
          });
 
+         getWorkouts();
          resetWorkoutComposition();
          navigate("/home");
       } catch (error) {

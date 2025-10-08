@@ -27,11 +27,17 @@
    font-size: 12px;
 }
 
-.optionsTableData {
+.optionsBtnWrapper {
    display: flex;
    justify-content: center;
    align-items: center;
+   gap: 20px;
+}
+
+.optionsContainer {
    position: relative;
+   display: grid;
+   place-content: center;
 }
 
 .optionsWrapper {
@@ -58,4 +64,5 @@
 .inputsTableData {
    padding: 10px 0;
    text-align: center;
+   border-bottom: 1px solid var(--accent);
 }

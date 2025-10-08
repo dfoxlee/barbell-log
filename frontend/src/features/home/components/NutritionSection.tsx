@@ -22,14 +22,17 @@ export default function NutritionSection({
    const { getGroupedNutritionReadings } = useFetchNutritionReadings();
 
    return (
-      <div>
-         <NutritionChart nutritionData={groupedNutritionReadings} />
-         <div className={styles.addNutritionDataBtn}>
-            <StandardBtn
-               text="Add/Edit Nutrition Data"
-               onClick={handleAddEditNutritionData}
-            />
-         </div>
+      <div className={styles.container}>
+         <h2 className={styles.sectionTitle}>Nutrition</h2>
+         {groupedNutritionReadings && (
+            <div className={styles.nutritionChartWrapper}>
+               <NutritionChart nutritionData={groupedNutritionReadings} />
+            </div>
+         )}
+         <StandardBtn
+            text="Add/Edit Nutrition Data"
+            onClick={handleAddEditNutritionData}
+         />
       </div>
    );
 }

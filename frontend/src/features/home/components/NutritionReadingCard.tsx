@@ -3,8 +3,13 @@ import StandardIconBtn from "../../shared/StandardIconBtn";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 import styles from "./NutritionReadingCard.module.css";
+import type { NutritionInfo } from "../../../types/nutrient.types";
 
-export default function NutritionReadingCard({ nutritionReading }) {
+export default function NutritionReadingCard({
+   nutritionReading,
+}: {
+   nutritionReading: NutritionInfo;
+}) {
    const formattedDescription = useMemo(
       () =>
          nutritionReading.description.replace(/\s*\(USDA type: [^)]+\)$/, ""),
@@ -24,10 +29,12 @@ export default function NutritionReadingCard({ nutritionReading }) {
    };
 
    return (
-      <div>
-         <p>{formattedDate}</p>
-         <h3>{formattedDescription}</h3>
-         <div>
+      <div className={styles.container}>
+         <div className={styles.nutritionInfoWrapper}>
+            <p className={styles.nutritionDate}>{formattedDate}</p>
+            <h3 className={styles.description}>{formattedDescription}</h3>
+         </div>
+         <div className={styles.nutritionOptions}>
             <StandardIconBtn
                Icon={FaPencilAlt}
                onClick={handleEditNutritionReading}
