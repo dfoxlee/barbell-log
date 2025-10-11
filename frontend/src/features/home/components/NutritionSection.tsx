@@ -25,9 +25,7 @@ export default function NutritionSection({
       <div className={styles.container}>
          <h2 className={styles.sectionTitle}>Nutrition</h2>
          {groupedNutritionReadings && (
-            <div className={styles.nutritionChartWrapper}>
-               <NutritionChart nutritionData={groupedNutritionReadings} />
-            </div>
+            <NutritionChart nutritionData={groupedNutritionReadings} />
          )}
          <StandardBtn
             text="Add/Edit Nutrition Data"

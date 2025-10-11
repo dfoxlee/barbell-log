@@ -1,0 +1,22 @@
+.container {
+   width: 100%;
+}
+
+.titleWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.title {
+   text-align: center;
+   font-size: 18px;
+   color: var(--accent);
+}
+
+.chartWrapper {
+   margin-top: 20px;
+   height: 300px;
+   width: 100%;
+}

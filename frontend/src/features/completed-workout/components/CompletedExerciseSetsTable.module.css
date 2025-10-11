@@ -18,3 +18,9 @@
    padding: 5px;
    font-size: 18px;
 }
+
+.optionsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: start;
+}

@@ -13,11 +13,15 @@ export default function BodyweightSection({
    return (
       <div className={styles.container}>
          <h2 className={styles.sectionTitle}>Bodyweight</h2>
-         <BodyweightChart />
-         <StandardBtn
-            text="Add/Edit Bodyweight"
-            onClick={toggleBodyweightModalOpen}
-         />
+         <div className={styles.chartWrapper}>
+            <BodyweightChart />
+         </div>
+         <div className={styles.toggleFilterMacrosModalOpen}>
+            <StandardBtn
+               text="Add/Edit Bodyweight"
+               onClick={toggleBodyweightModalOpen}
+            />
+         </div>
       </div>
    );
 }

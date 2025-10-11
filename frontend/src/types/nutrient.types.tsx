@@ -55,3 +55,9 @@ export interface GroupedNutritionInfo {
    totalFiber: number;
    totalSugar: number;
 }
+
+export interface MetricType {
+   key: string;
+   label: string;
+   unit: string;
+}

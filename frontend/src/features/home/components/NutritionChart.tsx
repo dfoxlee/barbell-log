@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
    Chart as ChartJS,
@@ -11,6 +11,11 @@ import {
    Legend,
 } from "chart.js";
 import type { GroupedNutritionInfo } from "../../../types/nutrient.types";
+import { FaFilter } from "react-icons/fa";
+import StandardIconBtn from "../../shared/StandardIconBtn";
+
+import styles from "./NutritionChart.module.css";
+import { useModalsStore } from "../../../stores/modals.store";
 
 // Register necessary components from Chart.js
 ChartJS.register(
@@ -46,9 +51,10 @@ const NutritionChart = ({
 }: {
    nutritionData: GroupedNutritionInfo[];
 }) => {
-   const labels = nutritionData
-      .map((d) => formatDate(d.dateGroup.toString()))
-      .reverse();
+   const selectedMetrics = useModalsStore((state) => state.selectedMetrics);
+   const toggleFilterMacrosModalOpen = useModalsStore(
+      (state) => state.toggleFilterMacrosModalOpen
+   );
 
    const metrics = [
       { key: "totalCalories", label: "Calories (kcal)", unit: "kcal" },
@@ -61,28 +67,34 @@ const NutritionChart = ({
       { key: "totalCholesterol", label: "Cholesterol (mg)", unit: "mg" },
    ];
 
-   const datasets = metrics.map((metric, index) => {
-      const dataPoints = nutritionData
-         .map((d) => parseFloat(d[metric.key]))
+   const { labels, datasets } = useMemo(() => {
+      const chartLabels = nutritionData
+         .map((d) => formatDate(d.dateGroup.toString()))
          .reverse();
 
-      const color = CHART_COLORS[index % CHART_COLORS.length];
+      const chartDatasets = selectedMetrics.map((metric, index) => {
+         const dataPoints = nutritionData
+            .map((d) =>
+               parseFloat(d[metric.key as keyof GroupedNutritionInfo] || "0")
+            )
+            .reverse();
 
-      return {
-         label: metric.label,
-         data: dataPoints,
-         borderColor: color,
-         backgroundColor: color + "40",
-         tension: 0.3,
-         fill: false,
-         yAxisID: metric.unit === "kcal" ? "y_kcal" : "y_g_mg",
-      };
-   });
+         const globalIndex = metrics.findIndex((m) => m.key === metric.key);
+         const color = CHART_COLORS[globalIndex % CHART_COLORS.length];
 
-   const data = {
-      labels: labels,
-      datasets: datasets,
-   };
+         return {
+            label: metric.label,
+            data: dataPoints,
+            borderColor: color,
+            backgroundColor: color + "40",
+            tension: 0.4,
+            fill: false,
+            yAxisID: metric.unit === "kcal" ? "y_kcal" : "y_g_mg",
+         };
+      });
+
+      return { labels: chartLabels, datasets: chartDatasets };
+   }, [nutritionData, selectedMetrics]);
 
    const options = {
       responsive: true,
@@ -97,10 +109,6 @@ const NutritionChart = ({
          },
          title: {
             display: false,
-            text: "30-Day Nutrition Overview",
-            font: {
-               size: 16,
-            },
          },
          tooltip: {
             mode: "index",
@@ -143,7 +151,26 @@ const NutritionChart = ({
       },
    };
 
-   return <Line data={data} options={options} />;
+   return (
+      <div className={styles.container}>
+         <div className={styles.titleWrapper}>
+            <h4 className={styles.title}>Macros</h4>
+            <StandardIconBtn
+               Icon={FaFilter}
+               onClick={toggleFilterMacrosModalOpen}
+            />
+         </div>
+         <div className={styles.chartWrapper}>
+            {datasets.length > 0 ? (
+               <Line data={{ labels, datasets }} options={options} />
+            ) : (
+               <p className={styles.emptyChartMessage}>
+                  Select at least one metric to display the chart.
+               </p>
+            )}
+         </div>
+      </div>
+   );
 };
 
 export default NutritionChart;

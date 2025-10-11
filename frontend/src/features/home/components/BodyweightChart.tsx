@@ -132,5 +132,13 @@ export const BodyweightChart = () => {
       },
    };
 
-   return <Line data={chartData} options={options} />;
+   return (
+      <Line
+         data={chartData}
+         options={options}
+         style={{
+            width: "100%",
+         }}
+      />
+   );
 };

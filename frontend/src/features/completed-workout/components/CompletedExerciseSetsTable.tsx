@@ -59,18 +59,20 @@ export default function CompletedExerciseSetsTable() {
                      })}
                   </td>
                   <td className={styles.tableData}>
-                     <StandardIconBtn Icon={FaCheckCircle} />
-                     <StandardIconBtn
-                        Icon={FaTrash}
-                        onClick={handleDeleteCompletedExerciseSetClick}
-                     />
-                     {ces.completedExerciseSetOrder !==
-                     currentCompletedExerciseSetOrder ? (
+                     <div className={styles.optionsWrapper}>
+                        <StandardIconBtn Icon={FaCheckCircle} />
                         <StandardIconBtn
-                           Icon={FaStepForward}
-                           onClick={handleSelectSetClick}
+                           Icon={FaTrash}
+                           onClick={handleDeleteCompletedExerciseSetClick}
                         />
-                     ) : null}
+                        {ces.completedExerciseSetOrder !==
+                        currentCompletedExerciseSetOrder ? (
+                           <StandardIconBtn
+                              Icon={FaStepForward}
+                              onClick={handleSelectSetClick}
+                           />
+                        ) : null}
+                     </div>
                   </td>
                </tr>
             ))}
