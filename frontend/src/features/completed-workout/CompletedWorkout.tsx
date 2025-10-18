@@ -11,21 +11,22 @@ import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
 import Seperator from "../shared/Seperator";
 import { useTimerStore } from "../../stores/timer.store";
 import Timer from "./components/Timer";
-import CompletedExerciseComposition from "./components/CompletedExerciseNavigation";
+import CompletedExerciseNavigation from "./components/CompletedExerciseNavigation";
 import RepsInput from "./components/RepsInput";
 import type { CompletedExerciseSetType } from "../../types/completed-exercise-set.types";
-import { FaTimes } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import WeightInput from "./components/WeightInput";
 import TimedInput from "./components/TimedInput";
 import DistanceInput from "./components/DistanceInput";
 import CompletedExerciseSetsTable from "./components/CompletedExerciseSetsTable";
 
 import styles from "./CompletedWorkout.module.css";
+import type { CompletedWorkoutType } from "../../types/completed-workout.types";
 
 export default function CompletedWorkout() {
    const params = useParams();
    const workoutId = params["workout-id"];
-   const completedWorkoutId = params["completed-workout-id"];
+   // const completedWorkoutId = params["completed-workout-id"];
    const token = useUserStore((state) => state.token);
    const completedWorkout = useCompletedWorkoutStore(
       (state) => state.completedWorkout
@@ -38,6 +39,9 @@ export default function CompletedWorkout() {
    );
    const currentCompletedExerciseSetOrder = useCompletedWorkoutStore(
       (state) => state.currentCompletedExerciseSetOrder
+   );
+   const setCurrentCompletedExerciseSetOrder = useCompletedWorkoutStore(
+      (state) => state.setCurrentCompletedExerciseSetOrder
    );
    const resetCompletedWorkout = useCompletedWorkoutStore(
       (state) => state.resetCompletedWorkout
@@ -100,7 +104,6 @@ export default function CompletedWorkout() {
          getCompletedWorkout();
       }
    }, [token]);
-   console.log(completedWorkout);
 
    const handleCancelClick = () => {
       console.log("cancel completed workout");
@@ -121,13 +124,74 @@ export default function CompletedWorkout() {
    const handleCompletedWorkoutNameChange = (
       event: ChangeEvent<HTMLInputElement>
    ) => {
-      console.log("complete workout name change", event.target.value);
+      const updatedWorkout = {
+         ...completedWorkout,
+         completedWorkoutName: event.target.value,
+      };
+
+      setCompletedWorkout(updatedWorkout as CompletedWorkoutType);
    };
 
    const handleCompletedWorkoutTypeChange = (
       event: ChangeEvent<HTMLSelectElement>
    ) => {
-      console.log("completed workout type change", event.target.value);
+      const updatedWorkout = {
+         ...completedWorkout,
+         completedWorkoutType: parseInt(event.target.value),
+      };
+
+      setCompletedWorkout(updatedWorkout as CompletedWorkoutType);
+   };
+
+   const updateCompletedWorkout = ({
+      field,
+      value,
+   }: {
+      field: string;
+      value: number | string;
+   }) => {
+      const updatedSet = {
+         ...currentCompletedExerciseSet,
+         [field]: value,
+      };
+
+      const updatedSets = currentCompletedExercise?.completedExerciseSets.map(
+         (ces) =>
+            ces.completedExerciseSetOrder ===
+            updatedSet.completedExerciseSetOrder
+               ? updatedSet
+               : ces
+      );
+
+      const updatedExercise = {
+         ...currentCompletedExercise,
+         completedExerciseSets: updatedSets,
+      };
+
+      const updatedExercises = completedWorkout?.completedExercises.map((ce) =>
+         ce.completedExerciseOrder === updatedExercise.completedExerciseOrder
+            ? updatedExercise
+            : ce
+      );
+      const updatedCompletedWorkout = {
+         ...completedWorkout,
+         completedExercises: updatedExercises,
+      };
+
+      setCompletedWorkout(updatedCompletedWorkout as CompletedWorkoutType);
+   };
+
+   const handleIncrementExerciseSetOrder = () => {
+      const updatedOrder = currentCompletedExerciseSetOrder + 1;
+      console.log(updatedOrder);
+
+      setCurrentCompletedExerciseSetOrder(updatedOrder);
+   };
+
+   const handleDecrementExerciseSetOrder = () => {
+      const updatedOrder = currentCompletedExerciseSetOrder - 1;
+
+      setCurrentCompletedExerciseSetOrder(updatedOrder);
    };
 
    if (isLoading) {
@@ -161,28 +225,67 @@ export default function CompletedWorkout() {
          </div>
          <Seperator />
          <Timer />
-         <CompletedExerciseComposition />
+         <CompletedExerciseNavigation />
          <div className={styles.inputsWrapper}>
             <div className={styles.repsWeightWrapper}>
                {currentCompletedExerciseSet?.hadReps ? (
                   <>
                      <RepsInput
-                        reps={currentCompletedExerciseSet?.completedReps ?? 0}
+                        completedReps={
+                           currentCompletedExerciseSet?.completedReps ?? 0
+                        }
+                        updateCompletedWorkout={updateCompletedWorkout}
                      />
                      <FaTimes />
                   </>
                ) : null}
                <WeightInput
-                  weight={currentCompletedExerciseSet?.completedWeight ?? 0}
+                  completedWeight={
+                     currentCompletedExerciseSet?.completedWeight ?? 0
+                  }
                   completedWeightUnit={
                      currentCompletedExerciseSet?.completedWeightUnit ?? 0
                   }
+                  updateCompletedWorkout={updateCompletedWorkout}
                />
             </div>
-            {currentCompletedExerciseSet?.wasTimed ? <TimedInput /> : null}
-            {currentCompletedExerciseSet?.wasDistance ? (
-               <DistanceInput />
+            {currentCompletedExerciseSet?.wasTimed ? (
+               <TimedInput
+                  completedHr={currentCompletedExerciseSet?.completedHr}
+                  completedMin={currentCompletedExerciseSet?.completedMin}
+                  completedSec={currentCompletedExerciseSet?.completedSec}
+                  updateCompletedWorkout={updateCompletedWorkout}
+               />
             ) : null}
+            {currentCompletedExerciseSet?.wasDistance ? (
+               <DistanceInput
+                  completedDistance={
+                     currentCompletedExerciseSet?.completedDistance
+                  }
+                  completedDistanceUnit={
+                     currentCompletedExerciseSet?.completedDistanceUnit
+                  }
+                  updateCompletedWorkout={updateCompletedWorkout}
+               />
+            ) : null}
+         </div>
+         <div className={styles.exerciseSetsNavigationWrapper}>
+            <StandardBtn
+               Icon={FaChevronLeft}
+               text="Set"
+               onClick={handleDecrementExerciseSetOrder}
+               disabled={currentCompletedExerciseSetOrder < 2}
+            />
+            <StandardBtn
+               Icon={FaChevronRight}
+               text="Set"
+               onClick={handleIncrementExerciseSetOrder}
+               disabled={
+                  currentCompletedExercise &&
+                  currentCompletedExerciseSetOrder > 
+                     currentCompletedExercise.completedExerciseSets.length - 1
+               }
+            />
          </div>
          <CompletedExerciseSetsTable />
       </div>

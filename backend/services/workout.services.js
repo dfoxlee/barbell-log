@@ -81,3 +81,31 @@ exports.createWorkout = async ({
 
    return results.insertId;
 };
+
+exports.updateWorkout = async ({ workout }) => {
+   const query = `
+      update workout
+      set workout_name = ?,
+         workout_type = ?
+      where workout_id = ?;
+   `;
+
+   const values = [workout.workoutName, workout.workoutType, workout.workoutId];
+
+   await pool.execute(query, values);
+
+   return;
+};
+
+exports.deleteWorkout = async ({ workoutId }) => {
+   const query = `
+      delete from workout
+      where workout_id = ?;
+   `;
+
+   const values = [workoutId];
+
+   await pool.execute(query, values);
+
+   return;
+};

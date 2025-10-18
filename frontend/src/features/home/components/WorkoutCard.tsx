@@ -3,9 +3,17 @@ import type { WorkoutType } from "../../../types/workout.types";
 import StandardIconBtn from "../../shared/StandardIconBtn";
 import styles from "./WorkoutCard.module.css";
 import { useFetchWorkoutTypes } from "../../../hooks/useFetchWorkoutTypes";
+import { useNavigate } from "react-router-dom";
+import { fetchDeleteWorkout } from "../../../services/workout.services";
+import { useUserStore } from "../../../stores/user.store";
+import toastify from "../../../utils/toastify";
+import { useFetchWorkouts } from "../../../hooks/useFetchWorkouts";
 
 export default function WorkoutCard({ workout }: { workout: WorkoutType }) {
    const { workoutTypes } = useFetchWorkoutTypes();
+   const token = useUserStore((state) => state.token);
+   const { getWorkouts } = useFetchWorkouts();
+   const navigate = useNavigate();
 
    const handleViewWorkoutClick = () => {
       console.log("view workout");
@@ -17,10 +25,28 @@ export default function WorkoutCard({ workout }: { workout: WorkoutType }) {
 
    const handleEditWorkoutClick = () => {
       console.log("edit workout");
+      navigate(`/home/create-workout/${workout.workoutId}`);
    };
 
-   const handleDeleteWorkoutClick = () => {
-      console.log("delete workout");
+   const handleDeleteWorkoutClick = async () => {
+      try {
+         if (token && workout.workoutId) {
+            await fetchDeleteWorkout({
+               token: token!,
+               workoutId: workout.workoutId!,
+            });
+         }
+
+         getWorkouts();
+      } catch (error) {
+         console.error(error);
+
+         return toastify({
+            message:
+               "An error occurred while deleting the workout. Please try again later.",
+            type: "error",
+         });
+      }
    };
 
    return (

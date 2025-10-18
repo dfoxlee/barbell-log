@@ -77,3 +77,55 @@ exports.getExerciseSets = async ({ exerciseId }) => {
 
    return results;
 };
+
+exports.updateExerciseSet = async ({ exerciseSet }) => {
+   const query = `
+      update exercise_set
+      set exercise_set_order = ?,
+         has_reps = ?,
+         is_timed = ?,
+         is_distance = ?,
+         reps = ?,
+         weight = ?,
+         weight_unit = ?,
+         hr = ?,
+         min = ?,
+         sec = ?,
+         distance = ?,
+         distance_unit = ?
+      where exercise_set_id = ?;
+   `;
+
+   const values = [
+      exerciseSet.exerciseSetOrder,
+      exerciseSet.hasReps,
+      exerciseSet.isTimed,
+      exerciseSet.isDistance,
+      exerciseSet.reps,
+      exerciseSet.weight,
+      exerciseSet.weightUnit,
+      exerciseSet.hr,
+      exerciseSet.min,
+      exerciseSet.sec,
+      exerciseSet.distance,
+      exerciseSet.distanceUnit,
+      exerciseSet.exerciseSetId,
+   ];
+
+   await pool.execute(query, values);
+
+   return;
+};
+
+exports.deleteExerciseSet = async ({ exerciseSetId }) => {
+   const query = `
+      delete from exercise_set
+      where exercise_set_id = ?;
+   `;
+
+   const values = [exerciseSetId];
+
+   await pool.execute(query, values);
+
+   return;
+};

@@ -11,6 +11,12 @@
    border-radius: 5px;
 }
 
+.btnDisabled {
+   color: var(--accent);
+   border-color: var(--accent);
+   cursor: not-allowed;
+}
+
 .text {
    font-size: 14px;
 }

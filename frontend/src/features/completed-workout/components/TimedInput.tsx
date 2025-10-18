@@ -3,54 +3,145 @@ import StandardIconBtn from "../../shared/StandardIconBtn";
 import WholeValueInput from "../../shared/WholeValueInput";
 
 import styles from "./TimedInput.module.css";
+import toastify from "../../../utils/toastify";
 
-export default function TimedInput() {
+interface TimedInputProps {
+   completedHr: number;
+   completedMin: number;
+   completedSec: number;
+   updateCompletedWorkout: ({
+      field,
+      value,
+   }: {
+      field: string;
+      value: number | string;
+   }) => void;
+}
+
+export default function TimedInput({
+   completedHr,
+   completedMin,
+   completedSec,
+   updateCompletedWorkout,
+}: TimedInputProps) {
    const handleIncrementHr = () => {
-      console.log("increment hr");
+      const updatedHr = completedHr + 1;
+
+      updateCompletedWorkout({
+         field: "completedHr",
+         value: updatedHr,
+      });
    };
 
    const handleHrChange = (value: number) => {
-      console.log("hr change", value);
+      const decimalRegex = /^\d*\.?\d{0,2}$/;
+
+      if (decimalRegex.test(value.toString())) {
+         updateCompletedWorkout({
+            field: "completedHr",
+            value: value,
+         });
+      }
    };
 
    const handleDecrementHr = () => {
-      console.log("decrement hr");
+      if (completedHr <= 0) {
+         return toastify({
+            message: "Hours must be positive.",
+            type: "info",
+         });
+      }
+
+      const updatedHr = completedHr - 1;
+
+      updateCompletedWorkout({
+         field: "completedHr",
+         value: updatedHr,
+      });
    };
 
    const handleIncrementMin = () => {
-      console.log("increment min");
+      const updatedMin = completedMin + 1;
+
+      updateCompletedWorkout({
+         field: "completedMin",
+         value: updatedMin,
+      });
    };
 
    const handleMinChange = (value: number) => {
-      console.log("min change", value);
+      const decimalRegex = /^\d*\.?\d{0,2}$/;
+
+      if (decimalRegex.test(value.toString())) {
+         updateCompletedWorkout({
+            field: "completedMin",
+            value: value,
+         });
+      }
    };
 
    const handleDecrementMin = () => {
-      console.log("decrement min");
+      if (completedMin <= 0) {
+         return toastify({
+            message: "Minutes must be positive.",
+            type: "info",
+         });
+      }
+
+      const updatedMin = completedMin - 1;
+
+      updateCompletedWorkout({
+         field: "completedMin",
+         value: updatedMin,
+      });
    };
 
    const handleIncrementSec = () => {
-      console.log("increment sec");
+      const updatedSec = completedSec + 1;
+
+      updateCompletedWorkout({
+         field: "completedSec",
+         value: updatedSec,
+      });
    };
 
    const handleSecChange = (value: number) => {
-      console.log("sec change", value);
+      const decimalRegex = /^\d*\.?\d{0,2}$/;
+
+      if (decimalRegex.test(value.toString())) {
+         updateCompletedWorkout({
+            field: "completedSec",
+            value: value,
+         });
+      }
    };
 
    const handleDecrementSec = () => {
-      console.log("decrement sec");
+      if (completedSec <= 0) {
+         return toastify({
+            message: "Minutes must be positive.",
+            type: "info",
+         });
+      }
+
+      const updatedSec = completedSec - 1;
+
+      updateCompletedWorkout({
+         field: "completedSec",
+         value: updatedSec,
+      });
    };
 
    return (
       <div className={styles.container}>
          <div className={styles.inputWrapper}>
             <StandardIconBtn Icon={FaChevronUp} onClick={handleIncrementHr} />
-            <WholeValueInput value={0} onBlur={handleHrChange} />
+            <WholeValueInput value={completedHr} onBlur={handleHrChange} />
             <StandardIconBtn Icon={FaChevronDown} onClick={handleDecrementHr} />
          </div>
          <div className={styles.inputWrapper}>
             <StandardIconBtn Icon={FaChevronUp} onClick={handleIncrementMin} />
-            <WholeValueInput value={0} onBlur={handleMinChange} />
+            <WholeValueInput value={completedMin} onBlur={handleMinChange} />
             <StandardIconBtn
                Icon={FaChevronDown}
                onClick={handleDecrementMin}
@@ -58,7 +149,7 @@ export default function TimedInput() {
          </div>
          <div className={styles.inputWrapper}>
             <StandardIconBtn Icon={FaChevronUp} onClick={handleIncrementSec} />
-            <WholeValueInput value={0} onBlur={handleSecChange} />
+            <WholeValueInput value={completedSec} onBlur={handleSecChange} />
             <StandardIconBtn
                Icon={FaChevronDown}
                onClick={handleDecrementSec}

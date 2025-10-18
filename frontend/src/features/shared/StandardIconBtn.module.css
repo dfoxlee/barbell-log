@@ -4,3 +4,8 @@
    font-size: 24px;
    color: var(--primary);
 }
+
+.btnDisabled {
+   color: var(--accent);
+   cursor:not-allowed
+}

@@ -5,22 +5,66 @@ import DistanceUnitSelector from "../../shared/DistanceUnitSelector";
 import type { ChangeEvent } from "react";
 
 import styles from "./DistanceInput.module.css";
+import toastify from "../../../utils/toastify";
 
-export default function DistanceInput() {
+interface DistanceInputProps {
+   completedDistance: number;
+   completedDistanceUnit: number;
+   updateCompletedWorkout: ({
+      field,
+      value,
+   }: {
+      field: string;
+      value: number | string;
+   }) => void;
+}
+
+export default function DistanceInput({
+   completedDistance,
+   completedDistanceUnit,
+   updateCompletedWorkout,
+}: DistanceInputProps) {
    const handleIncrementClick = () => {
-      console.log("distance increment");
+      const newValue = completedDistance + 1;
+
+      updateCompletedWorkout({
+         field: "completedDistance",
+         value: newValue,
+      });
    };
 
    const handleDistanceChange = (value: number) => {
-      console.log("distance change", value);
+      const wholeNumberRegex = /^\d*$/;
+
+      if (wholeNumberRegex.test(value.toString())) {
+         updateCompletedWorkout({
+            field: "completedDistance",
+            value,
+         });
+      }
    };
 
    const handleDecrementClick = () => {
-      console.log("distance decrement");
+      const updatedValue = completedDistance - 1;
+
+      if (updatedValue < 0) {
+         return toastify({
+            message: "Distance must be positive.",
+            type: "info",
+         });
+      }
+
+      updateCompletedWorkout({
+         field: "completedDistance",
+         value: updatedValue,
+      });
    };
 
    const handleDistanceUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      console.log("distance unit change", event.target.value);
+      updateCompletedWorkout({
+         field: "completedDistanceUnit",
+         value: event.target.value,
+      });
    };
 
    return (
@@ -30,13 +74,19 @@ export default function DistanceInput() {
                Icon={FaChevronUp}
                onClick={handleIncrementClick}
             />
-            <FractionalValueInput value={0} onBlur={handleDistanceChange} />
+            <FractionalValueInput
+               value={completedDistance}
+               onBlur={handleDistanceChange}
+            />
             <StandardIconBtn
                Icon={FaChevronDown}
                onClick={handleDecrementClick}
             />
          </div>
-         <DistanceUnitSelector value={0} onChange={handleDistanceUnitChange} />
+         <DistanceUnitSelector
+            value={completedDistanceUnit}
+            onChange={handleDistanceUnitChange}
+         />
       </div>
    );
 }

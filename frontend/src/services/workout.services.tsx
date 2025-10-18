@@ -45,3 +45,76 @@ export const fetchGetWorkouts = async ({ token }: { token: string }) => {
 
    return data;
 };
+
+export const fetchGetWorkout = async ({
+   token,
+   workoutId,
+}: {
+   token: string;
+   workoutId: string;
+}) => {
+   const request = await fetch(`${baseUrl}/workouts/${workoutId}`, {
+      method: "GET",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
+
+   if (!request.ok) {
+      throw new Error("An error occurred creating the workout.");
+   }
+
+   const data = await request.json();
+
+   return data;
+};
+
+export const fetchUpdateWorkout = async ({
+   token,
+   workout,
+}: {
+   token: string;
+   workout: WorkoutType;
+}) => {
+   const request = await fetch(`${baseUrl}/workouts`, {
+      method: "PATCH",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ workout }),
+   });
+
+   if (!request.ok) {
+      throw new Error("An error occurred creating the workout.");
+   }
+
+   const data = await request.json();
+
+   return data;
+};
+
+export const fetchDeleteWorkout = async ({
+   token,
+   workoutId,
+}: {
+   token: string;
+   workoutId: number;
+}) => {
+   const request = await fetch(`${baseUrl}/workouts/${workoutId}`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
+
+   if (!request.ok) {
+      throw new Error("An error occurred deleting the workout.");
+   }
+
+   const data = await request.json();
+
+   return data;
+};

@@ -49,3 +49,36 @@ exports.getExercises = async ({ exerciseId, workoutId }) => {
 
    return results;
 };
+
+exports.updateExercise = async ({ exercise }) => {
+   const query = `
+      update exercise
+      set exercise_name = ?,
+         exercise_order = ?
+      where exercise_id = ?;
+   `;
+
+   const values = [
+      exercise.exerciseName,
+      exercise.exerciseOrder,
+      exercise.exerciseId,
+   ];
+
+   await pool.execute(query, values);
+
+   return;
+};
+
+exports.deleteExercise = async ({ exerciseId }) => {
+   const query = `
+      delete from exercise
+      where exercise_id = ?;
+   `;
+
+   const values = [exerciseId];
+
+
+   await pool.execute(query, values);
+
+   return;
+};

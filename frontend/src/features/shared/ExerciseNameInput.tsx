@@ -32,32 +32,28 @@ export default function ExerciseNameInput({
          });
    }, []);
 
-
-const handleExerciseNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+   const handleExerciseNameChange = (event: ChangeEvent<HTMLInputElement>) => {
       const inputValue = event.target.value;
-      
+
       onChange(inputValue);
 
       if (inputValue.trim().length) {
          const searchTerms = inputValue
-            .toLowerCase() 
+            .toLowerCase()
             .trim()
-            .split(/\s+/) 
-            .filter(term => term.length > 0); 
+            .split(/\s+/)
+            .filter((term) => term.length > 0);
 
          if (searchTerms.length > 0) {
-            
             const filteredExerciseNames = exerciseNames.filter((name) => {
                const lowerCaseName = name.toLowerCase();
 
-               return searchTerms.every(term => lowerCaseName.includes(term));
+               return searchTerms.every((term) => lowerCaseName.includes(term));
             });
             setExerciseNameSuggestions(filteredExerciseNames);
-
          } else {
-             setExerciseNameSuggestions([]);
+            setExerciseNameSuggestions([]);
          }
-
       } else {
          setExerciseNameSuggestions([]);
       }

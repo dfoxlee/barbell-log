@@ -16,7 +16,11 @@ export default function StandardBtn({
    onClick,
 }: StandardBtnPropsType) {
    return (
-      <button className={styles.btn} disabled={disabled} onClick={onClick}>
+      <button
+         className={disabled ? `${styles.btn} ${styles.btnDisabled}` : styles.btn}
+         disabled={disabled}
+         onClick={onClick}
+      >
          {Icon ? <Icon /> : null}
          <span className={styles.text}>{text}</span>
       </button>

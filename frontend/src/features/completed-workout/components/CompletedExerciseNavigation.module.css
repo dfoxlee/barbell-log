@@ -36,3 +36,17 @@
    justify-content: center;
    margin-top: 20px;
 }
+
+.exerciseWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.exerciseNameInput {
+   background: none;
+   border: 1px solid var(--primary);
+   color: white;
+   padding: 
+}

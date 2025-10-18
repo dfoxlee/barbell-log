@@ -14,7 +14,7 @@ export default function StandardIconBtn({
    onClick,
 }: StandardIconBtnPropsType) {
    return (
-      <button className={styles.btn} onClick={onClick} disabled={disabled}>
+      <button className={disabled ? `${styles.btn} ${styles.btnDisabled}` : styles.btn} onClick={onClick} disabled={disabled}>
          <Icon />
       </button>
    );

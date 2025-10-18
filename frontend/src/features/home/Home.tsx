@@ -24,7 +24,6 @@ export default function Home() {
    const filterMacrosModalOpen = useModalsStore(
       (state) => state.filterMacrosModalOpen
    );
-   console.log(filterMacrosModalOpen)
 
    const toggleStartWorkoutModalOpen = () => {
       setStartWorkoutModalOpen((prev) => !prev);
