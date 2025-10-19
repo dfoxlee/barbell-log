@@ -148,6 +148,7 @@ exports.updateWorkout = async (req, res, next) => {
                      sec: exerciseSet.sec,
                      distance: exerciseSet.distance,
                      distanceUnit: exerciseSet.distanceUnit,
+                     notes: ''
                   });
                }
             }

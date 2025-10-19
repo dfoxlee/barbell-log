@@ -5,12 +5,20 @@ import { useState, type ChangeEvent } from "react";
 import DistanceUnitSelector from "../../shared/DistanceUnitSelector";
 import { useUserStore } from "../../../stores/user.store";
 import toastify from "../../../utils/toastify";
-import { fetchUpdateUnitPreference } from "../../../services/user.services";
+import {
+   fetchUpdatePassword,
+   fetchUpdateUnitPreference,
+} from "../../../services/user.services";
 import StandardBtn from "../../shared/StandardBtn";
 import Seperator from "../../shared/Seperator";
 import PasswordChangeInput from "./PasswordChangeInput";
 
 import styles from "./SettingsModal.module.css";
+import { useNavigate } from "react-router-dom";
+import {
+   getPasswordComplianceMessage,
+   validatePassword,
+} from "../../../utils/validation";
 
 interface SettingsModalPropsType {
    toggleSettingsModalOpen: () => void;
@@ -19,7 +27,6 @@ interface SettingsModalPropsType {
 export default function SettingsModal({
    toggleSettingsModalOpen,
 }: SettingsModalPropsType) {
-   const [prevPassword, setPrevPassword] = useState("");
    const [newPassword, setNewPassword] = useState("");
    const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
@@ -36,6 +43,8 @@ export default function SettingsModal({
       (state) => state.setDistanceUnitPreference
    );
    const token = useUserStore((state) => state.token);
+   const logout = useUserStore((state) => state.logout);
+   const navigate = useNavigate();
 
    const handleWeightUnitPreferenceChange = async (
       event: ChangeEvent<HTMLSelectElement>
@@ -95,12 +104,48 @@ export default function SettingsModal({
       console.log("delete account");
    };
 
-   const handleSavePasswordClick = () => {
-      console.log("savePassword");
-   };
+   const handleSavePasswordClick = async () => {
+      if (!newPassword || !newPassword.length) {
+         return toastify({
+            message: "Password cannot be blank.",
+            type: "info",
+         });
+      }
 
-   const handlePrevPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setPrevPassword(event.target.value);
+      if (newPassword !== confirmNewPassword) {
+         return toastify({
+            message: "Confirmation password must match the new password.",
+            type: "warning",
+         });
+      }
+
+      if (!validatePassword(newPassword)) {
+         return toastify({
+            message: getPasswordComplianceMessage(newPassword),
+            type: "info",
+         });
+      }
+
+      if (token) {
+         try {
+            await fetchUpdatePassword({ token, newPassword });
+         } catch (error) {
+            console.error(error);
+
+            return toastify({
+               message:
+                  "An error occurred while updating the password. Please try again later.",
+               type: "error",
+            });
+         }
+      }
+
+      toastify({
+         message: "Password changed successfully",
+         type: "success",
+      });
+      setNewPassword("");
+      setConfirmNewPassword("");
    };
 
    const handleNewPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -113,6 +158,11 @@ export default function SettingsModal({
       setConfirmNewPassword(event.target.value);
    };
 
+   const handleLogoutClick = () => {
+      logout();
+      navigate("/");
+   };
+
    return (
       <div className={styles.container}>
          <div className={styles.wrapper}>
@@ -120,6 +170,9 @@ export default function SettingsModal({
             <h2 className={`modalTitle`}>Settings</h2>
             <Seperator />
             <div className={styles.content}>
+               <div className={styles.logoutBtnWrapper}>
+                  <StandardBtn text="Logout" onClick={handleLogoutClick} />
+               </div>
                <h3 className={styles.sectionTitle}>Update Unit Preferences</h3>
                <div>
                   <div className={styles.unitPreferenceWrapper}>
@@ -143,18 +196,6 @@ export default function SettingsModal({
                </div>
                <h3 className={styles.sectionTitle}>Change Password</h3>
                <div className={styles.changePasswordWrapper}>
-                  <div className={styles.changePasswordInputWrapper}>
-                     <label
-                        className={styles.changePasswordLabel}
-                        htmlFor="previous-password"
-                     >
-                        previous password
-                     </label>
-                     <PasswordChangeInput
-                        value={prevPassword}
-                        onChange={handlePrevPasswordChange}
-                     />
-                  </div>
                   <div className={styles.changePasswordInputWrapper}>
                      <label
                         className={styles.changePasswordLabel}

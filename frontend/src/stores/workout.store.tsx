@@ -11,7 +11,10 @@ interface WorkoutStoreType {
    toggleShowExercisesOverview: () => void;
    setWorkouts: (workouts: WorkoutType[]) => void;
    setWorkoutComposition: (workout: WorkoutType) => void;
-   addExercise: () => void;
+   addExercise: (
+      weightUnitPreference?: number | null,
+      distanceUnitPreference?: number | null
+   ) => void;
    setWorkoutTypes: (workoutTypes: WorkoutTypeType[]) => void;
    incrementCurrentExerciseOrder: () => void;
    decrementCurrentExerciseOrder: () => void;
@@ -59,7 +62,7 @@ export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
 
    setWorkoutComposition: (workout) => set({ workoutComposition: workout }),
 
-   addExercise: () => {
+   addExercise: (weightUnitPreference, distanceUnitPreference) => {
       const workoutComposition = get().workoutComposition;
 
       const maxExerciseOrder = workoutComposition?.exercises.reduce(
@@ -81,12 +84,12 @@ export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
                isDistance: false,
                reps: 0,
                weight: 0,
-               weightUnit: 1,
+               weightUnit: weightUnitPreference ?? 1,
                hr: 0,
                min: 0,
                sec: 0,
                distance: 0,
-               distanceUnit: 7,
+               distanceUnit: distanceUnitPreference ?? 7,
             },
          ],
       };

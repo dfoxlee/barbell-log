@@ -13,7 +13,6 @@ export default function Timer() {
    const restartTimer = useTimerStore((state) => state.restartTimer);
 
    const handlePausePlayClick = () => {
-      console.log("pause play");
       if (timerState === "Paused") {
          playTimer();
       } else {
@@ -22,7 +21,6 @@ export default function Timer() {
    };
 
    const handleRestartClick = () => {
-      console.log("restart");
       restartTimer();
    };
 

@@ -1,0 +1,31 @@
+.container {
+   margin-top: 20px;
+}
+
+.exerciseName {
+   text-align: center;
+   font-size: 18px;
+   font-weight: 500;
+}
+
+.tableWrapper {
+   border-collapse: collapse;
+   width: 90%;
+   margin: 0 auto;
+}
+
+.tableHeader {
+   font-size: 14px;
+   color: var(--accent);
+   border-bottom: 1px solid var(--primary);
+}
+
+.tableHeader,
+.tableData {
+   text-align: center;
+   padding: 5px;
+}
+
+.tableData {
+   font-size: 18px;
+}

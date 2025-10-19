@@ -25,7 +25,7 @@ export default function DistanceInput({
    updateCompletedWorkout,
 }: DistanceInputProps) {
    const handleIncrementClick = () => {
-      const newValue = completedDistance + 1;
+      const newValue = parseFloat(completedDistance.toString()) + 1;
 
       updateCompletedWorkout({
          field: "completedDistance",
@@ -45,7 +45,7 @@ export default function DistanceInput({
    };
 
    const handleDecrementClick = () => {
-      const updatedValue = completedDistance - 1;
+      const updatedValue = parseFloat(completedDistance.toString()) - 1;
 
       if (updatedValue < 0) {
          return toastify({

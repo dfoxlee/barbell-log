@@ -15,6 +15,7 @@ import StandardBtn from "../../shared/StandardBtn";
 import ExerciseNameInput from "../../shared/ExerciseNameInput";
 import type { ExerciseSetType } from "../../../types/exercise-set.types";
 import { useModalsStore } from "../../../stores/modals.store";
+import { useUserStore } from "../../../stores/user.store";
 
 export default function ExerciseComposition() {
    const workoutComposition = useWorkoutStore(
@@ -39,6 +40,12 @@ export default function ExerciseComposition() {
    const setDeleteConfirmationWindowInfo = useModalsStore(
       (state) => state.setDeleteConfirmationWindowInfo
    );
+   const weightUnitPreference = useUserStore(
+      (state) => state.weightUnitPreference
+   );
+   const distanceUnitPreference = useUserStore(
+      (state) => state.distanceUnitPreference
+   );
 
    const currentExercise = useMemo(
       () =>
@@ -57,7 +64,7 @@ export default function ExerciseComposition() {
    };
 
    const handleAddExerciseClick = () => {
-      addExercise();
+      addExercise(weightUnitPreference, distanceUnitPreference);
    };
 
    const deleteExercise = () => {
@@ -228,12 +235,14 @@ export default function ExerciseComposition() {
    return (
       <>
          <div className={styles.header}>
-            {currentExerciseOrder > 1 ? (
-               <StandardIconBtn
-                  Icon={FaChevronLeft}
-                  onClick={handleExerciseDecrementClick}
-               />
-            ) : null}
+            <div className={styles.btnWrapper}>
+               {currentExerciseOrder > 1 ? (
+                  <StandardIconBtn
+                     Icon={FaChevronLeft}
+                     onClick={handleExerciseDecrementClick}
+                  />
+               ) : null}
+            </div>
             <select
                className={styles.exerciseSelector}
                name="exercises"
@@ -252,19 +261,21 @@ export default function ExerciseComposition() {
                   </option>
                ))}
             </select>
-            {workoutComposition?.exercises &&
-            currentExerciseOrder < workoutComposition?.exercises.length ? (
-               <StandardIconBtn
-                  Icon={FaChevronRight}
-                  onClick={handleExerciesIncrementClick}
-               />
-            ) : (
-               <StandardBtn
-                  text="Exercise"
-                  Icon={FaPlus}
-                  onClick={handleAddExerciseClick}
-               />
-            )}
+            <div className={styles.btnWrapper}>
+               {workoutComposition?.exercises &&
+               currentExerciseOrder < workoutComposition?.exercises.length ? (
+                  <StandardIconBtn
+                     Icon={FaChevronRight}
+                     onClick={handleExerciesIncrementClick}
+                  />
+               ) : (
+                  <StandardBtn
+                     text="Exercise"
+                     Icon={FaPlus}
+                     onClick={handleAddExerciseClick}
+                  />
+               )}
+            </div>
          </div>
          <div className={styles.exerciseNameWrapper}>
             <ExerciseNameInput

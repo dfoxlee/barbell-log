@@ -14,6 +14,12 @@ usersRouter.post(
    UsersController.updateUnitPreference
 );
 
+usersRouter.post(
+   "/update-password",
+   authMiddleware,
+   UsersController.updatePassword
+);
+
 usersRouter.get("/logout", authMiddleware, UsersController.logout);
 
 usersRouter.get("/:confirmationToken", UsersController.confirmEmail);

@@ -117,7 +117,12 @@ export default function CompletedExerciseNavigation() {
                   onChange={handleCompletedExerciseNameChange}
                />
             )}
-            <StandardIconBtn Icon={FaEdit} onClick={handleEditExerciseClick} />
+            <div className={styles.editExerciseBtnWrapper}>
+               <StandardIconBtn
+                  Icon={FaEdit}
+                  onClick={handleEditExerciseClick}
+               />
+            </div>
          </div>
          {completedWorkout?.completedExercises &&
          currentCompletedExerciseOrder <

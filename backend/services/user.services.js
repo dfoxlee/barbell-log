@@ -88,7 +88,8 @@ exports.updateUser = async ({ updatedUser }) => {
          refresh_token = ?,
          created_date = ?,
          weight_unit_preference = ?,
-         distance_unit_preference = ?
+         distance_unit_preference = ?,
+         last_password_change = ?
       where
          user_id = ?;
    `;
@@ -103,6 +104,7 @@ exports.updateUser = async ({ updatedUser }) => {
       updatedUser.createdDate,
       updatedUser.weightUnitPreference,
       updatedUser.distanceUnitPreference,
+      updatedUser.lastPasswordChange,
       updatedUser.userId,
    ];
 
@@ -113,4 +115,17 @@ exports.updateUser = async ({ updatedUser }) => {
    }
 
    return results.affectedRows;
+};
+
+exports.addLoginRecord = async ({ userId, loginDate }) => {
+   const query = `
+      insert into user_login_record
+      values(?, ?);
+   `;
+
+   const values = [userId, loginDate];
+
+   await pool.execute(query, values);
+
+   return;
 };

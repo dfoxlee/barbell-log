@@ -11,6 +11,14 @@ export const dateFormat = (date: Date) => {
    return `${month}/${day}/${year}`;
 };
 
+const formatNumberForDisplay = (num: number) => {
+   if (num % 1 === 0) {
+      return parseInt(num.toString());
+   }
+
+   return num.toString();
+};
+
 export const exerciseSetFormat = ({
    exerciseSet,
    weightUnits,
@@ -26,12 +34,18 @@ export const exerciseSetFormat = ({
       text = text + exerciseSet.reps;
    }
 
-   text =
-      text +
-      ` X ${exerciseSet.weight} ${
-         weightUnits.find((unit) => unit.unitId === exerciseSet.weightUnit)
-            ?.unitAbbreviation
-      }`;
+   if (exerciseSet.hasReps && exerciseSet.weight > 0) {
+      text += " X ";
+   }
+
+   if (exerciseSet.weight > 0) {
+      const formattedWeight = formatNumberForDisplay(exerciseSet.weight);
+      const weightAbbreviation = weightUnits.find(
+         (unit) => unit.unitId === exerciseSet.weightUnit
+      )?.unitAbbreviation;
+
+      text = text + `${formattedWeight} ${weightAbbreviation}`;
+   }
 
    if (exerciseSet.isTimed) {
       if (exerciseSet.hr > 0) {
@@ -55,10 +69,12 @@ export const exerciseSetFormat = ({
    }
 
    if (exerciseSet.isDistance) {
-      text += ` ${exerciseSet.distance} ${
-         distanceUnits.find((unit) => unit.unitId === exerciseSet.distanceUnit)
-            ?.unitAbbreviation
-      }`;
+      const formattedDistance = formatNumberForDisplay(exerciseSet.distance);
+      const distanceAbbreviation = distanceUnits.find(
+         (unit) => unit.unitId === exerciseSet.distanceUnit
+      )?.unitAbbreviation;
+
+      text += ` ${formattedDistance} ${distanceAbbreviation}`;
    }
 
    return text;

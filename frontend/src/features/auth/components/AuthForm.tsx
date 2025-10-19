@@ -5,6 +5,10 @@ import { useUserStore } from "../../../stores/user.store";
 import { fetchLogin, fetchSignUp } from "../../../services/user.services";
 
 import styles from "./AuthForm.module.css";
+import {
+   getPasswordComplianceMessage,
+   validatePassword,
+} from "../../../utils/validation";
 
 export default function AuthForm({ authTitle }: { authTitle: string }) {
    const [emailInput, setEmailInput] = useState("");
@@ -56,6 +60,13 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
             return toastify({
                message: "Passwords must match.",
                type: "warn",
+            });
+         }
+
+         if (!validatePassword(passwordInput)) {
+            return toastify({
+               message: getPasswordComplianceMessage(passwordInput),
+               type: "info",
             });
          }
       }

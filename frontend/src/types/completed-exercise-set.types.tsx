@@ -1,6 +1,8 @@
 export interface CompletedExerciseSetType {
    completedExerciseSetId?: number;
+   exerciseSetId?: number;
    completedExerciseSetOrder: number;
+   wasCompleted: boolean;
    hadReps: boolean;
    wasTimed: boolean;
    wasDistance: boolean;

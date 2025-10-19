@@ -9,6 +9,7 @@ interface ModalsStoreType {
    } | null;
    filterMacrosModalOpen: boolean;
    selectedMetrics: MetricType[];
+   viewWorkoutDetailsId: number | null;
    toggleMetric: (metric: MetricType) => void;
    setDeleteConfirmationWindowInfo: (
       deleteConfirmationWindowInfo: {
@@ -18,6 +19,7 @@ interface ModalsStoreType {
       } | null
    ) => void;
    toggleFilterMacrosModalOpen: () => void;
+   setViewWorkoutDetailsId: (workoutId: number | null) => void;
 }
 
 export const useModalsStore = create<ModalsStoreType>((set, get) => ({
@@ -28,6 +30,7 @@ export const useModalsStore = create<ModalsStoreType>((set, get) => ({
       { key: "totalProtein", label: "Protein (g)", unit: "g" },
       { key: "totalCarbohydrates", label: "Carbohydrates (g)", unit: "g" },
    ],
+   viewWorkoutDetailsId: null,
 
    toggleMetric: (metric) => {
       const currentMetrics = get().selectedMetrics;
@@ -49,4 +52,6 @@ export const useModalsStore = create<ModalsStoreType>((set, get) => ({
       set(({ filterMacrosModalOpen }) => ({
          filterMacrosModalOpen: !filterMacrosModalOpen,
       })),
+   setViewWorkoutDetailsId: (workoutId) =>
+      set({ viewWorkoutDetailsId: workoutId }),
 }));

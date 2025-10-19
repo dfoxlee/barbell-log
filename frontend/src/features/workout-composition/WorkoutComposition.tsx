@@ -39,7 +39,37 @@ export default function WorkoutComposition() {
    const resetWorkoutComposition = useWorkoutStore(
       (state) => state.resetWorkoutComposition
    );
+   const weightUnitPreference = useUserStore(
+      (state) => state.weightUnitPreference
+   );
+   const distanceUnitPreference = useUserStore(
+      (state) => state.distanceUnitPreference
+   );
    const [isLoading, setIsLoading] = useState(false);
+
+   useEffect(() => {
+      if (
+         workoutComposition &&
+         weightUnitPreference &&
+         distanceUnitPreference
+      ) {
+         const updatedExercises = workoutComposition.exercises.map((e) => ({
+            ...e,
+            exerciseSets: e.exerciseSets.map((s) => ({
+               ...s,
+               weightUnit: weightUnitPreference,
+               distanceUnit: distanceUnitPreference,
+            })),
+         }));
+
+         const updatedWorkoutComposition = {
+            ...workoutComposition,
+            exercises: updatedExercises,
+         };
+
+         setWorkoutComposition(updatedWorkoutComposition);
+      }
+   }, []);
 
    useEffect(() => {
       const getWorkout = async () => {
@@ -47,7 +77,7 @@ export default function WorkoutComposition() {
             setIsLoading(true);
             const workoutReq = await fetchGetWorkout({
                token: token!,
-               workoutId: workoutId!,
+               workoutId: parseInt(workoutId ?? "-1"),
             });
 
             setWorkoutComposition(workoutReq.workout);

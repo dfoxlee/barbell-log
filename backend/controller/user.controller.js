@@ -98,6 +98,10 @@ exports.login = async (req, res, next) => {
 
       await UserServices.updateUser({ updatedUser });
 
+      const loginDate = formatDateForDatabase(new Date());
+
+      await UserServices.addLoginRecord({ userId: user.userId, loginDate });
+
       return res.status(200).json({
          token,
          weightUnitPreference: user.weightUnitPreference,
@@ -172,6 +176,35 @@ exports.updateUnitPreference = async (req, res, next) => {
       await UserServices.updateUser({ updatedUser });
 
       return res.status(200).json("Units updated.");
+   } catch (error) {
+      next(error);
+   }
+};
+
+exports.updatePassword = async (req, res, next) => {
+   try {
+      const { userId } = req;
+      const { newPassword } = req.body;
+
+      const hashPassword = await encryptPassword(newPassword);
+
+      const user = await UserServices.fetchOneUser({ userId });
+
+      if (!user) {
+         throw new Error("Unable to find user.");
+      }
+
+      const lastPasswordChange = formatDateForDatabase(new Date());
+
+      const updatedUser = {
+         ...user,
+         hashPassword,
+         lastPasswordChange,
+      };
+
+      await UserServices.updateUser({ updatedUser });
+
+      return res.status(200).json("Password updated successfully.");
    } catch (error) {
       next(error);
    }

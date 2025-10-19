@@ -78,6 +78,39 @@ exports.getExerciseSets = async ({ exerciseId }) => {
    return results;
 };
 
+exports.getExerciseSetById = async ({ exerciseSetId }) => {
+   let query = ``;
+   let values = [];
+
+   if (exerciseSetId) {
+      query = `
+         select exercise_set_id as exerciseSetId,
+            exercise_set_order as exerciseSetOrder,
+            has_reps as hasReps,
+            is_timed as isTimed,
+            is_distance as isDistance,
+            reps,
+            weight,
+            weight_unit as weightUnit,
+            hr,
+            min,
+            sec,
+            distance,
+            distance_unit as distanceUnit
+         from exercise_set
+         where exercise_set_id = ?;
+      `;
+
+      values = [exerciseSetId];
+   } else {
+      return;
+   }
+
+   const [results] = await pool.execute(query, values);
+
+   return results[0];
+};
+
 exports.updateExerciseSet = async ({ exerciseSet }) => {
    const query = `
       update exercise_set

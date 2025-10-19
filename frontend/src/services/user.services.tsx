@@ -91,6 +91,31 @@ export const fetchUpdateUnitPreference = async ({
    return;
 };
 
+export const fetchUpdatePassword = async ({
+   token,
+   newPassword,
+}: {
+   token: string;
+   newPassword: string;
+}) => {
+   const req = await fetch(`${baseUrl}/users/update-password`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+         newPassword,
+      }),
+   });
+
+   if (!req.ok) {
+      throw new Error("An error occurred while updating the password.");
+   }
+
+   return;
+};
+
 export const fetchValidateEmailToken = async ({
    validationToken,
 }: {

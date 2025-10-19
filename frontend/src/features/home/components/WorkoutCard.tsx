@@ -8,19 +8,25 @@ import { fetchDeleteWorkout } from "../../../services/workout.services";
 import { useUserStore } from "../../../stores/user.store";
 import toastify from "../../../utils/toastify";
 import { useFetchWorkouts } from "../../../hooks/useFetchWorkouts";
+import { useModalsStore } from "../../../stores/modals.store";
 
 export default function WorkoutCard({ workout }: { workout: WorkoutType }) {
    const { workoutTypes } = useFetchWorkoutTypes();
    const token = useUserStore((state) => state.token);
    const { getWorkouts } = useFetchWorkouts();
    const navigate = useNavigate();
+   const setViewWorkoutDetailsId = useModalsStore(
+      (state) => state.setViewWorkoutDetailsId
+   );
 
    const handleViewWorkoutClick = () => {
-      console.log("view workout");
+      if (workout?.workoutId) {
+         setViewWorkoutDetailsId(workout?.workoutId);
+      }
    };
 
    const handleStartWorkoutClick = () => {
-      console.log("start workout");
+      navigate(`/home/completed-workout/${workout.workoutId}`);
    };
 
    const handleEditWorkoutClick = () => {

@@ -24,3 +24,14 @@
    justify-content: center;
    align-items: start;
 }
+
+.completeExerciseSetBtn {
+   background: none;
+   border-style: none;
+   color: var(--accent);
+   font-size: 24px;
+}
+
+.completedExerciseSetBtn {
+   color: var(--primary);
+}

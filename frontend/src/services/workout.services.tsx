@@ -51,7 +51,7 @@ export const fetchGetWorkout = async ({
    workoutId,
 }: {
    token: string;
-   workoutId: string;
+   workoutId: number;
 }) => {
    const request = await fetch(`${baseUrl}/workouts/${workoutId}`, {
       method: "GET",
