@@ -95,13 +95,23 @@ export const completedExerciseSetFormat = ({
       text = text + completedExerciseSet.completedReps;
    }
 
-   text =
-      text +
-      ` X ${completedExerciseSet.completedWeight} ${
-         weightUnits.find(
-            (unit) => unit.unitId === completedExerciseSet.completedWeightUnit
-         )?.unitAbbreviation
-      }`;
+   if (
+      completedExerciseSet.hadReps &&
+      completedExerciseSet.completedWeight > 0
+   ) {
+      text += " X ";
+   }
+
+   if (completedExerciseSet.completedWeight > 0) {
+      const formattedWeight = formatNumberForDisplay(
+         completedExerciseSet.completedWeight
+      );
+      const weightAbbreviation = weightUnits.find(
+         (unit) => unit.unitId === completedExerciseSet.completedWeightUnit
+      )?.unitAbbreviation;
+
+      text = text + `${formattedWeight} ${weightAbbreviation}`;
+   }
 
    if (completedExerciseSet.wasTimed) {
       if (completedExerciseSet.completedHr > 0) {

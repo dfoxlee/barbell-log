@@ -5,6 +5,7 @@ import { useWorkoutStore } from "../../../stores/workout.store";
 import { useModalsStore } from "../../../stores/modals.store";
 
 import styles from "./ExerciseOverview.module.css";
+import type { WorkoutType } from "../../../types/workout.types";
 
 export default function ExerciseOverview({
    exercise,
@@ -53,10 +54,12 @@ export default function ExerciseOverview({
          })
       );
 
-      setWorkoutComposition({
+      const updatedWorkout = {
          ...workoutComposition,
          exercises: reOrderedExercises,
-      });
+      };
+
+      setWorkoutComposition(updatedWorkout as WorkoutType);
 
       if (currentExerciseOrder > 1) {
          decrementCurrentExerciseOrder();
@@ -99,6 +102,7 @@ export default function ExerciseOverview({
             workoutComposition?.exercises.length > 1 ? (
                <StandardIconBtn
                   Icon={FaTrash}
+                  theme="WARNING"
                   onClick={handleDeleteExerciseClick}
                />
             ) : null}

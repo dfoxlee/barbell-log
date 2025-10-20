@@ -26,8 +26,9 @@ const authMiddleware = async (req, res, next) => {
 
       const user = await UserServices.fetchOneUser({ userId });
 
-      if (!user) {
+      if (!user || !user.isActive) {
          logger.info(`authMiddleware > Invalid token: ${token}`);
+         
          return res
             .status(401)
             .json({ error: true, message: "Unauthorized: Invalid user." });

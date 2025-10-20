@@ -17,6 +17,7 @@ import type { CompletedWorkoutType } from "../../types/completed-workout.types";
 
 import styles from "./CompletedWorkout.module.css";
 import CompletedExerciseComposition from "./components/CompletedExerciseComposition";
+import CompletedExercisesOverview from "./components/CompletedExercisesOverview";
 
 export default function CompletedWorkout() {
    const params = useParams();
@@ -36,6 +37,9 @@ export default function CompletedWorkout() {
    const pauseTimer = useTimerStore((state) => state.pauseTimer);
    const restartTimer = useTimerStore((state) => state.restartTimer);
    const [isLoading, setIsLoading] = useState(false);
+   const [viewState, setViewState] = useState<"EXERCISE" | "OVERVIEW">(
+      "EXERCISE"
+   );
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -99,7 +103,7 @@ export default function CompletedWorkout() {
    };
 
    const handleExercisesOverviewClick = () => {
-      console.log("view completed exercises overview");
+      setViewState((prev) => (prev === "EXERCISE" ? "OVERVIEW" : "EXERCISE"));
    };
 
    const handleCompletedWorkoutNameChange = (
@@ -135,6 +139,7 @@ export default function CompletedWorkout() {
             <StandardBtn
                text="Complete Workout"
                onClick={handleCompleteWorkoutClick}
+               theme="SUCCESS"
             />
          </div>
          <div className={styles.workoutNameInputWrapper}>
@@ -151,10 +156,17 @@ export default function CompletedWorkout() {
             <StandardBtn
                text="Exercises Overview"
                onClick={handleExercisesOverviewClick}
+               theme="INFO"
             />
          </div>
          <Seperator />
-         <CompletedExerciseComposition />
+         {viewState === "EXERCISE" ? (
+            <CompletedExerciseComposition />
+         ) : (
+            <CompletedExercisesOverview
+               handleExercisesOverviewClick={handleExercisesOverviewClick}
+            />
+         )}
       </div>
    );
 }

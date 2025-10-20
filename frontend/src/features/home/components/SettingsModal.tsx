@@ -6,6 +6,8 @@ import DistanceUnitSelector from "../../shared/DistanceUnitSelector";
 import { useUserStore } from "../../../stores/user.store";
 import toastify from "../../../utils/toastify";
 import {
+   fetchDeleteUser,
+   fetchDeleteUserData,
    fetchUpdatePassword,
    fetchUpdateUnitPreference,
 } from "../../../services/user.services";
@@ -33,6 +35,7 @@ export default function SettingsModal({
    const weightUnitPreference = useUserStore(
       (state) => state.weightUnitPreference
    );
+   const setUser = useUserStore((state) => state.setUser);
    const setWeightUnitPreference = useUserStore(
       (state) => state.setWeightUnitPreference
    );
@@ -96,12 +99,39 @@ export default function SettingsModal({
       }
    };
 
-   const handleDeleteAllWorkoutData = () => {
-      console.log("delete all data");
+   const handleDeleteAllWorkoutData = async () => {
+      try {
+         await fetchDeleteUserData({ token: token! });
+         toggleSettingsModalOpen();
+      } catch (error) {
+         console.error(error);
+
+         return toastify({
+            message: "An error occurred deleting data. Please try again later.",
+            type: "error",
+         });
+      }
    };
 
-   const handleDeleteAccount = () => {
-      console.log("delete account");
+   const handleDeleteAccount = async () => {
+      try {
+         await fetchDeleteUser({ token: token! });
+         setUser({
+            token: "",
+            weightUnitPreference: 1,
+            distanceUnitPreference: 1,
+         });
+         localStorage.removeItem("barbell-log");
+         toggleSettingsModalOpen();
+         navigate("/");
+      } catch (error) {
+         console.error(error);
+
+         return toastify({
+            message: "An error occurred deleting data. Please try again later.",
+            type: "error",
+         });
+      }
    };
 
    const handleSavePasswordClick = async () => {
@@ -228,10 +258,12 @@ export default function SettingsModal({
                <Seperator />
                <StandardBtn
                   text="Delete All Workout and Nutrition Data"
+                  theme="WARNING"
                   onClick={handleDeleteAllWorkoutData}
                />
                <StandardBtn
                   text="Delete Account"
+                  theme="ERROR"
                   onClick={handleDeleteAccount}
                />
             </div>

@@ -97,13 +97,26 @@ exports.updateWorkout = async ({ workout }) => {
    return;
 };
 
-exports.deleteWorkout = async ({ workoutId }) => {
-   const query = `
+exports.deleteWorkout = async ({ workoutId, userId }) => {
+   let query = ``;
+   let values = [];
+   if (workoutId) {
+      query = `
       delete from workout
       where workout_id = ?;
-   `;
+      `;
 
-   const values = [workoutId];
+      values = [workoutId];
+   } else if (userId) {
+      query = `
+      delete from workout
+      where user_id = ?;
+      `;
+
+      values = [userId];
+   } else {
+      return;
+   }
 
    await pool.execute(query, values);
 

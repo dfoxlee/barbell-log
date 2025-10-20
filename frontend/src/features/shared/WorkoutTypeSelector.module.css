@@ -1,8 +1,9 @@
 .selector {
    background: none;
-   border: 1px solid var(--primary);
+   border: none;
+   background-color: var(--info);
    border-radius: 5px;
-   color: white;
+   color: var(--secondary);
    padding: 8px 10px;
    font-size: 14px;
 }

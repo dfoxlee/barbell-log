@@ -123,6 +123,7 @@ export const useWorkoutStore = create<WorkoutStoreType>((set, get) => ({
 
    resetWorkoutComposition: () =>
       set({
+         showExercisesOverview: false,
          workoutComposition: {
             workoutName: "",
             workoutType: 12,

@@ -175,6 +175,7 @@ export default function WorkoutComposition() {
                text={workoutId ? "Update" : "Save"}
                onClick={handleSaveClick}
                disabled={isLoading}
+               theme="SUCCESS"
             />
          </div>
          {isLoading ? (
@@ -196,6 +197,7 @@ export default function WorkoutComposition() {
                            ? "Exercise Detail"
                            : "Exercises Overview"
                      }
+                     theme="INFO"
                      onClick={toggleShowExercisesOverview}
                   />
                </div>

@@ -1,4 +1,4 @@
-import { FaPlusCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { FaPlus, FaPlusCircle, FaTimes, FaTrash } from "react-icons/fa";
 import StandardIconBtn from "../../shared/StandardIconBtn";
 import WholeValueInput from "../../shared/WholeValueInput";
 import WeightUnitSelector from "../../shared/WeightUnitSelector";
@@ -234,40 +234,36 @@ export default function BodyweightModal({
             />
             <h2 className={`modalTitle`}>Bodyweight Readings</h2>
             <Seperator />
-            <div className={styles.tableWrapper}>
-               <table className={styles.table}>
-                  <thead>
-                     <tr>
-                        <th className={styles.tableHeader}>date</th>
-                        <th className={styles.tableHeader}>measurement</th>
-                        <th className={styles.tableHeader}>unit</th>
-                        <th className={styles.tableHeader}>options</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td className={styles.tableData}>New</td>
-                        <td className={styles.tableData}>
-                           <WholeValueInput
-                              value={bodyweightReading}
-                              onBlur={updateBodyweightInput}
-                           />
-                        </td>
-                        <td className={styles.tableData}>
-                           <WeightUnitSelector
-                              value={bodyweightUnit ?? 1}
-                              onChange={handleBodyweightUnitChange}
-                           />
-                        </td>
-                        <td className={styles.tableData}>
-                           <StandardIconBtn
-                              Icon={FaPlusCircle}
-                              onClick={handleAddBodyweightReading}
-                           />
-                        </td>
-                     </tr>
-                     {bodyweightReadings &&
-                        bodyweightReadings.map((reading) => (
+            <div className={styles.contentWrapper}>
+               <div className={styles.addBodyweightWrapper}>
+                  <div className={styles.weightWrapper}>
+                     <WholeValueInput
+                        value={bodyweightReading}
+                        onBlur={updateBodyweightInput}
+                     />
+                     <WeightUnitSelector
+                        value={bodyweightUnit ?? 1}
+                        onChange={handleBodyweightUnitChange}
+                     />
+                  </div>
+                  <StandardBtn
+                     Icon={FaPlus}
+                     text="Bodyweight"
+                     onClick={handleAddBodyweightReading}
+                  />
+               </div>
+               {bodyweightReadings && bodyweightReadings.length > 0 ? (
+                  <table className={styles.tableWrapper}>
+                     <thead>
+                        <tr>
+                           <th className={styles.tableHeader}>date</th>
+                           <th className={styles.tableHeader}>measurement</th>
+                           <th className={styles.tableHeader}>unit</th>
+                           <th className={styles.tableHeader}>options</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {bodyweightReadings.map((reading) => (
                            <tr key={reading.bodyweightReadingId}>
                               <td className={styles.tableData}>
                                  {new Date(
@@ -302,6 +298,7 @@ export default function BodyweightModal({
                               <td className={styles.tableData}>
                                  <StandardIconBtn
                                     Icon={FaTrash}
+                                    theme="WARNING"
                                     onClick={() =>
                                        handleDeleteBodyweightReading(
                                           reading.bodyweightReadingId
@@ -311,14 +308,18 @@ export default function BodyweightModal({
                               </td>
                            </tr>
                         ))}
-                  </tbody>
-               </table>
-            </div>
-            <div className={styles.deleteBodyweightsBtnWrapper}>
-               <StandardBtn
-                  text="Delete All Readings"
-                  onClick={handleDeleteAllBodyweightReadings}
-               />
+                     </tbody>
+                  </table>
+               ) : null}
+               {bodyweightReadings && bodyweightReadings.length ? (
+                  <div className={styles.deleteBodyweightsBtnWrapper}>
+                     <StandardBtn
+                        text="Delete All Readings"
+                        theme="WARNING"
+                        onClick={handleDeleteAllBodyweightReadings}
+                     />
+                  </div>
+               ) : null}
             </div>
          </div>
       </div>

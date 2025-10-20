@@ -114,3 +114,30 @@ exports.getGroupedNutritionReadings = async ({ userId }) => {
 
    return results;
 };
+
+exports.deleteNutritionReadings = async ({ userId, nutritionReadingId }) => {
+   let query = ``;
+   let values = [];
+
+   if (userId) {
+      query = `
+         delete from nutrition_reading
+         where user_id = ?;
+      `;
+
+      values = [userId];
+   } else if (nutritionReadingId) {
+      query = `
+         delete from nutrition_reading
+         where nutrition_reading_id = ?;
+      `;
+
+      values = [nutritionReadingId];
+   } else {
+      return;
+   }
+
+   await pool.execute(query, values);
+
+   return;
+};

@@ -45,6 +45,11 @@
    color: var(--secondary);
 }
 
+.currentOption {
+   color: white;
+   cursor: not-allowed;
+}
+
 .seperator {
    width: 90%;
    display: block;

@@ -8,6 +8,10 @@ const {
 const { formatDateForDatabase } = require("../utils/formatting.utils");
 const { htmlContent, transporter } = require("../utils/email.utils");
 const { debugConsoleLog } = require("../utils/debuggingUtils");
+const WorkoutServices = require("../services/workout.services");
+const CompletedWorkoutServices = require("../services/completed-workout.services");
+const ReadingServices = require("../services/reading.services");
+const NutritionServices = require("../services/nutrition.services");
 
 exports.signup = async (req, res, next) => {
    try {
@@ -77,7 +81,7 @@ exports.login = async (req, res, next) => {
 
       const user = await UserServices.fetchOneUser({ email });
 
-      if (!user) {
+      if (!user || !user.isActive) {
          throw new Error("Unable to find user.");
       }
 
@@ -128,7 +132,7 @@ exports.confirmEmail = async (req, res, next) => {
 
       const user = await UserServices.fetchOneUser({ email });
 
-      if (!user) {
+      if (!user || !user.isActive) {
          throw new Error("Unable to find user.");
       }
 
@@ -222,6 +226,44 @@ exports.logout = async (req, res, next) => {
       await UserServices.updateUser({ updatedUser });
 
       return res.status(200).json("User logged out.");
+   } catch (error) {
+      next(error);
+   }
+};
+
+exports.deleteAllUserData = async (req, res, next) => {
+   try {
+      const { userId } = req;
+
+      await WorkoutServices.deleteWorkout({ userId });
+      await CompletedWorkoutServices.deleteCompletedWorkout({ userId });
+      await NutritionServices.deleteNutritionReadings({ userId });
+      await ReadingServices.deleteAllBodyweightReadings({ userId });
+
+      return res.status(201).json("All workouts and reading data deleted.");
+   } catch (error) {
+      next(error);
+   }
+};
+
+exports.deleteUser = async (req, res, next) => {
+   try {
+      const { userId } = req;
+
+      const user = await UserServices.fetchOneUser({ userId });
+
+      if (!user) {
+         throw new Error("User not found.");
+      }
+
+      const updatedUser = {
+         ...user,
+         isActive: false,
+      };
+
+      await UserServices.updateUser({ updatedUser });
+
+      return res.status(201).json("User deleted.");
    } catch (error) {
       next(error);
    }

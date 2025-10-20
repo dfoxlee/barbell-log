@@ -9,7 +9,7 @@
 
 .wrapper {
    background-color: var(--secondary);
-   padding: 15px;
+   padding: 15px 15px 30px;
    border-radius: 10px;
    max-height: 500px;
    overflow-y: auto;
@@ -17,14 +17,30 @@
    max-width: 500px;
 }
 
-.tableWrapper {
+.contentWrapper {
    margin-top: 10px;
    display: flex;
    justify-content: center;
    align-items: center;
+   flex-direction: column;
+   gap: 20px;
 }
 
-.table {
+.weightWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: end;
+   gap: 5px;
+}
+
+.addBodyweightWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.tableWrapper {
    border-collapse: collapse;
 }
 
@@ -41,7 +57,6 @@
 }
 
 .deleteBodyweightsBtnWrapper {
-   margin-top: 20px;
    display: flex;
    justify-content: center;
    align-items: center;

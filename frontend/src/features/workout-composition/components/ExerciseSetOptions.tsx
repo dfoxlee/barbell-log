@@ -86,6 +86,7 @@ export default function ExerciseSetOptions({
             {showDeleteButton && (
                <StandardIconBtn
                   Icon={FaTrash}
+                  theme="WARNING"
                   onClick={() =>
                      handleDeleteSetClick(exerciseSet.exerciseSetOrder)
                   }

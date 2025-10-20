@@ -68,6 +68,7 @@ export default function WorkoutCard({ workout }: { workout: WorkoutType }) {
          <div className={styles.optionsWrapper}>
             <StandardIconBtn
                Icon={FaGlasses}
+               theme="INFO"
                onClick={handleViewWorkoutClick}
             />
             <StandardIconBtn
@@ -80,6 +81,7 @@ export default function WorkoutCard({ workout }: { workout: WorkoutType }) {
             />
             <StandardIconBtn
                Icon={FaTrash}
+               theme="WARNING"
                onClick={handleDeleteWorkoutClick}
             />
          </div>

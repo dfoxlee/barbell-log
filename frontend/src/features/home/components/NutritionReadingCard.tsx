@@ -58,6 +58,7 @@ export default function NutritionReadingCard({
             />
             <StandardIconBtn
                Icon={FaTrash}
+               theme="WARNING"
                onClick={handleDeleteNutritionReadingClick}
             />
          </div>

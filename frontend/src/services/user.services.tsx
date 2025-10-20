@@ -133,3 +133,39 @@ export const fetchValidateEmailToken = async ({
 
    return verificationResponse;
 };
+
+export const fetchDeleteUserData = async ({ token }: { token: string }) => {
+   const verificationRequest = await fetch(`${baseUrl}/users/data`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
+
+   if (!verificationRequest.ok) {
+      throw new Error("Something went wrong deleting data.");
+   }
+
+   const verificationResponse = await verificationRequest.json();
+
+   return verificationResponse;
+};
+
+export const fetchDeleteUser = async ({ token }: { token: string }) => {
+   const verificationRequest = await fetch(`${baseUrl}/users/`, {
+      method: "DELETE",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
+   });
+
+   if (!verificationRequest.ok) {
+      throw new Error("Something went wrong deleting user.");
+   }
+
+   const verificationResponse = await verificationRequest.json();
+
+   return verificationResponse;
+};

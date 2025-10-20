@@ -20,3 +20,24 @@
 .text {
    font-size: 14px;
 }
+
+.info {
+   background-color: var(--info);
+   border: 1px solid var(--info);
+   color: var(--secondary);
+}
+
+.success {
+   border: 1px solid var(--primary);
+   background-color: var(--primary);
+   color: var(--secondary);
+}
+
+.warning {
+   border: 1px solid var(--warning);
+   color: var(--warning);
+}
+.error {
+   border: 1px solid var(--error);
+   color: var(--error);
+}

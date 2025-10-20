@@ -24,4 +24,8 @@ usersRouter.get("/logout", authMiddleware, UsersController.logout);
 
 usersRouter.get("/:confirmationToken", UsersController.confirmEmail);
 
+usersRouter.delete("/", authMiddleware, UsersController.deleteUser);
+
+usersRouter.delete("/data", authMiddleware, UsersController.deleteAllUserData);
+
 module.exports = usersRouter;

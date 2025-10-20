@@ -80,15 +80,28 @@ exports.updateCompletedWorkout = async ({ completedWorkout }) => {
    return;
 };
 
-exports.deleteCompletedWorkout = async ({ completedWorkoutId }) => {
-   const query = `
+exports.deleteCompletedWorkout = async ({ completedWorkoutId, userId }) => {
+   let query = ``;
+   let values = [];
+   if (completedWorkoutId) {
+      query = `
       delete from completed_workout
       where completed_workout_id = ?;
-   `;
+      `;
 
-   const values = [completedWorkoutId];
+      values = [completedWorkoutId];
+   } else if (userId) {
+      query = `
+      delete from completed_workout
+      where user_id = ?;
+      `;
 
-   const [results] = await pool.execute(query, values);
+      values = [userId];
+   } else {
+      return;
+   }
+
+   await pool.execute(query, values);
 
    return;
 };

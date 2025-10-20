@@ -20,13 +20,13 @@ export default function StartWorkoutModal({
    const [workoutTypeFilter, setWorkoutTypeFilter] = useState(12);
    const workouts = useWorkoutStore((state) => state.workouts);
    const [filteredWorkouts, setFilteredWorkouts] = useState<WorkoutType[]>([]);
-   const [workoutSelected, setWorkoutSelected] = useState("");
+   const [workoutSelected, setWorkoutSelected] = useState<string>("");
    const navigate = useNavigate();
 
    useEffect(() => {
       if (workouts) {
          setFilteredWorkouts(workouts);
-         setWorkoutSelected(workouts[0].workoutName);
+         setWorkoutSelected(workouts[0]?.workoutName ?? "");
       }
    }, [workouts]);
 

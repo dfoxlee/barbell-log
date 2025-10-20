@@ -17,9 +17,11 @@ exports.fetchOneUser = async ({ userId, email }) => {
             created_date as createdDate,
             weight_unit_preference as weightUnitPreference,
             distance_unit_preference as distanceUnitPreference,
-            last_password_change as lastPasswordChange
+            last_password_change as lastPasswordChange,
+            is_active as isActive
          from user
          where user_id = ?
+         and is_active = 1
          limit 1;
       `;
 
@@ -36,7 +38,8 @@ exports.fetchOneUser = async ({ userId, email }) => {
             created_date as createdDate,
             weight_unit_preference as weightUnitPreference,
             distance_unit_preference as distanceUnitPreference,
-            last_password_change as lastPasswordChange
+            last_password_change as lastPasswordChange,
+            is_active as isActive
          from user
          where email = ?
          limit 1;
@@ -54,8 +57,8 @@ exports.fetchOneUser = async ({ userId, email }) => {
 
 exports.createUser = async ({ newUser }) => {
    const query = `
-      insert into user (email, hash_password, confirmation_token, is_email_confirmed, token, refresh_token, created_date, weight_unit_preference, distance_unit_preference)
-      values (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      insert into user (email, hash_password, confirmation_token, is_email_confirmed, token, refresh_token, created_date, weight_unit_preference, distance_unit_preference, is_active)
+      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
    `;
 
    const values = [
@@ -68,6 +71,7 @@ exports.createUser = async ({ newUser }) => {
       newUser.createdDate,
       newUser.weightUnitPreference,
       newUser.distanceUnitPreference,
+      1,
    ];
 
    const [results] = await pool.execute(query, values);
@@ -91,7 +95,8 @@ exports.updateUser = async ({ updatedUser }) => {
          created_date = ?,
          weight_unit_preference = ?,
          distance_unit_preference = ?,
-         last_password_change = ?
+         last_password_change = ?,
+         is_active = ?
       where
          user_id = ?;
    `;
@@ -107,6 +112,7 @@ exports.updateUser = async ({ updatedUser }) => {
       updatedUser.weightUnitPreference,
       updatedUser.distanceUnitPreference,
       updatedUser.lastPasswordChange,
+      updatedUser.isActive,
       updatedUser.userId,
    ];
 

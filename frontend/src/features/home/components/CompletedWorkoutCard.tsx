@@ -26,10 +26,6 @@ export default function CompletedWorkoutCard({
       }
    };
 
-   const handleStartWorkoutClick = () => {
-      console.log("start workout");
-   };
-
    const handleEditWorkoutClick = () => {
       console.log("edit workout");
    };
@@ -61,11 +57,8 @@ export default function CompletedWorkoutCard({
          <div className={styles.optionsWrapper}>
             <StandardIconBtn
                Icon={FaGlasses}
+               theme={"INFO"}
                onClick={handleViewWorkoutClick}
-            />
-            <StandardIconBtn
-               Icon={FaRunning}
-               onClick={handleStartWorkoutClick}
             />
             <StandardIconBtn
                Icon={FaPencilAlt}
@@ -73,6 +66,7 @@ export default function CompletedWorkoutCard({
             />
             <StandardIconBtn
                Icon={FaTrash}
+               theme="WARNING"
                onClick={handleDeleteWorkoutClick}
             />
          </div>
