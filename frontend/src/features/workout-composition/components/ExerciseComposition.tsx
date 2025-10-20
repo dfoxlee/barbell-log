@@ -8,14 +8,15 @@ import {
 import { useWorkoutStore } from "../../../stores/workout.store";
 
 import styles from "./ExerciseComposition.module.css";
-import { useMemo, type ChangeEvent } from "react";
+import { useMemo } from "react";
 import ExerciseSetsGrid from "./ExerciseSetsTable";
 import StandardIconBtn from "../../shared/StandardIconBtn";
 import StandardBtn from "../../shared/StandardBtn";
-import ExerciseNameInput from "../../shared/ExerciseNameInput";
 import type { ExerciseSetType } from "../../../types/exercise-set.types";
 import { useModalsStore } from "../../../stores/modals.store";
 import { useUserStore } from "../../../stores/user.store";
+import ExerciseNameInputSelector from "../../shared/ExerciseNameInputSelector";
+import type { WorkoutType } from "../../../types/workout.types";
 
 export default function ExerciseComposition() {
    const workoutComposition = useWorkoutStore(
@@ -82,7 +83,7 @@ export default function ExerciseComposition() {
       setWorkoutComposition({
          ...workoutComposition,
          exercises: reOrderedExercises,
-      });
+      } as WorkoutType);
 
       if (currentExerciseOrder > 1) {
          decrementCurrentExerciseOrder();
@@ -119,7 +120,7 @@ export default function ExerciseComposition() {
       setWorkoutComposition({
          ...workoutComposition,
          exercises: updatedExercises,
-      });
+      } as WorkoutType);
    };
 
    const handleAddExerciseSetClick = () => {
@@ -127,7 +128,9 @@ export default function ExerciseComposition() {
          (e) => e.exerciseOrder === currentExerciseOrder
       );
       const copyExerciseSet =
-         currentExercise.exerciseSets[currentExercise?.exerciseSets.length - 1];
+         currentExercise?.exerciseSets[
+            currentExercise?.exerciseSets.length - 1
+         ];
 
       if (!copyExerciseSet || !currentExercise) return;
 
@@ -158,13 +161,17 @@ export default function ExerciseComposition() {
       setWorkoutComposition({
          ...workoutComposition,
          exercises: updatedExercises,
-      });
+      } as WorkoutType);
    };
 
-   const handleExerciseOrderChange = (
-      event: ChangeEvent<HTMLSelectElement>
-   ) => {
-      setCurrentExerciseOrder(parseInt(event.target.value));
+   const handleExerciseOrderChange = (exerciseName: string) => {
+      const selectedExercise = workoutComposition?.exercises.find(
+         (e) => e.exerciseName === exerciseName
+      );
+
+      if (selectedExercise) {
+         setCurrentExerciseOrder(selectedExercise.exerciseOrder);
+      }
    };
 
    const updateExerciseSet = (updatedSet: ExerciseSetType) => {
@@ -194,7 +201,7 @@ export default function ExerciseComposition() {
       setWorkoutComposition({
          ...workoutComposition,
          exercises: updatedExercises,
-      });
+      } as WorkoutType);
    };
 
    const deleteExerciseSet = (exerciseSetOrder: number) => {
@@ -229,64 +236,42 @@ export default function ExerciseComposition() {
       setWorkoutComposition({
          ...workoutComposition,
          exercises: updatedExercises,
-      });
+      } as WorkoutType);
    };
 
    return (
       <>
          <div className={styles.header}>
-            <div className={styles.btnWrapper}>
-               {currentExerciseOrder > 1 ? (
-                  <StandardIconBtn
-                     Icon={FaChevronLeft}
-                     onClick={handleExerciseDecrementClick}
-                  />
-               ) : null}
-            </div>
-            <select
-               className={styles.exerciseSelector}
-               name="exercises"
-               id="exercises"
-               value={currentExerciseOrder}
-               onChange={handleExerciseOrderChange}
-            >
-               {workoutComposition?.exercises.map((exercise) => (
-                  <option
-                     key={exercise.exerciseOrder}
-                     value={exercise.exerciseOrder}
-                  >
-                     {exercise.exerciseName.length
-                        ? exercise.exerciseName
-                        : `Exercise ${exercise.exerciseOrder}`}
-                  </option>
-               ))}
-            </select>
-            <div className={styles.btnWrapper}>
-               {workoutComposition?.exercises &&
-               currentExerciseOrder < workoutComposition?.exercises.length ? (
-                  <StandardIconBtn
-                     Icon={FaChevronRight}
-                     onClick={handleExerciesIncrementClick}
-                  />
-               ) : (
-                  <StandardBtn
-                     text="Exercise"
-                     Icon={FaPlus}
-                     onClick={handleAddExerciseClick}
-                  />
-               )}
-            </div>
+            {currentExerciseOrder > 1 ? (
+               <StandardIconBtn
+                  Icon={FaChevronLeft}
+                  onClick={handleExerciseDecrementClick}
+               />
+            ) : null}
+            <ExerciseNameInputSelector
+               name={currentExercise?.exerciseName ?? ""}
+               options={
+                  workoutComposition?.exercises.map((e) => e.exerciseName) ??
+                  null
+               }
+               onOrderChange={handleExerciseOrderChange}
+               onNameChange={handleExerciseNameChange}
+            />
+            {workoutComposition?.exercises &&
+            currentExerciseOrder < workoutComposition?.exercises.length ? (
+               <StandardIconBtn
+                  Icon={FaChevronRight}
+                  onClick={handleExerciesIncrementClick}
+               />
+            ) : (
+               <StandardBtn
+                  text="Exercise"
+                  Icon={FaPlus}
+                  onClick={handleAddExerciseClick}
+               />
+            )}
          </div>
          <div className={styles.exerciseNameWrapper}>
-            <ExerciseNameInput
-               value={
-                  workoutComposition?.exercises.find(
-                     (exercise) =>
-                        exercise.exerciseOrder === currentExerciseOrder
-                  )?.exerciseName ?? ""
-               }
-               onChange={handleExerciseNameChange}
-            />
             {workoutComposition?.exercises &&
             workoutComposition?.exercises.length > 1 ? (
                <StandardBtn

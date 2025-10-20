@@ -44,8 +44,12 @@ export default function CompletedExerciseSetsTable() {
       console.log("delete completed exercise set");
    };
 
-   const handleSelectSetClick = () => {
-      console.log("select set");
+   const handleSelectSetClick = (
+      completedExerciseSet: CompletedExerciseSetType
+   ) => {
+      setCurrentCompletedExerciseSetOrder(
+         completedExerciseSet.completedExerciseSetOrder
+      );
    };
 
    const handleCompleteExerciseSetClick = (
@@ -195,7 +199,7 @@ export default function CompletedExerciseSetsTable() {
                         currentCompletedExerciseSetOrder ? (
                            <StandardIconBtn
                               Icon={FaStepForward}
-                              onClick={handleSelectSetClick}
+                              onClick={() => handleSelectSetClick(ces)}
                            />
                         ) : null}
                      </div>

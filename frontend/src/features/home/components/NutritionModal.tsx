@@ -51,7 +51,7 @@ export default function NutritionModal({
             </div>
             <div className={styles.addNutritionBtnWrapper}>
                <StandardBtn
-                  text={modalType === "add" ? "Cancel" : "Add Nutrition"}
+                  text={modalType === "add" ? "Cancel" : "Add Food"}
                   onClick={handleAddNutritionClick}
                />
             </div>

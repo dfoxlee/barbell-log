@@ -1,15 +1,15 @@
 import { useFetchDistanceUnits } from "../../../hooks/useFetchDistanceUnits";
 import { useFetchWeightUnits } from "../../../hooks/useFetchWeightUnits";
-import type { ExerciseSetType } from "../../../types/exercise-set.types";
-import { exerciseSetFormat } from "../../../utils/formatting";
+import { completedExerciseSetFormat } from "../../../utils/formatting";
+import type { CompletedExerciseSetType } from "../../../types/completed-exercise-set.types";
 
 import styles from "./ViewExerciseSetsTable.module.css";
 
-export default function ViewExerciseSetsTable({
+export default function ViewCompletedExerciseSetsTable({
    exerciseSets,
    exerciseName,
 }: {
-   exerciseSets: ExerciseSetType[];
+   exerciseSets: CompletedExerciseSetType[];
    exerciseName: string;
 }) {
    const { weightUnits } = useFetchWeightUnits();
@@ -23,24 +23,28 @@ export default function ViewExerciseSetsTable({
                <tr>
                   <th className={styles.tableHeader}>set</th>
                   <th className={styles.tableHeader}>output</th>
+                  <th className={styles.tableHeader}>notes</th>
                </tr>
             </thead>
             <tbody>
                {exerciseSets.map((set) => (
-                  <tr key={`${set.exerciseSetId}-${set.exerciseSetOrder}`}>
+                  <tr
+                     key={`${set.exerciseSetId}-${set.completedExerciseSetOrder}`}
+                  >
                      <td className={styles.tableData}>
-                        {set.exerciseSetOrder}
+                        {set.completedExerciseSetOrder}
                      </td>
                      <td className={styles.tableData}>
                         {set &&
                            weightUnits &&
                            distanceUnits &&
-                           exerciseSetFormat({
-                              exerciseSet: set,
+                           completedExerciseSetFormat({
+                              completedExerciseSet: set,
                               weightUnits,
                               distanceUnits,
                            })}
                      </td>
+                     <td className={styles.tableData}>{set.notes}</td>
                   </tr>
                ))}
             </tbody>

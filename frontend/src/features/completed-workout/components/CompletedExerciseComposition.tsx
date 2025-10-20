@@ -1,4 +1,9 @@
-import { FaCheck, FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
+import {
+   FaCheck,
+   FaChevronLeft,
+   FaChevronRight,
+   FaTimes,
+} from "react-icons/fa";
 import styles from "./CompletedExerciseComposition.module.css";
 import CompletedExerciseNavigation from "./CompletedExerciseNavigation";
 import RepsInput from "./RepsInput";
@@ -10,7 +15,7 @@ import StandardBtn from "../../shared/StandardBtn";
 import CompletedExerciseSetsTable from "./CompletedExerciseSetsTable";
 import { useCompletedWorkoutStore } from "../../../stores/completed-workout.store";
 import type { CompletedWorkoutType } from "../../../types/completed-workout.types";
-import { useMemo } from "react";
+import { useMemo, type ChangeEvent } from "react";
 import type { CompletedExerciseSetType } from "../../../types/completed-exercise-set.types";
 
 export default function CompletedExerciseComposition() {

@@ -10,16 +10,17 @@ export default function VerifiedEmail() {
    const params = useParams();
    const validationToken = params["validation-token"];
    const navigate = useNavigate();
-   const setToken = useUserStore((state) => state.setToken);
+   const setUser = useUserStore((state) => state.setUser);
    useEffect(() => {
       const validateToken = async () => {
          try {
             if (validationToken) {
-               const token = await fetchValidateEmailToken({
-                  validationToken,
-               });
+               const { token, weightUnitPreference, distanceUnitPreference } =
+                  await fetchValidateEmailToken({
+                     validationToken,
+                  });
 
-               setToken(token);
+               setUser({ token, weightUnitPreference, distanceUnitPreference });
 
                navigate("/home");
             } else {

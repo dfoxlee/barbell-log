@@ -39,6 +39,7 @@ exports.getNewCompleteWorkout = async (req, res, next) => {
             completedSec: exerciseSet.sec,
             completedDistance: exerciseSet.distance,
             completedDistanceUnit: exerciseSet.distanceUnit,
+            notes: "",
          }));
 
          const completedExercise = {

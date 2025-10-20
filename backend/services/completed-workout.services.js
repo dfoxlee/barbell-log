@@ -49,7 +49,9 @@ exports.getCompletedWorkouts = async ({ userId }) => {
          completed_workout_type as completedWorkoutType,
          completed_date as completedDate
       from completed_workout
-      where user_id = ?;
+      where user_id = ?
+      order by completed_date desc
+      limit 90;
    `;
 
    const values = [userId];

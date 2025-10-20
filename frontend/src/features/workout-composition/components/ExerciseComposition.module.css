@@ -6,16 +6,6 @@
    margin-top: 10px;
 }
 
-.exerciseSelector {
-   background: none;
-   border: 1px solid var(--primary);
-   color: white;
-   padding: 8px 12px;
-   border-radius: 5px;
-   width: 80%;
-   flex-shrink: 1;
-}
-
 .deleteIncrementExerciseBtnWrapper {
    display: flex;
    justify-content: center;
@@ -37,8 +27,4 @@
    display: flex;
    justify-content: center;
    margin-top: 20px;
-}
-
-.btnWrapper {
-   flex-grow: 1;
 }

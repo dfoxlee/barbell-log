@@ -91,14 +91,14 @@ exports.login = async (req, res, next) => {
 
       const token = createToken(user.userId);
 
+      const loginDate = formatDateForDatabase(new Date());
+
       const updatedUser = {
          ...user,
          token,
       };
 
       await UserServices.updateUser({ updatedUser });
-
-      const loginDate = formatDateForDatabase(new Date());
 
       await UserServices.addLoginRecord({ userId: user.userId, loginDate });
 
@@ -130,12 +130,6 @@ exports.confirmEmail = async (req, res, next) => {
 
       if (!user) {
          throw new Error("Unable to find user.");
-      }
-
-      if (!user.isEmailConfirmed) {
-         throw new Error(
-            "Email not confirmed. Please check your email for next steps."
-         );
       }
 
       const token = createToken(user.userId);

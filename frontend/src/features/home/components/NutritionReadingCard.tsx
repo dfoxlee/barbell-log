@@ -1,15 +1,20 @@
 import { useMemo } from "react";
 import StandardIconBtn from "../../shared/StandardIconBtn";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FaPencilAlt, FaPlusCircle, FaTrash } from "react-icons/fa";
+import type { NutritionInfo } from "../../../types/nutrient.types";
+import { useUserStore } from "../../../stores/user.store";
+import { fetchCreateNutritionReading } from "../../../services/nutrition.services";
+import { useFetchNutritionReadings } from "../../../hooks/useFetchNutritionReadings";
 
 import styles from "./NutritionReadingCard.module.css";
-import type { NutritionInfo } from "../../../types/nutrient.types";
 
 export default function NutritionReadingCard({
    nutritionReading,
 }: {
    nutritionReading: NutritionInfo;
 }) {
+   const token = useUserStore((state) => state.token);
+   const { getNutritionReadings } = useFetchNutritionReadings();
    const formattedDescription = useMemo(
       () =>
          nutritionReading.description.replace(/\s*\(USDA type: [^)]+\)$/, ""),
@@ -28,6 +33,17 @@ export default function NutritionReadingCard({
       console.log("delete nutrition reading");
    };
 
+   const handleAddFoodClick = async () => {
+      if (token) {
+         await fetchCreateNutritionReading({
+            token,
+            nutritionReading,
+         });
+
+         getNutritionReadings();
+      }
+   };
+
    return (
       <div className={styles.container}>
          <div className={styles.nutritionInfoWrapper}>
@@ -35,6 +51,7 @@ export default function NutritionReadingCard({
             <h3 className={styles.description}>{formattedDescription}</h3>
          </div>
          <div className={styles.nutritionOptions}>
+            <StandardIconBtn Icon={FaPlusCircle} onClick={handleAddFoodClick} />
             <StandardIconBtn
                Icon={FaPencilAlt}
                onClick={handleEditNutritionReading}

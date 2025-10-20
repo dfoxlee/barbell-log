@@ -18,9 +18,10 @@ exports.insertCompletedExerciseSet = async ({
          completed_min, 
          completed_sec, 
          completed_distance, 
-         completed_distance_unit
+         completed_distance_unit,
+         notes
       )
-      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
    `;
 
    const values = [
@@ -37,6 +38,7 @@ exports.insertCompletedExerciseSet = async ({
       completedExerciseSet.completedSec,
       completedExerciseSet.completedDistance,
       completedExerciseSet.completedDistanceUnit,
+      completedExerciseSet.notes,
    ];
    const [results] = await pool.execute(query, values);
 
@@ -61,7 +63,8 @@ exports.getCompletedExerciseSet = async ({ completedExerciseSetId }) => {
          completed_min as completedMin, 
          completed_sec as completedSec, 
          completed_distance as completedDistance, 
-         completed_distance_unit as completedDistanceUnit
+         completed_distance_unit as completedDistanceUnit,
+         notes
       from completed_exercise_set
       where completed_exercise_set_id = ?;
    `;
@@ -87,7 +90,8 @@ exports.getCompletedExerciseSets = async ({ completedExerciseId }) => {
          completed_min as completedMin, 
          completed_sec as completedSec, 
          completed_distance as completedDistance, 
-         completed_distance_unit as completedDistanceUnit
+         completed_distance_unit as completedDistanceUnit,
+         notes
       from completed_exercise_set
       where completed_exercise_id = ?;
    `;
@@ -113,7 +117,8 @@ exports.updateCompletedExerciseSet = async ({ completedExerciseSet }) => {
          completed_min, 
          completed_sec, 
          completed_distance, 
-         completed_distance_unit
+         completed_distance_unit,
+         notes
       where completed_exercise_set_id = ?;
    `;
 
@@ -131,6 +136,7 @@ exports.updateCompletedExerciseSet = async ({ completedExerciseSet }) => {
       completedExerciseSet.completedDistance,
       completedExerciseSet.completedDistanceUnit,
       completedExerciseSet.completedExerciseSetId,
+      completedExerciseSet.notes,
    ];
 
    const [results] = await pool.execute(query, values);

@@ -16,6 +16,8 @@ import WorkoutsSection from "./components/WorkoutsSection";
 import { useModalsStore } from "../../stores/modals.store";
 import ChartFilterModal from "./components/ChartFilterModal";
 import ViewWorkoutModal from "./components/ViewWorkoutModal";
+import CompletedWorkoutsSection from "./components/CompletedWorkoutsSection";
+import ViewCompletedWorkoutModal from "./components/ViewCompletedWorkoutModal";
 
 export default function Home() {
    const [startWorkoutModalOpen, setStartWorkoutModalOpen] = useState(false);
@@ -27,6 +29,9 @@ export default function Home() {
    );
    const viewWorkoutDetailsId = useModalsStore(
       (state) => state.viewWorkoutDetailsId
+   );
+   const viewCompletedWorkoutDetailsId = useModalsStore(
+      (state) => state.viewCompletedWorkoutDetailsId
    );
 
    const toggleStartWorkoutModalOpen = () => {
@@ -68,6 +73,7 @@ export default function Home() {
          ) : null}
          {filterMacrosModalOpen ? <ChartFilterModal /> : null}
          {viewWorkoutDetailsId ? <ViewWorkoutModal /> : null}
+         {viewCompletedWorkoutDetailsId ? <ViewCompletedWorkoutModal /> : null}
          <h1 className={`pageTitle`}>Barbell Log</h1>
          <Seperator />
          <div className={styles.btnsWrapper}>
@@ -85,6 +91,7 @@ export default function Home() {
          />
          <NutritionSection toggleNutritionModal={toggleNutritionModal} />
          <WorkoutsSection />
+         <CompletedWorkoutsSection />
       </div>
    );
 }

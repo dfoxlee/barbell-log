@@ -16,7 +16,8 @@ exports.fetchOneUser = async ({ userId, email }) => {
             refresh_token as refreshToken,
             created_date as createdDate,
             weight_unit_preference as weightUnitPreference,
-            distance_unit_preference as distanceUnitPreference
+            distance_unit_preference as distanceUnitPreference,
+            last_password_change as lastPasswordChange
          from user
          where user_id = ?
          limit 1;
@@ -34,7 +35,8 @@ exports.fetchOneUser = async ({ userId, email }) => {
             refresh_token as refreshToken,
             created_date as createdDate,
             weight_unit_preference as weightUnitPreference,
-            distance_unit_preference as distanceUnitPreference
+            distance_unit_preference as distanceUnitPreference,
+            last_password_change as lastPasswordChange
          from user
          where email = ?
          limit 1;

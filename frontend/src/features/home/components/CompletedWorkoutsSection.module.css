@@ -7,17 +7,12 @@
    font-weight: 500;
 }
 
-.workoutsWrapper {
+.completedWorkoutsWrapper {
    max-height: 350px;
    overflow-y: auto;
    margin-top: 10px;
 }
 
-.workoutsWrapper > *:not(:first-child) {
+.completedWorkoutsWrapper > *:not(:first-child) {
    margin-top: 20px;
-}
-
-.createWorkoutBtnWrapper {
-   display: flex;
-   justify-content: center;
 }

@@ -5,9 +5,9 @@
    --primary: #3ace87;
    --secondary: #121212;
    --accent: #898989;
-   --success: #006239; 
-   --warning: #ffc107; 
-   --error: #cc3300; 
+   --success: #006239;
+   --warning: #ffc107;
+   --error: #cc3300;
    --info: #17a2b8;
 
    /* Background Colors */
@@ -234,4 +234,8 @@ button {
 
 .modalTitle {
    text-align: center;
+}
+
+input {
+   min-width: 0;
 }
