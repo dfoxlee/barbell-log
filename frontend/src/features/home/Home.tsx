@@ -1,57 +1,97 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FaCog } from "react-icons/fa";
+import StartWorkoutModal from "./components/StartWorkoutModal";
+import BodyweightModal from "./components/BodyweightModal";
+import BodyweightSection from "./components/BodyweightSection";
+import SettingsModal from "./components/SettingsModal";
+import StandardBtn from "../shared/StandardBtn";
+import StandardLink from "../shared/StandardLink";
+import StandardIconBtn from "../shared/StandardIconBtn";
 import Seperator from "../shared/Seperator";
 
-import { useUserStore } from "../../stores/userStore";
-import { useWorkoutsStore } from "../../stores/workoutsStore";
-import toastify from "../../utils/toastify";
-
-import Loading from "../shared/Loading";
-import Workouts from "./components/Workouts";
-
 import styles from "./Home.module.css";
+import NutritionSection from "./components/NutritionSection";
+import NutritionModal from "./components/NutritionModal";
+import WorkoutsSection from "./components/WorkoutsSection";
+import { useModalsStore } from "../../stores/modals.store";
+import ChartFilterModal from "./components/ChartFilterModal";
+import ViewWorkoutModal from "./components/ViewWorkoutModal";
+import CompletedWorkoutsSection from "./components/CompletedWorkoutsSection";
+import ViewCompletedWorkoutModal from "./components/ViewCompletedWorkoutModal";
 
 export default function Home() {
-   const workouts = useWorkoutsStore((state) => state.workouts);
-   const getWorkouts = useWorkoutsStore((state) => state.getWorkouts);
-   const workoutsLoading = useWorkoutsStore((state) => state.workoutsLoading);
-   const workoutsError = useWorkoutsStore((state) => state.workoutsError);
-   const { user } = useUserStore();
+   const [startWorkoutModalOpen, setStartWorkoutModalOpen] = useState(false);
+   const [bodyweightModalOpen, setBodyweightModalOpen] = useState(false);
+   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+   const [nutritionModalOpen, setNutritionModalOpen] = useState(false);
+   const filterMacrosModalOpen = useModalsStore(
+      (state) => state.filterMacrosModalOpen
+   );
+   const viewWorkoutDetailsId = useModalsStore(
+      (state) => state.viewWorkoutDetailsId
+   );
+   const viewCompletedWorkoutDetailsId = useModalsStore(
+      (state) => state.viewCompletedWorkoutDetailsId
+   );
 
-   useEffect(() => {
-      if (!workoutsLoading && user?.token) {
-         getWorkouts(user.token);
-      }
+   const toggleStartWorkoutModalOpen = () => {
+      setStartWorkoutModalOpen((prev) => !prev);
+   };
 
-      if (workoutsError) {
-         console.error("Error fetching workouts:", workoutsError);
+   const toggleBodyweightModalOpen = () => {
+      setBodyweightModalOpen((prev) => !prev);
+   };
 
-         toastify({
-            message: "Something went wrong getting workouts. Try again later.",
-            type: "error",
-         });
-      }
-   }, [user?.token, workoutsError]);
+   const toggleSettingsModalOpen = () => {
+      setSettingsModalOpen((prev) => !prev);
+   };
 
-   if (workoutsLoading) {
-      return <Loading />;
-   }
+   const toggleNutritionModal = () => {
+      setNutritionModalOpen((prev) => !prev);
+   };
 
    return (
       <div className={styles.container}>
+         <div className={styles.settingsBtnWrapper}>
+            <StandardIconBtn Icon={FaCog} onClick={toggleSettingsModalOpen} />
+         </div>
+         {startWorkoutModalOpen ? (
+            <StartWorkoutModal
+               toggleStartWorkoutModalOpen={toggleStartWorkoutModalOpen}
+            />
+         ) : null}
+         {bodyweightModalOpen ? (
+            <BodyweightModal
+               toggleBodyweightModalOpen={toggleBodyweightModalOpen}
+            />
+         ) : null}
+         {settingsModalOpen ? (
+            <SettingsModal toggleSettingsModalOpen={toggleSettingsModalOpen} />
+         ) : null}
+         {nutritionModalOpen ? (
+            <NutritionModal toggleNutritionModal={toggleNutritionModal} />
+         ) : null}
+         {filterMacrosModalOpen ? <ChartFilterModal /> : null}
+         {viewWorkoutDetailsId ? <ViewWorkoutModal /> : null}
+         {viewCompletedWorkoutDetailsId ? <ViewCompletedWorkoutModal /> : null}
          <h1 className={`pageTitle`}>Barbell Log</h1>
          <Seperator />
-         <div className={styles.createWorkoutLinkWrapper}>
-            {workouts.length <= 10 ? (
-               <Link
-                  className={`standardLink ${styles.createWorkoutLink}`}
-                  to="/home/workout-composition"
-               >
-                  Create Workout
-               </Link>
-            ) : null}
+         <div className={styles.btnsWrapper}>
+            <StandardLink
+               toPath="/home/create-workout"
+               text="Create a Workout"
+            />
+            <StandardBtn
+               text="Start a Workout"
+               onClick={toggleStartWorkoutModalOpen}
+            />
          </div>
-         {workouts.length ? <Workouts /> : null}
+         <BodyweightSection
+            toggleBodyweightModalOpen={toggleBodyweightModalOpen}
+         />
+         <NutritionSection toggleNutritionModal={toggleNutritionModal} />
+         <WorkoutsSection />
+         <CompletedWorkoutsSection />
       </div>
    );
 }

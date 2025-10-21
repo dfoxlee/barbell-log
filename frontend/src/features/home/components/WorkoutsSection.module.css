@@ -1,0 +1,24 @@
+.container {
+   margin-top: 50px;
+}
+
+.sectionTitle {
+   text-align: center;
+   font-weight: 500;
+}
+
+.workoutsWrapper {
+   max-height: 350px;
+   overflow-y: auto;
+   margin-top: 10px;
+}
+
+.workoutsWrapper > *:not(:first-child) {
+   margin-top: 20px;
+}
+
+.createWorkoutBtnWrapper {
+   display: flex;
+   justify-content: center;
+   margin-top: 20px;
+}

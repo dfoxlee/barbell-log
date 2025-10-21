@@ -1,0 +1,258 @@
+.
+├── backend
+│   ├── controller
+│   │   ├── common.controller.js
+│   │   ├── completed-workout.controller.js
+│   │   ├── nutrition.controller.js
+│   │   ├── reading.controller.js
+│   │   ├── user.controller.js
+│   │   └── workout.controller.js
+│   ├── db
+│   │   ├── ca-certificate.crt
+│   │   ├── dbConfig.js
+│   │   └── SqlInitialize.sql
+│   ├── index.js
+│   ├── logger
+│   │   ├── logger.js
+│   │   └── logs
+│   │       ├── combined.log
+│   │       └── error.log
+│   ├── middleware
+│   │   ├── authMiddleware.js
+│   │   └── errorMiddleware.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes
+│   │   ├── common.routes.js
+│   │   ├── completed-workout.routes.js
+│   │   ├── nutrition.routes.js
+│   │   ├── readings.routes.js
+│   │   ├── users.routes.js
+│   │   └── workouts.routes.js
+│   ├── services
+│   │   ├── common.services.js
+│   │   ├── completed-exercise-set.services.js
+│   │   ├── completed-exercise.services.js
+│   │   ├── completed-workout.services.js
+│   │   ├── exercise-set.services.js
+│   │   ├── exercise.services.js
+│   │   ├── nutrition.services.js
+│   │   ├── reading.services.js
+│   │   ├── user.services.js
+│   │   └── workout.services.js
+│   └── utils
+│       ├── authUtils.js
+│       ├── debuggingUtils.js
+│       ├── email.utils.js
+│       ├── formatting.utils.js
+│       └── validationUtils.js
+├── frontend
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── barbell-log-screenshot.png
+│   │   ├── home-screenshot.png
+│   │   ├── settings-screenshot.png
+│   │   ├── weight-gym-background.jpg
+│   │   ├── workout-composition-screenshot.png
+│   │   └── workout-history-screenshot.png
+│   ├── README.md
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── constants
+│   │   │   └── exercises.tsx
+│   │   ├── features
+│   │   │   ├── auth
+│   │   │   │   ├── Auth.module.css
+│   │   │   │   ├── Auth.tsx
+│   │   │   │   └── components
+│   │   │   │       ├── AuthForm.module.css
+│   │   │   │       └── AuthForm.tsx
+│   │   │   ├── completed-workout
+│   │   │   │   ├── CompletedWorkout.module.css
+│   │   │   │   ├── CompletedWorkout.tsx
+│   │   │   │   └── components
+│   │   │   │       ├── CompletedExerciseComposition.module.css
+│   │   │   │       ├── CompletedExerciseComposition.tsx
+│   │   │   │       ├── CompletedExerciseNameInputSelector.module.css
+│   │   │   │       ├── CompletedExerciseNameInputSelector.tsx
+│   │   │   │       ├── CompletedExerciseNavigation.module.css
+│   │   │   │       ├── CompletedExerciseNavigation.tsx
+│   │   │   │       ├── CompletedExerciseOverview.module.css
+│   │   │   │       ├── CompletedExerciseOverview.tsx
+│   │   │   │       ├── CompletedExerciseSetsTable.module.css
+│   │   │   │       ├── CompletedExerciseSetsTable.tsx
+│   │   │   │       ├── CompletedExercisesOverview.module.css
+│   │   │   │       ├── CompletedExercisesOverview.tsx
+│   │   │   │       ├── CompletedSetNavigation.module.css
+│   │   │   │       ├── CompletedSetNavigation.tsx
+│   │   │   │       ├── DistanceInput.module.css
+│   │   │   │       ├── DistanceInput.tsx
+│   │   │   │       ├── RepsInput.module.css
+│   │   │   │       ├── RepsInput.tsx
+│   │   │   │       ├── TimedInput.module.css
+│   │   │   │       ├── TimedInput.tsx
+│   │   │   │       ├── Timer.module.css
+│   │   │   │       ├── Timer.tsx
+│   │   │   │       ├── WeightInput.module.css
+│   │   │   │       └── WeightInput.tsx
+│   │   │   ├── home
+│   │   │   │   ├── components
+│   │   │   │   │   ├── AddNutritionForm.module.css
+│   │   │   │   │   ├── AddNutritionForm.tsx
+│   │   │   │   │   ├── BodyweightChart.module.css
+│   │   │   │   │   ├── BodyweightChart.tsx
+│   │   │   │   │   ├── BodyweightModal.module.css
+│   │   │   │   │   ├── BodyweightModal.tsx
+│   │   │   │   │   ├── BodyweightSection.module.css
+│   │   │   │   │   ├── BodyweightSection.tsx
+│   │   │   │   │   ├── ChartFilterModal.module.css
+│   │   │   │   │   ├── ChartFilterModal.tsx
+│   │   │   │   │   ├── CompletedWorkoutCard.module.css
+│   │   │   │   │   ├── CompletedWorkoutCard.tsx
+│   │   │   │   │   ├── CompletedWorkoutsSection.module.css
+│   │   │   │   │   ├── CompletedWorkoutsSection.tsx
+│   │   │   │   │   ├── ExploreWorkoutCard.module.css
+│   │   │   │   │   ├── ExploreWorkoutCard.tsx
+│   │   │   │   │   ├── ExploreWorkouts.module.css
+│   │   │   │   │   ├── ExploreWorkouts.tsx
+│   │   │   │   │   ├── NutritionChart.module.css
+│   │   │   │   │   ├── NutritionChart.tsx
+│   │   │   │   │   ├── NutritionModal.module.css
+│   │   │   │   │   ├── NutritionModal.tsx
+│   │   │   │   │   ├── NutritionReadingCard.module.css
+│   │   │   │   │   ├── NutritionReadingCard.tsx
+│   │   │   │   │   ├── NutritionSection.module.css
+│   │   │   │   │   ├── NutritionSection.tsx
+│   │   │   │   │   ├── PasswordChangeInput.module.css
+│   │   │   │   │   ├── PasswordChangeInput.tsx
+│   │   │   │   │   ├── SettingsModal.module.css
+│   │   │   │   │   ├── SettingsModal.tsx
+│   │   │   │   │   ├── StartWorkoutModal.module.css
+│   │   │   │   │   ├── StartWorkoutModal.tsx
+│   │   │   │   │   ├── ViewCompletedExerciseSetsTable.tsx
+│   │   │   │   │   ├── ViewCompletedWorkoutModal.module.css
+│   │   │   │   │   ├── ViewCompletedWorkoutModal.tsx
+│   │   │   │   │   ├── ViewExerciseSetsTable.module.css
+│   │   │   │   │   ├── ViewExerciseSetsTable.tsx
+│   │   │   │   │   ├── ViewWorkoutModal.module.css
+│   │   │   │   │   ├── ViewWorkoutModal.tsx
+│   │   │   │   │   ├── WorkoutCard.module.css
+│   │   │   │   │   ├── WorkoutCard.tsx
+│   │   │   │   │   ├── WorkoutsSection.module.css
+│   │   │   │   │   └── WorkoutsSection.tsx
+│   │   │   │   ├── Home.module.css
+│   │   │   │   └── Home.tsx
+│   │   │   ├── landing
+│   │   │   │   ├── Landing.module.css
+│   │   │   │   └── Landing.tsx
+│   │   │   ├── not-found-404
+│   │   │   │   ├── NotFound404.module.css
+│   │   │   │   └── NotFound404.tsx
+│   │   │   ├── shared
+│   │   │   │   ├── DeleteConfirmationWindow.module.css
+│   │   │   │   ├── DeleteConfirmationWindow.tsx
+│   │   │   │   ├── DistanceUnitSelector.module.css
+│   │   │   │   ├── DistanceUnitSelector.tsx
+│   │   │   │   ├── ExerciseNameInput.module.css
+│   │   │   │   ├── ExerciseNameInput.tsx
+│   │   │   │   ├── FractionalValueInput.module.css
+│   │   │   │   ├── FractionalValueInput.tsx
+│   │   │   │   ├── Layout.module.css
+│   │   │   │   ├── Layout.tsx
+│   │   │   │   ├── Loading.module.css
+│   │   │   │   ├── Loading.tsx
+│   │   │   │   ├── Seperator.module.css
+│   │   │   │   ├── Seperator.tsx
+│   │   │   │   ├── StandardBtn.module.css
+│   │   │   │   ├── StandardBtn.tsx
+│   │   │   │   ├── StandardIconBtn.module.css
+│   │   │   │   ├── StandardIconBtn.tsx
+│   │   │   │   ├── StandardLink.module.css
+│   │   │   │   ├── StandardLink.tsx
+│   │   │   │   ├── UnderConstruction.module.css
+│   │   │   │   ├── UnderConstruction.tsx
+│   │   │   │   ├── WeightUnitSelector.module.css
+│   │   │   │   ├── WeightUnitSelector.tsx
+│   │   │   │   ├── WholeValueInput.module.css
+│   │   │   │   ├── WholeValueInput.tsx
+│   │   │   │   ├── WorkoutNameInput.module.css
+│   │   │   │   ├── WorkoutNameInput.tsx
+│   │   │   │   ├── WorkoutTypeSelector.module.css
+│   │   │   │   └── WorkoutTypeSelector.tsx
+│   │   │   ├── sign-up-received
+│   │   │   │   ├── SignUpReceived.module.css
+│   │   │   │   └── SignUpReceived.tsx
+│   │   │   ├── verified-email
+│   │   │   │   ├── VerifiedEmail.module.css
+│   │   │   │   └── VerifiedEmail.tsx
+│   │   │   └── workout-composition
+│   │   │       ├── components
+│   │   │       │   ├── ExerciseComposition.module.css
+│   │   │       │   ├── ExerciseComposition.tsx
+│   │   │       │   ├── ExerciseNameInputSelector.module.css
+│   │   │       │   ├── ExerciseNameInputSelector.tsx
+│   │   │       │   ├── ExerciseOverview.module.css
+│   │   │       │   ├── ExerciseOverview.tsx
+│   │   │       │   ├── ExerciseSetOptions.module.css
+│   │   │       │   ├── ExerciseSetOptions.tsx
+│   │   │       │   ├── ExerciseSetsTable.module.css
+│   │   │       │   ├── ExerciseSetsTable.tsx
+│   │   │       │   ├── ExercisesOverview.module.css
+│   │   │       │   ├── ExercisesOverview.tsx
+│   │   │       │   ├── OptionToggleBtn.module.css
+│   │   │       │   └── OptionToggleBtn.tsx
+│   │   │       ├── WorkoutComposition.module.css
+│   │   │       └── WorkoutComposition.tsx
+│   │   ├── hooks
+│   │   │   ├── useFetchCompletedWorkout.tsx
+│   │   │   ├── useFetchCompletedWorkouts.tsx
+│   │   │   ├── useFetchDistanceUnits.tsx
+│   │   │   ├── useFetchNutritionReadings.tsx
+│   │   │   ├── useFetchWeightUnits.tsx
+│   │   │   ├── useFetchWorkouts.tsx
+│   │   │   └── useFetchWorkoutTypes.tsx
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── services
+│   │   │   ├── common.services.tsx
+│   │   │   ├── completed-workout.services.tsx
+│   │   │   ├── nutrition.services.tsx
+│   │   │   ├── reading.services.tsx
+│   │   │   ├── user.services.tsx
+│   │   │   └── workout.services.tsx
+│   │   ├── stores
+│   │   │   ├── completed-workout.store.tsx
+│   │   │   ├── modals.store.tsx
+│   │   │   ├── reading.store.tsx
+│   │   │   ├── timer.store.tsx
+│   │   │   ├── units.store.tsx
+│   │   │   ├── user.store.tsx
+│   │   │   └── workout.store.tsx
+│   │   ├── types
+│   │   │   ├── common.types.tsx
+│   │   │   ├── completed-exercise-set.types.tsx
+│   │   │   ├── completed-exercise.types.tsx
+│   │   │   ├── completed-workout.types.tsx
+│   │   │   ├── exercise-set.types.tsx
+│   │   │   ├── exercise.types.tsx
+│   │   │   ├── nutrient.types.tsx
+│   │   │   ├── reading.types.tsx
+│   │   │   └── workout.types.tsx
+│   │   ├── utils
+│   │   │   ├── filters.tsx
+│   │   │   ├── formatting.tsx
+│   │   │   ├── toastify.tsx
+│   │   │   └── validation.tsx
+│   │   └── vite-env.d.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
+├── LICENSE
+├── README.md
+└── tree-structure.txt
+
+32 directories, 223 files

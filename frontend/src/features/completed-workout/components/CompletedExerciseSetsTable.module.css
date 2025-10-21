@@ -1,0 +1,37 @@
+.container {
+   width: 100%;
+   max-width: 400px;
+   margin: 10px auto 0;
+   border-collapse: collapse;
+}
+
+.tableHeader {
+   font-weight: 500;
+   font-size: 14px;
+   border-bottom: 1px solid var(--accent);
+   padding: 5px;
+   color: var(--accent);
+}
+
+.tableData {
+   text-align: center;
+   padding: 5px;
+   font-size: 18px;
+}
+
+.optionsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: start;
+}
+
+.completeExerciseSetBtn {
+   background: none;
+   border-style: none;
+   color: var(--accent);
+   font-size: 24px;
+}
+
+.completedExerciseSetBtn {
+   color: var(--primary);
+}

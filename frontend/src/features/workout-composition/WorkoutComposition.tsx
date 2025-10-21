@@ -1,95 +1,213 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import ExerciseComposition from "./components/ExerciseComposition";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, type ChangeEvent } from "react";
 import Seperator from "../shared/Seperator";
-import ReorderExercise from "./components/ReorderExercise";
-import { useUserStore } from "../../stores/userStore";
+import ExerciseComposition from "./components/ExerciseComposition";
+import ExercisesOverview from "./components/ExercisesOverview";
+import { useWorkoutStore } from "../../stores/workout.store";
+import type { WorkoutType } from "../../types/workout.types";
+import toastify from "../../utils/toastify";
+import { useUserStore } from "../../stores/user.store";
+import WorkoutNameInput from "../shared/WorkoutNameInput";
+import StandardBtn from "../shared/StandardBtn";
+import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
 import {
-   verticalListSortingStrategy,
-   SortableContext,
-} from "@dnd-kit/sortable";
-import ReorderExerciseWrapper from "./components/ReorderExerciseWrapper";
-import { useWorkoutCompositionStore } from "../../stores/workoutCompositionStore";
+   fetchCreateWorkout,
+   fetchGetWorkout,
+   fetchUpdateWorkout,
+} from "../../services/workout.services";
 
 import styles from "./WorkoutComposition.module.css";
+import Loading from "../shared/Loading";
 
 export default function WorkoutComposition() {
    const params = useParams();
+   const navigate = useNavigate();
    const workoutId = params["workout-id"];
-
-   const [isReorderExercise, setIsReorderExercise] = useState(false);
-   const user = useUserStore((state) => state.user);
-
-   const workoutComposition = useWorkoutCompositionStore(
+   const showExercisesOverview = useWorkoutStore(
+      (state) => state.showExercisesOverview
+   );
+   const toggleShowExercisesOverview = useWorkoutStore(
+      (state) => state.toggleShowExercisesOverview
+   );
+   const workoutComposition = useWorkoutStore(
       (state) => state.workoutComposition
    );
-   const workoutCompositionLoading = useWorkoutCompositionStore(
-      (state) => state.workoutCompositionLoading
+   const setWorkoutComposition = useWorkoutStore(
+      (state) => state.setWorkoutComposition
    );
-   const updateWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.updateWorkoutComposition
-   );
-   const getWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.getWorkoutComposition
-   );
-   const resetWorkoutComposition = useWorkoutCompositionStore(
+   const token = useUserStore((state) => state.token);
+   const resetWorkoutComposition = useWorkoutStore(
       (state) => state.resetWorkoutComposition
    );
+   const weightUnitPreference = useUserStore(
+      (state) => state.weightUnitPreference
+   );
+   const distanceUnitPreference = useUserStore(
+      (state) => state.distanceUnitPreference
+   );
+   const [isLoading, setIsLoading] = useState(false);
 
    useEffect(() => {
-      resetWorkoutComposition();
+      if (
+         workoutComposition &&
+         weightUnitPreference &&
+         distanceUnitPreference
+      ) {
+         const updatedExercises = workoutComposition.exercises.map((e) => ({
+            ...e,
+            exerciseSets: e.exerciseSets.map((s) => ({
+               ...s,
+               weightUnit: weightUnitPreference,
+               distanceUnit: distanceUnitPreference,
+            })),
+         }));
 
-      if (workoutId && user?.token && !workoutCompositionLoading) {
-         getWorkoutComposition({ token: user.token, workoutId });
+         const updatedWorkoutComposition = {
+            ...workoutComposition,
+            exercises: updatedExercises,
+         };
+
+         setWorkoutComposition(updatedWorkoutComposition);
       }
-   }, [user?.token, workoutId]);
+   }, []);
 
-   const handleWorkoutNameInput = (event) => {
-      updateWorkoutComposition({
+   useEffect(() => {
+      const getWorkout = async () => {
+         try {
+            setIsLoading(true);
+            const workoutReq = await fetchGetWorkout({
+               token: token!,
+               workoutId: parseInt(workoutId ?? "-1"),
+            });
+
+            setWorkoutComposition(workoutReq.workout);
+         } catch (error) {
+            console.log(error);
+
+            return toastify({
+               message:
+                  "An error occurred while getting the workout. Please try again later.",
+               type: "error",
+            });
+         } finally {
+            setIsLoading(false);
+         }
+      };
+
+      if (workoutId && token) {
+         getWorkout();
+      }
+   }, [token, workoutId]);
+
+   const handleWorkoutNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const updatedWorkoutComposition = {
          ...workoutComposition,
          workoutName: event.target.value,
-      });
+      };
+
+      setWorkoutComposition(updatedWorkoutComposition as WorkoutType);
    };
 
-   const handleReorderExerciseClick = () => {
-      return setIsReorderExercise((prev) => !prev);
+   const handleWorkoutTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+      const updatedWorkoutComposition = {
+         ...workoutComposition,
+         workoutType: parseInt(event.target.value),
+      };
+
+      setWorkoutComposition(updatedWorkoutComposition as WorkoutType);
+   };
+
+   const handleCancelClick = () => {
+      resetWorkoutComposition();
+      navigate("/home");
+   };
+
+   const handleSaveClick = async () => {
+      const workoutName = workoutComposition?.workoutName;
+      const firstExercise = workoutComposition?.exercises[0];
+
+      if (!workoutName || !firstExercise?.exerciseName) {
+         return toastify({
+            message: "You must complete the workout details to save.",
+            type: "warning",
+         });
+      }
+
+      try {
+         setIsLoading(true);
+         if (workoutId) {
+            await fetchUpdateWorkout({
+               token: token!,
+               workout: workoutComposition,
+            });
+         } else {
+            await fetchCreateWorkout({
+               token: token!,
+               workout: workoutComposition!,
+            });
+         }
+
+         toastify({
+            message: `Workout ${workoutId ? "updated" : "saved"} succesfully!`,
+            type: "success",
+         });
+
+         resetWorkoutComposition();
+         navigate("/home");
+      } catch (error) {
+         console.error("An error occurred saving workout.", error);
+
+         return toastify({
+            message:
+               "An error occurred saving workout. Please try again later.",
+            type: "error",
+         });
+      } finally {
+         setIsLoading(false);
+      }
    };
 
    return (
       <div className={styles.container}>
-         <input
-            className={`titleInput ${styles.workoutNameInput}`}
-            type="text"
-            placeholder="workout name..."
-            value={workoutComposition.workoutName}
-            onChange={handleWorkoutNameInput}
-         />
-         <button
-            className={`standardBtn ${styles.reorderExerciseBtn}`}
-            onClick={handleReorderExerciseClick}
-         >
-            {isReorderExercise ? `Exercise Details` : `Exercises Overview`}
-         </button>
-         <Seperator />
-         {isReorderExercise ? (
-            <ReorderExerciseWrapper>
-               <SortableContext
-                  items={workoutComposition.exercises.map(
-                     (exercise) => exercise.exerciseOrder
-                  )}
-                  strategy={verticalListSortingStrategy}
-               >
-                  {workoutComposition.exercises.map((exercise) => (
-                     <ReorderExercise
-                        key={exercise.exerciseOrder}
-                        id={exercise.exerciseOrder}
-                        exercise={exercise}
-                     />
-                  ))}
-               </SortableContext>
-            </ReorderExerciseWrapper>
+         <div className={styles.workoutControlBtnsWrapper}>
+            <StandardBtn text="Cancel" onClick={handleCancelClick} />
+            <StandardBtn
+               text={workoutId ? "Update" : "Save"}
+               onClick={handleSaveClick}
+               disabled={isLoading}
+               theme="SUCCESS"
+            />
+         </div>
+         {isLoading ? (
+            <Loading />
          ) : (
-            <ExerciseComposition />
+            <div className={styles.main}>
+               <WorkoutNameInput
+                  value={workoutComposition?.workoutName}
+                  onChange={handleWorkoutNameChange}
+               />
+               <div className={styles.workoutOptionBtnsWrapper}>
+                  <WorkoutTypeSelector
+                     value={workoutComposition?.workoutType ?? 12}
+                     onChange={handleWorkoutTypeChange}
+                  />
+                  <StandardBtn
+                     text={
+                        showExercisesOverview
+                           ? "Exercise Detail"
+                           : "Exercises Overview"
+                     }
+                     theme="INFO"
+                     onClick={toggleShowExercisesOverview}
+                  />
+               </div>
+               <Seperator />
+               {showExercisesOverview ? (
+                  <ExercisesOverview />
+               ) : (
+                  <ExerciseComposition />
+               )}
+            </div>
          )}
       </div>
    );

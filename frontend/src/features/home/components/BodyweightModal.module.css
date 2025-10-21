@@ -1,0 +1,64 @@
+.container {
+   position: fixed;
+   inset: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.wrapper {
+   background-color: var(--secondary);
+   padding: 15px 15px 30px;
+   border-radius: 10px;
+   max-height: 500px;
+   overflow-y: auto;
+   width: 90vw;
+   max-width: 500px;
+}
+
+.contentWrapper {
+   margin-top: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   gap: 20px;
+}
+
+.weightWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+}
+
+.addBodyweightWrapper {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.tableWrapper {
+   border-collapse: collapse;
+}
+
+.tableHeader {
+   font-size: 14px;
+   font-weight: 400;
+   color: var(--accent);
+   border-bottom: 1px solid var(--primary);
+}
+
+.tableData {
+   padding: 5px;
+   text-align: center;
+}
+
+.deleteBodyweightsBtnWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}

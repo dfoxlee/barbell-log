@@ -7,11 +7,7 @@
 1. [Introduction](#1-introduction)
 2. [Features](#2-features)
 3. [Architecture](#3-architecture)
-4. [Getting Started](#4-getting-started)
-5. [Project Structure](#5-project-structure)
-6. [License](#6-license)
-7. [Support & Contact](#7-support--contact)
-8. [Future Enhancements](#8-future-enhancements)
+4. [License](#6-license)
 
 ---
 
@@ -46,21 +42,8 @@ MyEnterpriseApp follows a multi-tier, decoupled architecture to ensure scalabili
    -  Nodemon (dev)
 -  **Database (MySQL):**
 
-## 4. Getting Started
-
-## 5. Project Structure
-
-## 6. License
+## 4. License
 
 Copyright (c) 2025 David FoxLee. All rights reserved.
 
 Licensed under the MIT License.
-
-## 7. Suport & Contact
-
-## 8. Future Enhancements
-<<<<<<< HEAD
-=======
-
-- Set up measurement functionality
->>>>>>> timer-implementation

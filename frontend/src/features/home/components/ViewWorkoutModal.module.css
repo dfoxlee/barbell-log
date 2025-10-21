@@ -1,0 +1,24 @@
+.container {
+   position: fixed;
+   inset: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.wrapper {
+   background-color: var(--secondary);
+   padding: 15px;
+   border-radius: 10px;
+   max-height: 500px;
+   overflow-y: auto;
+   width: 90vw;
+   max-width: 500px;
+}
+
+.title {
+   text-align: center;
+   font-size: 24px;
+   color: var(--accent);
+}

@@ -2,33 +2,32 @@ import { useNavigate, useParams } from "react-router-dom";
 import Seperator from "../shared/Seperator";
 import styles from "./VerifiedEmail.module.css";
 import { useEffect } from "react";
-import { fetchValidateEmailToken } from "../../services/userServices";
+import { fetchValidateEmailToken } from "../../services/user.services";
 import toastify from "../../utils/toastify";
+import { useUserStore } from "../../stores/user.store";
 
 export default function VerifiedEmail() {
    const params = useParams();
+   const validationToken = params["validation-token"];
    const navigate = useNavigate();
-
+   const setUser = useUserStore((state) => state.setUser);
    useEffect(() => {
       const validateToken = async () => {
          try {
-            const res = await fetchValidateEmailToken({
-               verificationToken: params["verification-token"],
-            });
+            if (validationToken) {
+               const { token, weightUnitPreference, distanceUnitPreference } =
+                  await fetchValidateEmailToken({
+                     validationToken,
+                  });
 
-            if (res.error) {
-               console.log(res.message);
+               setUser({ token, weightUnitPreference, distanceUnitPreference });
 
-               return toastify({
-                  message:
-                     "Something went wrong verifying email token. Please try again later.",
-                  type: "error",
-               });
+               navigate("/home");
+            } else {
+               navigate("/auth/sign-up");
             }
-
-            navigate("/auth/login");
-         } catch (error: any) {
-            console.log(error.message);
+         } catch (error) {
+            console.error(error);
 
             return toastify({
                message:
@@ -37,11 +36,10 @@ export default function VerifiedEmail() {
             });
          }
       };
-      if (params["verification-token"]) {
-         validateToken();
-      }
+
+      validateToken();
    }, [params]);
-   
+
    return (
       <div className={styles.container}>
          <h1 className={`pageTitle`}>Barbell Log</h1>

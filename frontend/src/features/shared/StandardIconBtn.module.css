@@ -1,0 +1,34 @@
+.btn {
+   background: none;
+   border-style: none;
+   font-size: 24px;
+   color: var(--primary);
+}
+
+.btnDisabled {
+   color: var(--accent);
+   cursor: not-allowed;
+}
+
+.text {
+   font-size: 14px;
+}
+
+.info {
+   color: var(--info);
+}
+
+.success {
+   color: var(--secondary);
+}
+
+.warning {
+   color: var(--warning);
+}
+.error {
+   color: var(--error);
+}
+
+.notSelected {
+   color: var(--accent);
+}

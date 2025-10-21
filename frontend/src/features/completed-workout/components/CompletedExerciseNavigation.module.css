@@ -1,0 +1,66 @@
+.exerciseNavigationWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 20px;
+   margin-top: 10px;
+}
+
+.exerciseSelector {
+   background: none;
+   border: 1px solid var(--primary);
+   color: white;
+   padding: 8px 12px;
+   border-radius: 5px;
+   width: 80%;
+}
+
+.deleteIncrementExerciseBtnWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px 10px;
+   flex-wrap: wrap;
+}
+
+.exerciseNameWrapper {
+   margin-top: 30px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+}
+
+.addExerciseSetBtnWrapper {
+   display: flex;
+   justify-content: center;
+   margin-top: 20px;
+}
+
+.exerciseWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   width: 90%;
+}
+
+.exerciseNameInput {
+   background: none;
+   border: 1px solid var(--primary);
+   color: white;
+   padding: 8px 10px;
+   width: 90vw;
+   flex-shrink: 1;
+}
+
+.exerciseNameInputWrapper {
+   display: flex;
+   flex-direction: column;
+   flex-shrink: 1;
+}
+
+.editExerciseBtnWrapper {
+   flex: 1 0 30px;
+}

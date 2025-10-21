@@ -1,226 +1,265 @@
-import { useMemo, useState } from "react";
-import {
-   FaChevronLeft,
-   FaChevronRight,
-   FaPlus,
-   FaPlusCircle,
-   FaTrashAlt,
-} from "react-icons/fa";
-import toastify from "../../../utils/toastify";
-import { useWorkoutCompositionStore } from "../../../stores/workoutCompositionStore";
-import ExerciseSetsGrid from "./ExerciseSetsGrid";
+import { FaPlus, FaPlusCircle, FaTrash } from "react-icons/fa";
+import { useWorkoutStore } from "../../../stores/workout.store";
+import { useMemo } from "react";
+import ExerciseSetsGrid from "./ExerciseSetsTable";
+import StandardBtn from "../../shared/StandardBtn";
+import type { ExerciseSetType } from "../../../types/exercise-set.types";
+import { useModalsStore } from "../../../stores/modals.store";
+import ExerciseNameInputSelector from "./ExerciseNameInputSelector";
+import type { WorkoutType } from "../../../types/workout.types";
+import type { ExerciseType } from "../../../types/exercise.types";
 
 import styles from "./ExerciseComposition.module.css";
 
 export default function ExerciseComposition() {
-   const [viewAllExerciseSets, setViewAllExerciseSets] = useState(false);
-   const workoutComposition = useWorkoutCompositionStore(
+   const workoutComposition = useWorkoutStore(
       (state) => state.workoutComposition
    );
-   const currentExerciseViewOrder = useWorkoutCompositionStore(
-      (state) => state.currentExerciseViewOrder
+   const setWorkoutComposition = useWorkoutStore(
+      (state) => state.setWorkoutComposition
    );
-   const updateExercise = useWorkoutCompositionStore(
-      (state) => state.updateExercise
+   const currentExerciseOrder = useWorkoutStore(
+      (state) => state.currentExerciseOrder
    );
-   const updateCurrentExerciseViewOrder = useWorkoutCompositionStore(
-      (state) => state.updateCurrentExerciseViewOrder
+   const decrementCurrentExerciseOrder = useWorkoutStore(
+      (state) => state.decrementCurrentExerciseOrder
    );
-   const updateCurrentExerciseSetViewOrder = useWorkoutCompositionStore(
-      (state) => state.updateCurrentExerciseSetViewOrder
+   const setCurrentExerciseOrder = useWorkoutStore(
+      (state) => state.setCurrentExerciseOrder
    );
-   const updateWorkoutComposition = useWorkoutCompositionStore(
-      (state) => state.updateWorkoutComposition
+   const setDeleteConfirmationWindowInfo = useModalsStore(
+      (state) => state.setDeleteConfirmationWindowInfo
    );
-   const incrementExerciseViewOrder = useWorkoutCompositionStore(
-      (state) => state.incrementExerciseViewOrder
-   );
-   const decrementExerciseViewOrder = useWorkoutCompositionStore(
-      (state) => state.decrementExerciseViewOrder
-   );
-   const currentExercise = useMemo(() => {
-      return workoutComposition.exercises.find(
-         (exercise) => exercise.exerciseOrder === currentExerciseViewOrder
-      );
-   }, [currentExerciseViewOrder, workoutComposition.exercises]);
-   const latestExerciseOrder = useMemo(() => {
-      return workoutComposition.exercises.reduce((prev, curr) =>
-         curr.exerciseOrder > prev.exerciseOrder ? curr : prev
-      ).exerciseOrder;
-   }, [workoutComposition.exercises]);
 
-   const handleAddSetClick = () => {
-      if (currentExercise?.exerciseSets) {
-         const latestSet = {
-            ...currentExercise.exerciseSets[
-               currentExercise.exerciseSets.length - 1
-            ],
-         };
+   const currentExercise = useMemo(
+      () =>
+         workoutComposition?.exercises.find(
+            (e) => e.exerciseOrder === currentExerciseOrder
+         ),
+      [workoutComposition, currentExerciseOrder]
+   );
 
-         const newExerciseSetOrder = latestSet.exerciseSetOrder + 1;
-
-         delete latestSet.exerciseSetId;
-
-         const updatedExerciseSets = [
-            ...currentExercise.exerciseSets,
+   const handleAddExerciseClick = () => {
+      const firstSet = currentExercise?.exerciseSets[0];
+      const currentExerciseCopy = {
+         ...currentExercise,
+         exerciseName: "",
+         exerciseSets: [
             {
-               ...latestSet,
-               exerciseSetOrder: newExerciseSetOrder,
+               ...firstSet,
+               distance: 0,
+               reps: 0,
+               weight: 0,
+               hr: 0,
+               min: 0,
+               hasReps: true,
+               isTimed: false,
+               isDistance: false,
             },
-         ];
+         ],
+      } as ExerciseType;
 
-         const updatedExercise = {
-            ...currentExercise,
-            exerciseSets: updatedExerciseSets,
-         };
+      const currentExerciseIndex =
+         workoutComposition?.exercises.findIndex(
+            (e) => e.exerciseOrder === currentExercise?.exerciseOrder
+         ) ?? -1;
 
-         updateExercise(updatedExercise);
-         updateCurrentExerciseSetViewOrder(newExerciseSetOrder);
-         if (viewAllExerciseSets) {
-            toggleViewAllExerciseSets();
-         }
+      const addExercises = workoutComposition?.exercises;
+
+      if (!currentExerciseCopy || currentExerciseIndex < 0) return;
+
+      addExercises?.splice(currentExerciseIndex + 1, 0, currentExerciseCopy);
+
+      const reorderedExercises = workoutComposition?.exercises.map(
+         (e, idx) => ({
+            ...e,
+            exerciseOrder: idx + 1,
+         })
+      );
+
+      const updatedWorkout = {
+         ...workoutComposition,
+         exercises: reorderedExercises,
+      };
+
+      setWorkoutComposition(updatedWorkout as WorkoutType);
+      setCurrentExerciseOrder(currentExerciseOrder + 1);
+   };
+
+   const deleteExercise = () => {
+      const updatedExercises = workoutComposition?.exercises.filter(
+         (exercise) => exercise.exerciseOrder !== currentExerciseOrder
+      );
+
+      if (!updatedExercises) return;
+
+      const reOrderedExercises = updatedExercises.map((exercise, index) => ({
+         ...exercise,
+         exerciseOrder: index + 1,
+      }));
+
+      setWorkoutComposition({
+         ...workoutComposition,
+         exercises: reOrderedExercises,
+      } as WorkoutType);
+
+      if (currentExerciseOrder > 1) {
+         decrementCurrentExerciseOrder();
+      } else {
+         setCurrentExerciseOrder(1);
       }
-   };
-
-   const handleExerciseDecrementClick = () => {
-      decrementExerciseViewOrder();
-   };
-
-   const handleExerciseIncrementClick = () => {
-      incrementExerciseViewOrder();
-   };
-
-   const handleExerciseNameInput = (event) => {
-      if (currentExercise) {
-         updateExercise({
-            ...currentExercise,
-            exerciseName: event.target.value,
-         });
-      }
-   };
-
-   const toggleViewAllExerciseSets = () => {
-      setViewAllExerciseSets((prev) => !prev);
    };
 
    const handleDeleteExerciseClick = () => {
-      if (workoutComposition.exercises.length === 1) {
-         return toastify({
-            message: "There must be at least one exercies per workout.",
-            type: "warning",
-         });
-      }
+      const message = currentExercise?.exerciseName
+         ? `Are you sure you want to delete Exercise ${currentExerciseOrder} - ${currentExercise.exerciseName}?`
+         : `Are you sure you want to delete Exercise ${currentExerciseOrder}?`;
+      setDeleteConfirmationWindowInfo({
+         onCancel: () => {},
+         onConfirm: deleteExercise,
+         message,
+      });
+   };
 
-      if (currentExercise) {
-         const updatedExercises = workoutComposition.exercises
-            .filter(
-               (exercise) =>
-                  exercise.exerciseOrder !== currentExercise?.exerciseOrder
-            )
-            .map((exercise, index) => ({
-               ...exercise,
-               exerciseOrder: index + 1,
-            }));
+   const handleAddExerciseSetClick = () => {
+      const currentExercise = workoutComposition?.exercises.find(
+         (e) => e.exerciseOrder === currentExerciseOrder
+      );
+      const copyExerciseSet =
+         currentExercise?.exerciseSets[
+            currentExercise?.exerciseSets.length - 1
+         ];
 
-         const updatedWorkoutComposition = {
-            ...workoutComposition,
-            exercises: updatedExercises,
-         };
+      if (!copyExerciseSet || !currentExercise) return;
 
-         const newCurrentExerciseViewOrder =
-            updatedExercises[updatedExercises.length - 1].exerciseOrder;
+      const maxExerciseSetOrder = currentExercise.exerciseSets.reduce(
+         (max, set) =>
+            set.exerciseSetOrder > max ? set.exerciseSetOrder : max,
+         0
+      );
 
-         updateWorkoutComposition(updatedWorkoutComposition);
-         updateCurrentExerciseViewOrder(newCurrentExerciseViewOrder);
-      }
+      const newExerciseSet = {
+         ...copyExerciseSet,
+         exerciseSetOrder: maxExerciseSetOrder + 1,
+      };
+
+      const updatedExercise = {
+         ...currentExercise,
+         exerciseSets: [...currentExercise.exerciseSets, newExerciseSet],
+      };
+
+      const updatedExercises = workoutComposition?.exercises.map((exercise) =>
+         exercise.exerciseOrder === currentExercise.exerciseOrder
+            ? updatedExercise
+            : exercise
+      );
+
+      if (!updatedExercises) return;
+
+      setWorkoutComposition({
+         ...workoutComposition,
+         exercises: updatedExercises,
+      } as WorkoutType);
+   };
+
+   const updateExerciseSet = (updatedSet: ExerciseSetType) => {
+      const currentExercise = workoutComposition?.exercises.find(
+         (e) => e.exerciseOrder === currentExerciseOrder
+      );
+
+      if (!currentExercise) return;
+
+      const updatedExerciseSets = currentExercise.exerciseSets.map((set) =>
+         set.exerciseSetOrder === updatedSet.exerciseSetOrder ? updatedSet : set
+      );
+
+      const updatedExercise = {
+         ...currentExercise,
+         exerciseSets: updatedExerciseSets,
+      };
+
+      const updatedExercises = workoutComposition?.exercises.map((exercise) =>
+         exercise.exerciseOrder === currentExercise.exerciseOrder
+            ? updatedExercise
+            : exercise
+      );
+
+      if (!updatedExercises) return;
+
+      setWorkoutComposition({
+         ...workoutComposition,
+         exercises: updatedExercises,
+      } as WorkoutType);
+   };
+
+   const deleteExerciseSet = (exerciseSetOrder: number) => {
+      const currentExercise = workoutComposition?.exercises.find(
+         (e) => e.exerciseOrder === currentExerciseOrder
+      );
+
+      if (!currentExercise) return;
+
+      const updatedExerciseSets = currentExercise.exerciseSets.filter(
+         (set) => set.exerciseSetOrder !== exerciseSetOrder
+      );
+
+      const reOrderedExerciseSets = updatedExerciseSets.map((set, index) => ({
+         ...set,
+         exerciseSetOrder: index + 1,
+      }));
+
+      const updatedExercise = {
+         ...currentExercise,
+         exerciseSets: reOrderedExerciseSets,
+      };
+
+      const updatedExercises = workoutComposition?.exercises.map((exercise) =>
+         exercise.exerciseOrder === currentExercise.exerciseOrder
+            ? updatedExercise
+            : exercise
+      );
+
+      if (!updatedExercises) return;
+
+      setWorkoutComposition({
+         ...workoutComposition,
+         exercises: updatedExercises,
+      } as WorkoutType);
    };
 
    return (
-      <div className={styles.container}>
-         <div className={styles.exerciseTitleWrapper}>
-            <h3
-               className={`subTitle`}
-            >{`Exercise ${currentExerciseViewOrder} / ${workoutComposition.exercises.length}`}</h3>
-            {workoutComposition.exercises.length > 1 ? (
-               <button
-                  className={`standardIconBtn ${styles.deleteExerciseBtn}`}
+      <>
+         <div className={styles.header}>
+            <ExerciseNameInputSelector />
+            <StandardBtn
+               text="Exercise"
+               Icon={FaPlus}
+               onClick={handleAddExerciseClick}
+            />
+            {workoutComposition?.exercises &&
+            workoutComposition?.exercises.length > 1 ? (
+               <StandardBtn
+                  Icon={FaTrash}
+                  text="Exercise"
+                  theme="WARNING"
                   onClick={handleDeleteExerciseClick}
-               >
-                  <FaTrashAlt />
-               </button>
+               />
             ) : null}
          </div>
-         <div className={styles.exerciseNameInputWrapper}>
-            <button
-               className={`standardIconBtn ${
-                  currentExerciseViewOrder === 1
-                     ? `${styles.changeExerciseBtnDisabled} ${styles.changeExerciseBtn}`
-                     : styles.changeExerciseBtn
-               }`}
-               onClick={handleExerciseDecrementClick}
-               disabled={currentExerciseViewOrder === 1 ? true : false}
-            >
-               <FaChevronLeft />
-            </button>
-            <input
-               type="text"
-               className={`standardInput ${styles.exerciseNameInput}`}
-               placeholder="Exercise name..."
-               onChange={handleExerciseNameInput}
-               value={currentExercise?.exerciseName}
-            />
-            <button
-               className={`standardIconBtn ${styles.changeExerciseBtn}`}
-               onClick={handleExerciseIncrementClick}
-            >
-               {latestExerciseOrder === currentExercise?.exerciseOrder ? (
-                  <FaPlusCircle />
-               ) : (
-                  <FaChevronRight />
-               )}
-            </button>
-         </div>
-         {currentExercise ? (
+         {currentExercise?.exerciseSets && (
             <ExerciseSetsGrid
-               currentExercise={currentExercise}
-               viewAllExerciseSets={viewAllExerciseSets}
-               toggleViewAllExerciseSets={toggleViewAllExerciseSets}
+               exerciseSets={currentExercise?.exerciseSets}
+               updateExerciseSet={updateExerciseSet}
+               deleteExerciseSet={deleteExerciseSet}
             />
-         ) : null}
-         <div className={styles.exerciseOptionsWrapper}>
-            <button
-               className={`standardBtn ${styles.addSetBtn}`}
-               onClick={handleAddSetClick}
-            >
-               <FaPlus />
-               <span>Set</span>
-            </button>
-            <div className={styles.exerciseNavBtnsWrapper}>
-               <button
-                  className={`standardBtn ${styles.addExerciseBtn} ${
-                     currentExerciseViewOrder === 1
-                        ? styles.disabledAddExerciseBtn
-                        : ""
-                  }`}
-                  onClick={handleExerciseDecrementClick}
-                  disabled={currentExerciseViewOrder === 1 ? true : false}
-               >
-                  <FaChevronLeft />
-                  <span>Exercise</span>
-               </button>
-               <button
-                  className={`standardBtn ${styles.addExerciseBtn}`}
-                  onClick={handleExerciseIncrementClick}
-               >
-                  <span>Exercise</span>
-                  {latestExerciseOrder === currentExercise?.exerciseOrder ? (
-                     <FaPlusCircle />
-                  ) : (
-                     <FaChevronRight />
-                  )}
-               </button>
-            </div>
+         )}
+         <div className={styles.addExerciseSetBtnWrapper}>
+            <StandardBtn
+               text="Set"
+               Icon={FaPlusCircle}
+               onClick={handleAddExerciseSetClick}
+            />
          </div>
-      </div>
+      </>
    );
 }

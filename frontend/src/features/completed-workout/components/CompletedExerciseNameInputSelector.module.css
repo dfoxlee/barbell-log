@@ -1,0 +1,62 @@
+.inputContainer {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+   margin-top: 10px;
+}
+
+.nameInput {
+   background: none;
+   border: 1px solid var(--primary);
+   border-radius: 5px;
+   padding: 5px 10px;
+   color: white;
+   min-width: 0;
+}
+
+.dropdownWrapper {
+   position: relative;
+   width: 100%;
+}
+
+.optionsList {
+   position: absolute;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   background-color: var(--accent);
+   z-index: 10;
+   width: 100%;
+   top: 3px;
+   border-radius: 5px;
+   max-height: 300px;
+   overflow-y: auto;
+}
+
+.dropdownTitle {
+   margin-top: 5px;
+   color: var(--secondary);
+   font-size: 12px;
+}
+
+.optionBtn {
+   border-style: none;
+   background: none;
+   margin: 10px 0 10px;
+   color: var(--secondary);
+}
+
+.currentOption {
+   color: white;
+   cursor: not-allowed;
+}
+
+.seperator {
+   width: 90%;
+   display: block;
+   height: 2px;
+   margin-top: 3px;
+   background-color: var(--secondary);
+   content: "";
+}

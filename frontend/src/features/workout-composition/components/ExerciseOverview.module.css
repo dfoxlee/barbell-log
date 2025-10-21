@@ -1,0 +1,33 @@
+.container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 30px;
+   padding: 5px 15px;
+   border-radius: 10px;
+   background: none;
+   border: 1px solid var(--accent);
+}
+
+.exerciseInfo {
+   flex-grow: 1;
+}
+
+.exerciseTitle {
+   font-weight: 500;
+   font-size: 18px;
+   color: var(--white);
+}
+
+.setCount {
+   color: var(--accent);
+   font-size: 14px;
+}
+
+.exerciseOptionBtns {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   align-items: center;
+   min-width: 80px;
+}

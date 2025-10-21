@@ -1,6 +1,7 @@
 // authUtils.js
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { debugConsoleLog } = require("./debuggingUtils");
 require("dotenv").config();
 
 const saltRounds = 10;
@@ -16,7 +17,7 @@ async function encryptPassword(password) {
 // Function to compare a plain password with its hash
 async function comparePassword(plainPassword, hashedPassword) {
    const match = await bcrypt.compare(plainPassword, hashedPassword);
-   
+
    return match;
 }
 

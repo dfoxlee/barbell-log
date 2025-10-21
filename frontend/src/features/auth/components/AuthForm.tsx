@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toastify from "../../../utils/toastify";
-import { useUserStore } from "../../../stores/userStore";
-import { fetchLogin, fetchSignUp } from "../../../services/userServices";
+import { useUserStore } from "../../../stores/user.store";
+import { fetchLogin, fetchSignUp } from "../../../services/user.services";
 
 import styles from "./AuthForm.module.css";
+import {
+   getPasswordComplianceMessage,
+   validatePassword,
+} from "../../../utils/validation";
 
 export default function AuthForm({ authTitle }: { authTitle: string }) {
    const [emailInput, setEmailInput] = useState("");
    const [passwordInput, setPasswordInput] = useState("");
    const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
    const [isLoading, setIsLoading] = useState(false);
-   const setUser = useUserStore((state) => state.setUser);
+   const setToken = useUserStore((state) => state.setToken);
+   const setWeightUnitPreference = useUserStore(
+      (state) => state.setWeightUnitPreference
+   );
+   const setDistanceUnitPreference = useUserStore(
+      (state) => state.setDistanceUnitPreference
+   );
    const navigate = useNavigate();
 
    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,50 +48,50 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          });
       }
 
-      if (authTitle === "Sign Up") {
-         if (confirmPasswordInput === "") {
-            return toastify({
-               message: "All fields are required.",
-               type: "warn",
-            });
-         }
+      // if (authTitle === "Sign Up") {
+      //    if (confirmPasswordInput === "") {
+      //       return toastify({
+      //          message: "All fields are required.",
+      //          type: "warn",
+      //       });
+      //    }
 
-         if (passwordInput !== confirmPasswordInput) {
-            return toastify({
-               message: "Passwords must match.",
-               type: "warn",
-            });
-         }
-      }
+      //    if (passwordInput !== confirmPasswordInput) {
+      //       return toastify({
+      //          message: "Passwords must match.",
+      //          type: "warn",
+      //       });
+      //    }
+
+      //    if (!validatePassword(passwordInput)) {
+      //       return toastify({
+      //          message: getPasswordComplianceMessage(passwordInput),
+      //          type: "info",
+      //       });
+      //    }
+      // }
 
       try {
          if (authTitle === "Sign Up") {
             setIsLoading(true);
 
-            const signUpRequest = await fetchSignUp({
+            await fetchSignUp({
                email: emailInput,
                password: passwordInput,
             });
-
-            if (signUpRequest.error) {
-               throw new Error(signUpRequest.message);
-            }
 
             navigate("/sign-up-received");
          } else {
             setIsLoading(true);
 
-            const user = await fetchLogin({
+            const loginRequest = await fetchLogin({
                email: emailInput,
                password: passwordInput,
             });
 
-            if (user.error) {
-               console.log(user);
-               throw new Error(user.message);
-            }
-
-            setUser(user);
+            setToken(loginRequest.token);
+            setWeightUnitPreference(loginRequest.weightUnitPreference);
+            setDistanceUnitPreference(loginRequest.distanceUnitPreference);
 
             navigate("/home");
          }

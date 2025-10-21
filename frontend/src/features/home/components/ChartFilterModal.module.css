@@ -1,0 +1,31 @@
+.container {
+   position: fixed;
+   inset: 0;
+   background-color: rgba(0, 0, 0, 0.8);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.wrapper {
+   background-color: var(--secondary);
+   padding: 20px 30px;
+   border-radius: 10px;
+   width: 90vw;
+   max-width: 600px;
+}
+
+.title {
+   font-size: 18px;
+   color: var(--accent);
+   text-align: center;
+}
+
+.metricsWrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 10px 10px;
+   margin-top: 20px;
+}
