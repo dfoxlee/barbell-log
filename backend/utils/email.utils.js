@@ -75,7 +75,7 @@ const htmlContent = (confirmationToken) => `
                            <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px; display: flex; justify-content: center;">
                               <tr>
                                  <td align="center" style="border-radius: 5px; text-align: center;" bgcolor="#007bff">
-                                    <a href="https://barbell-log.com/verify/${confirmationToken}" target="_blank"
+                                    <a href="https://barbell-log.com/validate/${confirmationToken}" target="_blank"
                                        style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #121212; text-decoration: none; border-radius: 5px; padding: 12px 24px; background-color: #3ace87; display: inline-block;">
                                        Verify
                                     </a>
