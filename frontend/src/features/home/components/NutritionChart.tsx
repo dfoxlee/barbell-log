@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import {
    Chart as ChartJS,
@@ -13,9 +13,9 @@ import {
 import type { GroupedNutritionInfo } from "../../../types/nutrient.types";
 import { FaFilter } from "react-icons/fa";
 import StandardIconBtn from "../../shared/StandardIconBtn";
+import { useModalsStore } from "../../../stores/modals.store";
 
 import styles from "./NutritionChart.module.css";
-import { useModalsStore } from "../../../stores/modals.store";
 
 // Register necessary components from Chart.js
 ChartJS.register(

@@ -63,8 +63,8 @@ export const exerciseSetFormat = ({
       } else {
          text +=
             exerciseSet.sec < 10
-               ? ` 0${exerciseSet.sec}`
-               : ` ${exerciseSet.sec}`;
+               ? ` 0${exerciseSet.sec} sec`
+               : ` ${exerciseSet.sec} sec`;
       }
    }
 
@@ -133,8 +133,8 @@ export const completedExerciseSetFormat = ({
       } else {
          text +=
             completedExerciseSet.completedSec < 10
-               ? ` 0${completedExerciseSet.completedSec}`
-               : ` ${completedExerciseSet.completedSec}`;
+               ? ` 0${completedExerciseSet.completedSec} sec`
+               : ` ${completedExerciseSet.completedSec} sec`;
       }
    }
 

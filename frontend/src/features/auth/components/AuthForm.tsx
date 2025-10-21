@@ -48,28 +48,28 @@ export default function AuthForm({ authTitle }: { authTitle: string }) {
          });
       }
 
-      if (authTitle === "Sign Up") {
-         if (confirmPasswordInput === "") {
-            return toastify({
-               message: "All fields are required.",
-               type: "warn",
-            });
-         }
+      // if (authTitle === "Sign Up") {
+      //    if (confirmPasswordInput === "") {
+      //       return toastify({
+      //          message: "All fields are required.",
+      //          type: "warn",
+      //       });
+      //    }
 
-         if (passwordInput !== confirmPasswordInput) {
-            return toastify({
-               message: "Passwords must match.",
-               type: "warn",
-            });
-         }
+      //    if (passwordInput !== confirmPasswordInput) {
+      //       return toastify({
+      //          message: "Passwords must match.",
+      //          type: "warn",
+      //       });
+      //    }
 
-         if (!validatePassword(passwordInput)) {
-            return toastify({
-               message: getPasswordComplianceMessage(passwordInput),
-               type: "info",
-            });
-         }
-      }
+      //    if (!validatePassword(passwordInput)) {
+      //       return toastify({
+      //          message: getPasswordComplianceMessage(passwordInput),
+      //          type: "info",
+      //       });
+      //    }
+      // }
 
       try {
          if (authTitle === "Sign Up") {

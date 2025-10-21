@@ -8,11 +8,11 @@
 .nutritionInfoWrapper {
    display: flex;
    flex-direction: column;
-   flex-grow: 1;
+   flex-shrink: 1;
 }
 
 .description {
-   font-size: 14px;
+   font-size: 12px;
    font-weight: 500;
    margin-top: 5px;
    width: 100%;
@@ -23,5 +23,5 @@
    display: flex;
    align-items: center;
    gap: 10px;
-   min-width: 80px;
+   min-width: 100px;
 }

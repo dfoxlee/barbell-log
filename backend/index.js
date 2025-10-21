@@ -1,7 +1,7 @@
 // libraries and frameworks
 const express = require("express");
 const cors = require("cors");
-// const morgan = require("morgan");
+const morgan = require("morgan");
 
 // middleware
 const errorMiddleware = require("./middleware/errorMiddleware");
@@ -16,7 +16,7 @@ const nutritionRouter = require("./routes/nutrition.routes");
 const completedWorkoutRouter = require("./routes/completed-workout.routes");
 
 // utils, db, services
-// const { winstonStream, logger } = require("./logger/logger");
+const { winstonStream, logger } = require("./logger/logger");
 
 require("dotenv").config();
 
@@ -31,7 +31,7 @@ const corsOptions =
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(morgan("combined", { stream: winstonStream }));
+app.use(morgan("combined", { stream: winstonStream }));
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/workouts", authMiddleware, workoutsRouter);
@@ -44,6 +44,6 @@ app.use(errorMiddleware);
 
 const port = process.env.PORT || 4004;
 app.listen(port, () => {
-   // logger.info(`Server listening on port ${port}`);
+   logger.info(`Server listening on port ${port}`);
    console.log(`App listening on port ${port}`);
 });

@@ -29,12 +29,13 @@
 .weightWrapper {
    display: flex;
    justify-content: center;
-   align-items: end;
+   align-items: center;
    gap: 5px;
 }
 
 .addBodyweightWrapper {
    display: flex;
+   flex-direction: column;
    justify-content: center;
    align-items: center;
    gap: 10px;

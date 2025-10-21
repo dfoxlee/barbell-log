@@ -8,6 +8,7 @@ interface TimerStore {
    startTimer: (timerState: string) => void;
    pauseTimer: () => void;
    playTimer: () => void;
+   timerEvent: (updatedTimerState: string) => void;
    restartTimer: () => void;
    _tick: () => void;
 }
@@ -57,6 +58,22 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
       set({
          intervalId: newIntervalId,
          timerState: "Play",
+      });
+   },
+
+   timerEvent: (updatedTimerState) => {
+      const { _tick, intervalId } = get();
+
+      if (intervalId !== null) {
+         clearInterval(intervalId);
+      }
+
+      const newIntervalId = setInterval(_tick, 1000);
+
+      set({
+         timer: 0,
+         intervalId: newIntervalId,
+         timerState: updatedTimerState,
       });
    },
 

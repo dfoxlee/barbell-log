@@ -2,6 +2,7 @@ import { useFetchDistanceUnits } from "../../../hooks/useFetchDistanceUnits";
 import { useFetchWeightUnits } from "../../../hooks/useFetchWeightUnits";
 import { completedExerciseSetFormat } from "../../../utils/formatting";
 import type { CompletedExerciseSetType } from "../../../types/completed-exercise-set.types";
+import { FaCheckCircle } from "react-icons/fa";
 
 import styles from "./ViewExerciseSetsTable.module.css";
 
@@ -14,6 +15,7 @@ export default function ViewCompletedExerciseSetsTable({
 }) {
    const { weightUnits } = useFetchWeightUnits();
    const { distanceUnits } = useFetchDistanceUnits();
+   console.log(exerciseSets);
 
    return (
       <div className={styles.container}>
@@ -23,6 +25,7 @@ export default function ViewCompletedExerciseSetsTable({
                <tr>
                   <th className={styles.tableHeader}>set</th>
                   <th className={styles.tableHeader}>output</th>
+                  <th className={styles.tableHeader}>complete</th>
                   <th className={styles.tableHeader}>notes</th>
                </tr>
             </thead>
@@ -44,7 +47,14 @@ export default function ViewCompletedExerciseSetsTable({
                               distanceUnits,
                            })}
                      </td>
-                     <td className={styles.tableData}>{set.notes}</td>
+                     <td className={styles.tableData}>
+                        {set.wasCompleted ? (
+                           <div className={styles.completeIconWrapper}>
+                              <FaCheckCircle className={styles.completeIcon} />
+                           </div>
+                        ) : null}
+                     </td>
+                     <td className={`${styles.tableData} ${styles.notes}`}>{set.notes}</td>
                   </tr>
                ))}
             </tbody>

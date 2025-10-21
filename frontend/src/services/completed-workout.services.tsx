@@ -132,7 +132,7 @@ export const fetchDeleteCompletedWorkout = async ({
    completedWorkoutId,
 }: {
    token: string;
-   completedWorkoutId: string;
+   completedWorkoutId: number;
 }) => {
    const request = await fetch(
       `${baseUrl}/completed-workouts/${completedWorkoutId}`,

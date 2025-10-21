@@ -10,6 +10,7 @@ import styles from "./CompletedExerciseSetsTable.module.css";
 import type { CompletedExerciseSetType } from "../../../types/completed-exercise-set.types";
 import type { CompletedWorkoutType } from "../../../types/completed-workout.types";
 import toastify from "../../../utils/toastify";
+import { useTimerStore } from "../../../stores/timer.store";
 
 export default function CompletedExerciseSetsTable() {
    const completedWorkout = useCompletedWorkoutStore(
@@ -30,6 +31,7 @@ export default function CompletedExerciseSetsTable() {
    const setCurrentCompletedExerciseOrder = useCompletedWorkoutStore(
       (state) => state.setCurrentCompletedExerciseOrder
    );
+   const timerEvent = useTimerStore((state) => state.timerEvent);
    const { weightUnits } = useFetchWeightUnits();
    const { distanceUnits } = useFetchDistanceUnits();
    const completedExerciseSets = useMemo(
@@ -40,16 +42,13 @@ export default function CompletedExerciseSetsTable() {
       [completedWorkout, currentCompletedExerciseOrder]
    );
 
-   const handleDeleteCompletedExerciseSetClick = () => {
-      console.log("delete completed exercise set");
-   };
-
    const handleSelectSetClick = (
       completedExerciseSet: CompletedExerciseSetType
    ) => {
       setCurrentCompletedExerciseSetOrder(
          completedExerciseSet.completedExerciseSetOrder
       );
+      timerEvent("Set Change");
    };
 
    const handleCompleteExerciseSetClick = (
@@ -151,6 +150,7 @@ export default function CompletedExerciseSetsTable() {
             const nextExerciseOrder = currentCompletedExerciseOrder + 1;
 
             setCurrentCompletedExerciseOrder(nextExerciseOrder);
+            timerEvent("Exercise Change");
          }
       }
    };
@@ -191,10 +191,6 @@ export default function CompletedExerciseSetsTable() {
                         >
                            <FaCheck />
                         </button>
-                        <StandardIconBtn
-                           Icon={FaTrash}
-                           onClick={handleDeleteCompletedExerciseSetClick}
-                        />
                         {ces.completedExerciseSetOrder !==
                         currentCompletedExerciseSetOrder ? (
                            <StandardIconBtn

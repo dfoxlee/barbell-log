@@ -5,6 +5,11 @@ import StandardIconBtn from "../../shared/StandardIconBtn";
 import styles from "./CompletedWorkoutCard.module.css";
 import { dateFormat } from "../../../utils/formatting";
 import { useModalsStore } from "../../../stores/modals.store";
+import { useNavigate } from "react-router-dom";
+import { useFetchCompletedWorkouts } from "../../../hooks/useFetchCompletedWorkouts";
+import toastify from "../../../utils/toastify";
+import { fetchDeleteCompletedWorkout } from "../../../services/completed-workout.services";
+import { useUserStore } from "../../../stores/user.store";
 
 interface CompletedWorkoutCardProps {
    completedWorkout: CompletedWorkoutType;
@@ -14,9 +19,12 @@ export default function CompletedWorkoutCard({
    completedWorkout,
 }: CompletedWorkoutCardProps) {
    const { workoutTypes } = useFetchWorkoutTypes();
+   const token = useUserStore((state) => state.token);
    const setViewCompletedWorkoutDetailsId = useModalsStore(
       (state) => state.setViewCompletedWorkoutDetailsId
    );
+   const { getWorkouts } = useFetchCompletedWorkouts();
+   const navigate = useNavigate();
 
    const handleViewWorkoutClick = () => {
       if (completedWorkout?.completedWorkoutId) {
@@ -27,11 +35,28 @@ export default function CompletedWorkoutCard({
    };
 
    const handleEditWorkoutClick = () => {
-      console.log("edit workout");
+      navigate(
+         `/home/completed-workout/completed/${completedWorkout.completedWorkoutId}`
+      );
    };
 
-   const handleDeleteWorkoutClick = () => {
-      console.log("delete workout");
+   const handleDeleteWorkoutClick = async () => {
+      try {
+         if (token && completedWorkout?.completedWorkoutId)
+            await fetchDeleteCompletedWorkout({
+               token,
+               completedWorkoutId: completedWorkout.completedWorkoutId,
+            });
+         getWorkouts();
+      } catch (error) {
+         console.error(error);
+
+         return toastify({
+            message:
+               "An error occurred while deleting the workout. Please try again later.",
+            type: "error",
+         });
+      }
    };
 
    return (

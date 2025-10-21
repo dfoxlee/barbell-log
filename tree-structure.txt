@@ -31,6 +31,8 @@
 │   │   └── workouts.routes.js
 │   ├── services
 │   │   ├── common.services.js
+│   │   ├── completed-exercise-set.services.js
+│   │   ├── completed-exercise.services.js
 │   │   ├── completed-workout.services.js
 │   │   ├── exercise-set.services.js
 │   │   ├── exercise.services.js
@@ -72,10 +74,20 @@
 │   │   │   │   ├── CompletedWorkout.module.css
 │   │   │   │   ├── CompletedWorkout.tsx
 │   │   │   │   └── components
+│   │   │   │       ├── CompletedExerciseComposition.module.css
+│   │   │   │       ├── CompletedExerciseComposition.tsx
+│   │   │   │       ├── CompletedExerciseNameInputSelector.module.css
+│   │   │   │       ├── CompletedExerciseNameInputSelector.tsx
 │   │   │   │       ├── CompletedExerciseNavigation.module.css
 │   │   │   │       ├── CompletedExerciseNavigation.tsx
+│   │   │   │       ├── CompletedExerciseOverview.module.css
+│   │   │   │       ├── CompletedExerciseOverview.tsx
 │   │   │   │       ├── CompletedExerciseSetsTable.module.css
 │   │   │   │       ├── CompletedExerciseSetsTable.tsx
+│   │   │   │       ├── CompletedExercisesOverview.module.css
+│   │   │   │       ├── CompletedExercisesOverview.tsx
+│   │   │   │       ├── CompletedSetNavigation.module.css
+│   │   │   │       ├── CompletedSetNavigation.tsx
 │   │   │   │       ├── DistanceInput.module.css
 │   │   │   │       ├── DistanceInput.tsx
 │   │   │   │       ├── RepsInput.module.css
@@ -98,6 +110,10 @@
 │   │   │   │   │   ├── BodyweightSection.tsx
 │   │   │   │   │   ├── ChartFilterModal.module.css
 │   │   │   │   │   ├── ChartFilterModal.tsx
+│   │   │   │   │   ├── CompletedWorkoutCard.module.css
+│   │   │   │   │   ├── CompletedWorkoutCard.tsx
+│   │   │   │   │   ├── CompletedWorkoutsSection.module.css
+│   │   │   │   │   ├── CompletedWorkoutsSection.tsx
 │   │   │   │   │   ├── ExploreWorkoutCard.module.css
 │   │   │   │   │   ├── ExploreWorkoutCard.tsx
 │   │   │   │   │   ├── ExploreWorkouts.module.css
@@ -116,6 +132,13 @@
 │   │   │   │   │   ├── SettingsModal.tsx
 │   │   │   │   │   ├── StartWorkoutModal.module.css
 │   │   │   │   │   ├── StartWorkoutModal.tsx
+│   │   │   │   │   ├── ViewCompletedExerciseSetsTable.tsx
+│   │   │   │   │   ├── ViewCompletedWorkoutModal.module.css
+│   │   │   │   │   ├── ViewCompletedWorkoutModal.tsx
+│   │   │   │   │   ├── ViewExerciseSetsTable.module.css
+│   │   │   │   │   ├── ViewExerciseSetsTable.tsx
+│   │   │   │   │   ├── ViewWorkoutModal.module.css
+│   │   │   │   │   ├── ViewWorkoutModal.tsx
 │   │   │   │   │   ├── WorkoutCard.module.css
 │   │   │   │   │   ├── WorkoutCard.tsx
 │   │   │   │   │   ├── WorkoutsSection.module.css
@@ -169,6 +192,8 @@
 │   │   │       ├── components
 │   │   │       │   ├── ExerciseComposition.module.css
 │   │   │       │   ├── ExerciseComposition.tsx
+│   │   │       │   ├── ExerciseNameInputSelector.module.css
+│   │   │       │   ├── ExerciseNameInputSelector.tsx
 │   │   │       │   ├── ExerciseOverview.module.css
 │   │   │       │   ├── ExerciseOverview.tsx
 │   │   │       │   ├── ExerciseSetOptions.module.css
@@ -182,6 +207,8 @@
 │   │   │       ├── WorkoutComposition.module.css
 │   │   │       └── WorkoutComposition.tsx
 │   │   ├── hooks
+│   │   │   ├── useFetchCompletedWorkout.tsx
+│   │   │   ├── useFetchCompletedWorkouts.tsx
 │   │   │   ├── useFetchDistanceUnits.tsx
 │   │   │   ├── useFetchNutritionReadings.tsx
 │   │   │   ├── useFetchWeightUnits.tsx
@@ -215,8 +242,10 @@
 │   │   │   ├── reading.types.tsx
 │   │   │   └── workout.types.tsx
 │   │   ├── utils
+│   │   │   ├── filters.tsx
 │   │   │   ├── formatting.tsx
-│   │   │   └── toastify.tsx
+│   │   │   ├── toastify.tsx
+│   │   │   └── validation.tsx
 │   │   └── vite-env.d.ts
 │   ├── tsconfig.app.json
 │   ├── tsconfig.json
@@ -226,4 +255,4 @@
 ├── README.md
 └── tree-structure.txt
 
-34 directories, 209 files
+32 directories, 223 files

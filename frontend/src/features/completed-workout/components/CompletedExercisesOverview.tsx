@@ -16,7 +16,11 @@ export default function CompletedExercisesOverview({
    return (
       <div className={styles.exercisesWrapper}>
          {completedWorkout?.completedExercises.map((e) => (
-            <CompletedExerciseOverview completedExercise={e} handleExercisesOverviewClick={handleExercisesOverviewClick} />
+            <CompletedExerciseOverview
+               key={e.completedExerciseOrder}
+               completedExercise={e}
+               handleExercisesOverviewClick={handleExercisesOverviewClick}
+            />
          ))}
       </div>
    );

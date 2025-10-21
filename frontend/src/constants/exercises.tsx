@@ -1110,6 +1110,7 @@ export const exerciseNames = [
    "Doorway Chest Stretch",
    "Double Diagonal Reach",
    "Double Hip Rotation Cross Knee Drive",
+   "Jump Rope",
    "Double Jump Rope",
    "Double Jump Squat",
    "Double Knee Drive",

@@ -1,4 +1,5 @@
 const pool = require("../db/dbConfig");
+const { debugConsoleLog } = require("../utils/debuggingUtils");
 
 exports.insertCompletedWorkout = async ({
    completedWorkout,

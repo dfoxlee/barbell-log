@@ -7,16 +7,20 @@ export default function CompletedWorkoutsSection() {
 
    return (
       <div className={styles.container}>
-         <h2 className={styles.sectionTitle}>Completed Workouts</h2>
-         <div className={styles.completedWorkoutsWrapper}>
-            {completedWorkouts &&
-               completedWorkouts.map((w) => (
-                  <CompletedWorkoutCard
-                     key={w.completedWorkoutId}
-                     completedWorkout={w}
-                  />
-               ))}
-         </div>
+         {completedWorkouts && completedWorkouts.length > 0 && (
+            <>
+               <h2 className={styles.sectionTitle}>Completed Workouts</h2>
+               <div className={styles.completedWorkoutsWrapper}>
+                  {completedWorkouts &&
+                     completedWorkouts.map((w) => (
+                        <CompletedWorkoutCard
+                           key={w.completedWorkoutId}
+                           completedWorkout={w}
+                        />
+                     ))}
+               </div>
+            </>
+         )}
       </div>
    );
 }

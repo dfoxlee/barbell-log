@@ -7,6 +7,7 @@ import { useMemo } from "react";
 
 import styles from "./CompletedSetNavigation.module.css";
 import type { CompletedWorkoutType } from "../../../types/completed-workout.types";
+import { useTimerStore } from "../../../stores/timer.store";
 
 export default function CompletedSetNavigation() {
    const completedWorkout = useCompletedWorkoutStore(
@@ -27,6 +28,7 @@ export default function CompletedSetNavigation() {
    const currentCompletedExerciseSetOrder = useCompletedWorkoutStore(
       (state) => state.currentCompletedExerciseSetOrder
    );
+   const timerEvent = useTimerStore((state) => state.timerEvent);
    const currentCompletedExercise = useMemo(
       () =>
          completedWorkout?.completedExercises.find(
@@ -85,6 +87,7 @@ export default function CompletedSetNavigation() {
             1
          );
          setCurrentCompletedExerciseOrder(updatedCurrentExerciseOrder);
+         timerEvent("Set Change");
          //set current set to last set
          return setCurrentCompletedExerciseSetOrder(maxSetOrder || 1);
       }
@@ -92,6 +95,7 @@ export default function CompletedSetNavigation() {
       //decrement set
       const updatedCurrentSetOrder = currentCompletedExerciseSetOrder - 1;
       setCurrentCompletedExerciseSetOrder(updatedCurrentSetOrder);
+      timerEvent("Set Change");
    };
 
    const handleSetIncrementClick = () => {
@@ -111,12 +115,14 @@ export default function CompletedSetNavigation() {
          //move to first set of next exercise
          setCurrentCompletedExerciseSetOrder(1);
          const updatedExerciseOrder = currentCompletedExerciseOrder + 1;
-         return setCurrentCompletedExerciseOrder(updatedExerciseOrder);
+         setCurrentCompletedExerciseOrder(updatedExerciseOrder);
+         return timerEvent("Exercise Change");
       }
 
       //increment set
       const updatedSetOrder = currentCompletedExerciseSetOrder + 1;
       setCurrentCompletedExerciseSetOrder(updatedSetOrder);
+      return timerEvent("Set Change");
    };
 
    const handleCompleteSetClick = () => {

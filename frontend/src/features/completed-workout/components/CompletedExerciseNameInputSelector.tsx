@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useMemo, type ChangeEvent } from "react";
 import { filterExerciseSuggestions } from "../../../utils/filters";
 import { useCompletedWorkoutStore } from "../../../stores/completed-workout.store";
 import type { CompletedWorkoutType } from "../../../types/completed-workout.types";
+import { useTimerStore } from "../../../stores/timer.store";
 
 import styles from "./CompletedExerciseNameInputSelector.module.css";
 
@@ -23,6 +24,7 @@ export default function CompletedExerciseNameInputSelector() {
    const setCurrentCompletedExerciseSetOrder = useCompletedWorkoutStore(
       (state) => state.setCurrentCompletedExerciseSetOrder
    );
+   const timerEvent = useTimerStore((state) => state.timerEvent);
    const [dropdownType, setDropdownType] = useState<
       "SEARCH" | "NAVIGATE" | null
    >(null);
@@ -85,6 +87,7 @@ export default function CompletedExerciseNameInputSelector() {
       setDropdownType(null);
       setCurrentCompletedExerciseSetOrder(1);
       setCurrentCompletedExerciseOrder(exerciseOrder);
+      timerEvent("Exercise Change");
    };
 
    const handleOptionSelection = (option: string) => {

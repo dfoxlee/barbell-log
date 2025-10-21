@@ -117,7 +117,7 @@ export default function CompletedExerciseComposition() {
    };
 
    return (
-      <div>
+      <>
          <Timer />
          <CompletedExerciseNameInputSelector />
          <div className={styles.inputsWrapper}>
@@ -173,6 +173,6 @@ export default function CompletedExerciseComposition() {
             currentExerciseSet={currentCompletedExerciseSet}
          />
          <CompletedExerciseSetsTable />
-      </div>
+      </>
    );
 }

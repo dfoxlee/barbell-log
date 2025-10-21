@@ -3,7 +3,9 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import toastify from "../../utils/toastify";
 import {
    fetchAddCompletedWorkout,
+   fetchGetCompletedWorkoutById,
    fetchGetNewCompletedWorkout,
+   fetchUpdateCompletedWorkout,
 } from "../../services/completed-workout.services";
 import { useUserStore } from "../../stores/user.store";
 import { useCompletedWorkoutStore } from "../../stores/completed-workout.store";
@@ -14,15 +16,15 @@ import WorkoutTypeSelector from "../shared/WorkoutTypeSelector";
 import Seperator from "../shared/Seperator";
 import { useTimerStore } from "../../stores/timer.store";
 import type { CompletedWorkoutType } from "../../types/completed-workout.types";
-
-import styles from "./CompletedWorkout.module.css";
 import CompletedExerciseComposition from "./components/CompletedExerciseComposition";
 import CompletedExercisesOverview from "./components/CompletedExercisesOverview";
+
+import styles from "./CompletedWorkout.module.css";
 
 export default function CompletedWorkout() {
    const params = useParams();
    const workoutId = params["workout-id"];
-   // const completedWorkoutId = params["completed-workout-id"];
+   const completedWorkoutId = params["completed-workout-id"];
    const token = useUserStore((state) => state.token);
    const completedWorkout = useCompletedWorkoutStore(
       (state) => state.completedWorkout
@@ -43,19 +45,33 @@ export default function CompletedWorkout() {
    const navigate = useNavigate();
 
    useEffect(() => {
-      startTimer("Workout started");
+      if (!completedWorkoutId) {
+         startTimer("Workout started");
+      }
    }, []);
 
    useEffect(() => {
       const getCompletedWorkout = async () => {
          try {
             setIsLoading(true);
-            const completedWorkoutRequest = await fetchGetNewCompletedWorkout({
-               token,
-               workoutId,
-            });
 
-            setCompletedWorkout(completedWorkoutRequest.completedWorkout);
+            if (completedWorkoutId) {
+               const completedWorkoutRequest =
+                  await fetchGetCompletedWorkoutById({
+                     token: token!,
+                     completedWorkoutId,
+                  });
+
+               setCompletedWorkout(completedWorkoutRequest.completedWorkout);
+            } else {
+               const completedWorkoutRequest =
+                  await fetchGetNewCompletedWorkout({
+                     token: token!,
+                     workoutId: workoutId!,
+                  });
+
+               setCompletedWorkout(completedWorkoutRequest.completedWorkout);
+            }
          } catch (error) {
             console.error(
                "An error occurred getting new completed workout.",
@@ -74,7 +90,7 @@ export default function CompletedWorkout() {
       if (token && workoutId) {
          getCompletedWorkout();
       }
-   }, [token]);
+   }, [token, workoutId, completedWorkoutId]);
 
    const handleCancelClick = () => {
       console.log("cancel completed workout");
@@ -85,11 +101,15 @@ export default function CompletedWorkout() {
    };
 
    const handleCompleteWorkoutClick = async () => {
-      console.log("complete workout");
       try {
          if (token && completedWorkout) {
-            await fetchAddCompletedWorkout({ token, completedWorkout });
-            navigate("/home");
+            if (!completedWorkoutId) {
+               await fetchAddCompletedWorkout({ token, completedWorkout });
+               navigate("/home");
+            } else {
+               await fetchUpdateCompletedWorkout({ token, completedWorkout });
+               navigate("/home");
+            }
          }
       } catch (error) {
          console.error(error);
@@ -137,7 +157,7 @@ export default function CompletedWorkout() {
          <div className={styles.headerOptionsWrapper}>
             <StandardBtn text="Cancel" onClick={handleCancelClick} />
             <StandardBtn
-               text="Complete Workout"
+               text={completedWorkoutId ? "Update Workout" : "Complete Workout"}
                onClick={handleCompleteWorkoutClick}
                theme="SUCCESS"
             />

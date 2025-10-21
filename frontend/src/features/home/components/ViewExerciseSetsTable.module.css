@@ -15,7 +15,7 @@
 }
 
 .tableHeader {
-   font-size: 14px;
+   font-size: 12px;
    color: var(--accent);
    border-bottom: 1px solid var(--primary);
 }
@@ -27,5 +27,19 @@
 }
 
 .tableData {
-   font-size: 18px;
+   font-size: 14px;
+}
+
+.completeIconWrapper {
+   display: flex;
+   justify-content: center;
+}
+
+.completeIcon {
+   color: var(--primary);
+   font-size: 24px;
+}
+
+.notes {
+   width: 40%;
 }

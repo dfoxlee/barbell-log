@@ -18,7 +18,7 @@ completedWorkoutRouter.patch(
    CompletedWorkoutController.updateCompletedWorkout
 );
 completedWorkoutRouter.delete(
-   "/:workoutId",
+   "/:completedWorkoutId",
    CompletedWorkoutController.deleteCompletedWorkout
 );
 completedWorkoutRouter.post(

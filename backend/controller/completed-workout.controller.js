@@ -198,7 +198,7 @@ exports.updateCompletedWorkout = async (req, res, next) => {
             )
          ) {
             await CompletedExerciseServices.updateCompletedExercise({
-               exercise,
+               completedExercise: exercise,
             });
 
             const idIndex = existingExerciseIds.findIndex(
@@ -224,7 +224,7 @@ exports.updateCompletedWorkout = async (req, res, next) => {
                   )
                ) {
                   await CompletedExerciseSetServices.updateCompletedExerciseSet(
-                     { exerciseSet }
+                     { completedExerciseSet: exerciseSet }
                   );
 
                   const idIndex = existingExerciseSetIds.findIndex(
@@ -234,10 +234,10 @@ exports.updateCompletedWorkout = async (req, res, next) => {
                      existingExerciseSetIds.splice(idIndex, 1);
                   }
                } else {
-                  await CompletedExerciseSetServices.createCompletedExerciseSet(
+                  await CompletedExerciseSetServices.insertCompletedExerciseSet(
                      {
                         completedExerciseId: exercise.completedExerciseId,
-                        ...exerciseSet,
+                        completedExerciseSet: exerciseSet,
                      }
                   );
                }
@@ -250,15 +250,15 @@ exports.updateCompletedWorkout = async (req, res, next) => {
             }
          } else {
             const newCompletedExerciseId =
-               await CompletedExerciseServices.createCompletedExercise({
+               await CompletedExerciseServices.insertCompletedExercise({
                   completedWorkoutId: completedWorkout.completedWorkoutId,
-                  ...exercise,
+                  completedExercise: exercise,
                });
 
             for (var exerciseSet of exercise.completedExerciseSets) {
-               await CompletedExerciseSetServices.createCompletedExerciseSet({
+               await CompletedExerciseSetServices.insertCompletedExerciseSet({
                   completedExerciseId: newCompletedExerciseId,
-                  ...exerciseSet,
+                  completedExerciseSet: exerciseSet,
                });
             }
          }
@@ -278,7 +278,10 @@ exports.updateCompletedWorkout = async (req, res, next) => {
 
 exports.deleteCompletedWorkout = async (req, res, next) => {
    try {
-      const completedWorkoutId = req.params["completedWorkoutId"];
+      const completedWorkoutId = req.params.completedWorkoutId;
+      if (!completedWorkoutId) {
+         throw new Error("Unable to find workout.");
+      }
 
       await CompletedWorkoutServices.deleteCompletedWorkout({
          completedWorkoutId,

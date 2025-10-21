@@ -17,7 +17,7 @@
 
 .workoutName {
    font-weight: 600;
-   font-size: 24px;
+   font-size: 18px;
 }
 
 .workoutDate {
@@ -34,4 +34,5 @@
    align-items: center;
    justify-content: center;
    gap: 10px;
+   min-width: 100px;
 }

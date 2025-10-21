@@ -9,6 +9,7 @@ import type { CompletedExerciseSetType } from "../../../types/completed-exercise
 import type { CompletedWorkoutType } from "../../../types/completed-workout.types";
 
 import styles from "./CompletedExerciseOverview.module.css";
+import { useTimerStore } from "../../../stores/timer.store";
 
 interface CompletedExerciseOverviewProps {
    completedExercise: CompletedExerciseType;
@@ -30,11 +31,13 @@ export default function CompletedExerciseOverview({
    const setCurrentCompletedExerciseOrder = useCompletedWorkoutStore(
       (state) => state.setCurrentCompletedExerciseOrder
    );
+   const timerEvent = useTimerStore((state) => state.timerEvent);
 
    const handleEditExerciseClick = () => {
       setCurrentCompletedExerciseOrder(
          completedExercise.completedExerciseOrder
       );
+      timerEvent("Exercise Change");
       handleExercisesOverviewClick();
    };
 
@@ -74,7 +77,7 @@ export default function CompletedExerciseOverview({
    return (
       <div className={styles.container}>
          <div className={styles.headerWrapper}>
-            <h4>
+            <h4 className={styles.exerciseName}>
                {completedExercise.completedExerciseName.length
                   ? `${completedExercise.completedExerciseOrder}. ${completedExercise.completedExerciseName}`
                   : `${completedExercise.completedExerciseOrder}. New Exercise`}
